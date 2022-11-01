@@ -10,3 +10,5 @@ Team Members
 - Dzakirin Asyraff
 - Muhammad Naim
 - Brendan Dylan
+
+Current Sprint = 1
