@@ -10,6 +10,8 @@ const employeeSchema = mongoose.Schema({
     employeeEmail: String,
     employeeContact: String,
     employeePosition: String,
+    // employeeRole differentiate between executive and employee
+    executiveRole: Boolean,
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);

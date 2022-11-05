@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import Criteria from "./criteria";
+import criteriaSchema from "./criteria";
 
 const applicationSchema = mongoose.Schema({
     applicationDate : {
@@ -15,7 +15,7 @@ const applicationSchema = mongoose.Schema({
         ref: "Job"
     },
     hireDate : Date,
-    criteria: Criteria
+    criteria: criteriaSchema
 });
 
 const Application = mongoose.model("Application", applicationSchema);

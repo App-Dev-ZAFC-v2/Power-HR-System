@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
-import User from "./user";
+import userSchema from "./user";
 
 const adminSchema = mongoose.Schema({
-    user: User,
+    user: userSchema,
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

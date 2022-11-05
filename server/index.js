@@ -7,11 +7,13 @@ import employeeRoutes from './routes/employee.js'; // import the employee router
 
 const app = express();
 
+app.use(cors()); // to allow cross-origin requests
+
 app.use('/employees', employeeRoutes); // when a request is made to the /employees endpoint, use the employeeRoutes router
 
 app.use(bodyParser.json({ limit: '30mb', extended: true })); // limit is the size of the image that can be uploaded
 app.use(bodyParser.urlencoded({ limit: '30mb', extended: true })); // limit is the size of the image that can be uploaded
-app.use(cors()); // to allow cross-origin requests
+
 
 const CONNECTION_URL = 'mongodb+srv://dzakirin:dzakirin@cluster0.pnnbfiw.mongodb.net/?retryWrites=true&w=majority'; // replace <password> with your password
 
