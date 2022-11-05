@@ -10,7 +10,7 @@ export const getEmployees = async (req, res) => {
     }
 }
 
-export const getEmployeeName = async (req, res) => {
+export const getEmployeeByID = async (req, res) => {
     const { id } = req.params;
     try{
         const employee = await Employee.findById(id);
