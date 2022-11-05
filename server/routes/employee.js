@@ -1,13 +1,17 @@
 import express from 'express'; // import express
 
-import { getEmployees, createEmployee, getEmployeeByID} from '../controllers/employee.js'; // import the getEmployees and createEmployee functions from the employee controller
+import { getEmployees, createEmployee, getEmployeeByID, updateEmployee, deleteEmployee} from '../controllers/employee.js'; // import the getEmployees and createEmployee functions from the employee controller
 
 const router = express.Router(); // create a router
 
-router.get('/getAll', getEmployees);
+router.get('/', getEmployees);
 
 router.get('/:id', getEmployeeByID);
 
-router.post('/createOne', createEmployee);
+router.post('/', createEmployee);
+
+router.patch('/:id', updateEmployee);
+
+router.delete('/:id', deleteEmployee);
 
 export default router; // export the router
