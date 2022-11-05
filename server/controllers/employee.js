@@ -21,11 +21,24 @@ export const getEmployeeName = async (req, res) => {
     }
 }
 
-export const createEmployee = (req, res) => {
+// export const createEmployee = (req, res) => {
+//     const employee = req.body;
+//     const newEmployee = new Employee(employee);
+//     try{
+//         newEmployee.save();
+//         res.status(201).json(newEmployee);
+//     }
+//     catch(error){
+//         res.status(409).json({ message: error.message });
+//     }
+// }
+
+// post request to create a new employee
+export const createEmployee = async (req, res) => {
     const employee = req.body;
     const newEmployee = new Employee(employee);
     try{
-        newEmployee.save();
+        await newEmployee.save();
         res.status(201).json(newEmployee);
     }
     catch(error){
