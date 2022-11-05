@@ -50,3 +50,15 @@ export const deleteEmployee = async (req, res) => {
     await Employee.findByIdAndRemove(id);
     res.json({ message: "Employee deleted successfully." });
 }
+
+//login for employee
+export const loginEmployee = async (req, res) => {
+    const { email, username, password } = req.body;
+    try{
+        const employee = await Employee.findOne({ email, username, password });
+        res.status(200).json(employee);
+    }
+    catch(error){
+        res.status(404).json({ message: error.message });
+    }
+}
