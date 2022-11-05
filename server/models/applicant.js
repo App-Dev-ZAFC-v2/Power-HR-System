@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import userSchema from "./auth";
+import userSchema from "./user.js";
 
 const applicantSchema = mongoose.Schema({
     user: userSchema,
