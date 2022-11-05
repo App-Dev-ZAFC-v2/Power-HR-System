@@ -53,7 +53,7 @@ export const deleteEmployee = async (req, res) => {
 
 //login for employee
 export const loginEmployee = async (req, res) => {
-    const { email, username, password } = req.body;
+    const {username, password } = req.body;
     try{
         const employee = await Employee.findOne({ email, username, password });
         res.status(200).json(employee);
