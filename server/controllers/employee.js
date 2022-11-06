@@ -64,7 +64,7 @@ export const registerEmployee = async (req, res) => {
         if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match" });
         const hashedPassword = await bcrypt.hash(password, 12);
         const result = await Employee.create({ username, password: hashedPassword, employeeName, employeeEmail, employeeContact, employeePosition });
-        // const token = jwt.sign({ username: result.username, id: result._id }, { expiresIn: "1h" });
+        // const token = jwt.sign({ username: result.username, id: result._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result });
     }
     catch(error){
@@ -80,7 +80,8 @@ export const loginEmployee = async (req, res) => {
         if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
         const isPasswordCorrect = await bcrypt.compare(password, employee.password);
         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-        const token = jwt.sign({ email: employee.email, id: employee._id }, { expiresIn: "1h" });
+        const token = jwt.sign({ email: employee.email, id: employee._id }, 'test', { expiresIn: "1h" });
+        console.log(employee);
         res.status(200).json({ result: employee, token });
     }
     catch(error){
