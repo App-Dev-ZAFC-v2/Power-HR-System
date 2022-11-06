@@ -1,8 +1,8 @@
 import './App.css';
 import { BrowserRouter as Router, Routes, Route, Switch } from 'react-router-dom';
-import Login from './pages/login';
-import ApplicantRegister from './pages/Applicant/Register';
-import EmployeeDashboard from './pages/Employee/Dashboard';
+import Login from './Pages/Login';
+import ApplicantRegister from './Pages/Applicant/Register';
+import EmployeeDashboard from './Pages/Employee/Dashboard';
 
 function App() {
   return (
