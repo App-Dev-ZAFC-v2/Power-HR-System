@@ -6,7 +6,7 @@ function Login() {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [userType, setUserType] = useState(['applicants', 'employees', 'admins']);
-    const [user, setUser] = useState('');
+    const [user, setUser] = useState(2);
     const [error, setError] = useState('');
     const [tries, setTries] = useState(0);
 
@@ -16,12 +16,13 @@ function Login() {
             username,
             password
         }
+        // axios.post(`http://localhost:5000/admins/login`, loginData)
         axios.post(`http://localhost:5000/${userType[user]}/login`, loginData)
         .then(res => {
             console.log(res);
             localStorage.setItem('authToken', res.data.token);
-            user===0 ? window.location = '/applicant' : 
-            user===1 ? window.location = '/employee' : 
+            user===0 ? window.location = '/applicant/dashboard' : 
+            user===1 ? window.location = '/employee/dashboard' : 
             window.location = '/admin/dashboard';
         
         }
