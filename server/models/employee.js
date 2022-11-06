@@ -1,10 +1,14 @@
 import mongoose from "mongoose";
-// import User from "./user.js";
-import userSchema from "./user.js";
 
 const employeeSchema = mongoose.Schema({
-    user: {
-        type: userSchema,
+    username: {
+        type: String,
+        required: true,
+        unique: true,
+    },
+    password: {
+        type: String,
+        required: true,
     },
     employeeName: String,
     employeeEmail: String,

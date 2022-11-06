@@ -55,14 +55,15 @@ export const deleteEmployee = async (req, res) => {
 
 //signup for employee
 export const registerEmployee = async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, password, confirmPassword, employeeName, employeeEmail, employeeContact, employeePosition} = req.body;
     try{
-        const employee = await Employee.findOne({ email });
+        const employee = await Employee.findOne({ employeeEmail });
         if(employee) return res.status(400).json({ message: "Email already exists" });
         const user = await Employee.findOne({ username });
         if(user) return res.status(400).json({ message: "Username already exists" });
+        if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match" });
         const hashedPassword = await bcrypt.hash(password, 12);
-        const result = await Employee.create({ username, email, password: hashedPassword });
+        const result = await Employee.create({ username, password: hashedPassword, employeeName, employeeEmail, employeeContact, employeePosition });
         const token = jwt.sign({ email: result.email, id: result._id }, { expiresIn: "1h" });
         res.status(200).json({ result, token });
     }
