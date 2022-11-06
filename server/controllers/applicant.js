@@ -1,4 +1,6 @@
 import Applicant from '../models/applicant.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const getApplicants = async (req, res) => {
     try{
@@ -69,11 +71,11 @@ export const registerApplicant = async (req, res) => {
     try{
         const applicant = await Applicant.findOne({ applicantEmail });
         if(applicant) return res.status(400).json({ message: "Email already exists" });
-        const user = await applicant.findOne({ username });
+        const user = await Applicant.findOne({ username });
         if(user) return res.status(400).json({ message: "Username already exists" });
         if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match" });
         const hashedPassword = await bcrypt.hash(password, 12);
-        const result = await applicant.create({ username, password: hashedPassword, applicantName, applicantEmail, applicantContact, applicantStatus });
+        const result = await Applicant.create({ username, password: hashedPassword, applicantName, applicantEmail, applicantContact, applicantStatus });
         // const token = jwt.sign({ username: result.username, id: result._id }, { expiresIn: "1h" });
         res.status(200).json({ result });
     }
