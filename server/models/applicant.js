@@ -11,10 +11,14 @@ const applicantSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+    applicantStatus:{
+        type: String,
+        default: "Active" // Accepted, Rejected, Active, Inactive, Pending
+    },
     applicantName: String,
     applicantEmail: String,
     applicantContact: String,
-    applicantStatus: String
+     
 });
 
 const Applicant = mongoose.model("Applicant", applicantSchema);
