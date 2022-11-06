@@ -16,7 +16,6 @@ function Login() {
             username,
             password
         }
-        // axios.post(`http://localhost:5000/admins/login`, loginData)
         axios.post(`http://localhost:5000/${userType[user]}/login`, loginData)
         .then(res => {
             console.log(res);
