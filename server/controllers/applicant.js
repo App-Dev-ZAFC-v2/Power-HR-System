@@ -1,6 +1,7 @@
 import Applicant from '../models/applicant.js';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import mongoose from 'mongoose';
 
 export const getApplicants = async (req, res) => {
     try{
