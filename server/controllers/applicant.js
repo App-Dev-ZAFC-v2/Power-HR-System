@@ -62,3 +62,22 @@ export const loginApplicant = async (req, res) => {
         res.status(404).json({ message: error.message });
     }
 }
+
+//register for applicant
+export const registerApplicant = async (req, res) => {
+    const { username, password, confirmPassword, applicantName, applicantEmail, applicantContact, applicantStatus} = req.body;
+    try{
+        const applicant = await Applicant.findOne({ applicantEmail });
+        if(applicant) return res.status(400).json({ message: "Email already exists" });
+        const user = await applicant.findOne({ username });
+        if(user) return res.status(400).json({ message: "Username already exists" });
+        if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match" });
+        const hashedPassword = await bcrypt.hash(password, 12);
+        const result = await applicant.create({ username, password: hashedPassword, applicantName, applicantEmail, applicantContact, applicantStatus });
+        // const token = jwt.sign({ username: result.username, id: result._id }, { expiresIn: "1h" });
+        res.status(200).json({ result });
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}
