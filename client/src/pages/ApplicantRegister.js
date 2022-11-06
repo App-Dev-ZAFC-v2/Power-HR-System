@@ -1,9 +1,9 @@
 import React from 'react'
 
-const register = () => {
+function ApplicantRegister() {
   return (
     <div>register (commit) hmmm</div>
   )
 }
 
-export default register
+export default ApplicantRegister

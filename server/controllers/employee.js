@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
+//  (DONE)
 export const getEmployees = async (req, res) => {
     try{
         const employees = await Employee.find();
@@ -13,6 +14,7 @@ export const getEmployees = async (req, res) => {
     }
 }
 
+//  (DONE)
 export const getEmployeeByID = async (req, res) => {
     const { id } = req.params;
     try{
@@ -24,7 +26,7 @@ export const getEmployeeByID = async (req, res) => {
     }
 }
 
-// post request to create a new employee
+// post request to create a new employee (DONE)
 export const createEmployee = async (req, res) => {
     const employee = req.body;
     const newEmployee = new Employee(employee);
@@ -37,7 +39,7 @@ export const createEmployee = async (req, res) => {
     }
 }
 
-// patch request to update an employee
+// patch request to update an employee (DONE)
 export const updateEmployee = async (req, res) => {
     const { id } = req.params;
     const employee = req.body;
@@ -46,7 +48,7 @@ export const updateEmployee = async (req, res) => {
     res.json(updatedEmployee);
 }
 
-// delete request to delete an employee
+// delete request to delete an employee (DONE)
 export const deleteEmployee = async (req, res) => {
     const { id } = req.params;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
@@ -54,7 +56,7 @@ export const deleteEmployee = async (req, res) => {
     res.json({ message: "Employee deleted successfully." });
 }
 
-//signup for employee
+//signup for employee  (DONE)
 export const registerEmployee = async (req, res) => {
     const { username, password, confirmPassword, employeeName, employeeEmail, employeeContact, employeePosition} = req.body;
     try{
@@ -73,7 +75,7 @@ export const registerEmployee = async (req, res) => {
     }
 }
 
-//login for employee
+//login for employee  (DONE)
 export const loginEmployee = async (req, res) => {
     const { username, password } = req.body;
     try{
