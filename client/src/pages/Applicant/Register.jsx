@@ -2,7 +2,7 @@ import React from "react";
 import {FaUserAlt} from 'react-icons/fa';
 import {Container, Row, Col, Form, Button} from 'react-bootstrap';
 
-const register = () => {
+function ApplicantRegister() {
   return (
     <section className="signup ">
       <Container>
@@ -48,4 +48,4 @@ const register = () => {
   );
 };
 
-export default register;
+export default ApplicantRegister;
