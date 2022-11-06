@@ -11,11 +11,11 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import AdbIcon from '@mui/icons-material/Adb';
+import Link from '@mui/material/Link';
 import Logo from "../Assets/Logo.png";
 
 const pages = ['NAV1', 'NAV2'];
-const settings = ['Profile', 'Logout'];
+const settings = [{link:'/profile', name:'Profile'}, {link:'/login', name:'Logout'}];
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -162,10 +162,10 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {settings.map((setting) => (
-                <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                  <Typography textAlign="center">{setting}</Typography>
-                </MenuItem>
+              {(settings).map((setting, index) => (
+                <Link href={setting.link} underline="none"><MenuItem key={setting.name} onClick={handleCloseUserMenu}>
+                  <Typography textAlign="center">{setting.name}</Typography>
+                </MenuItem></Link>
               ))}
             </Menu>
           </Box>
