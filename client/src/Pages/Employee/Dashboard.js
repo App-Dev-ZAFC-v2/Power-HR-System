@@ -1,8 +1,9 @@
 import React from 'react';
+import Navbar from '../../Components/Navbar';
 
 function EmployeeDashboard() {
     return (
-        <div>employee dashboard</div>
+        <Navbar />
     )
     }
 
