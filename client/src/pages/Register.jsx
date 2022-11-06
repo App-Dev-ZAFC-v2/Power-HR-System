@@ -1,50 +1,110 @@
-import React from "react";
-import {FaUserAlt} from 'react-icons/fa';
-import {Container, Row, Col, Form, Button} from 'react-bootstrap';
+import * as React from "react";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
+import CssBaseline from "@mui/material/CssBaseline";
+import TextField from "@mui/material/TextField";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import Link from "@mui/material/Link";
+import Container from '@mui/material/Container';
+import Box from "@mui/material/Box";
+import Grid from "@mui/material/Grid";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
+import Typography from "@mui/material/Typography";
+import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-const register = () => {
+const register = (props) => {
+  const theme = createTheme();
+
   return (
-    <section className="signup ">
-      <Container>
-        <div className="signup-content d-flex justify-content">
-          <div className="signup-form">
-            <h2 className="form-title">Register Here!</h2>
-            <Form method="POST" className="register-form" id="register-form">
-              <div className="form-group">
-                <label htmlFor="username">
-                  <FaUserAlt/>
-                </label>
-                <input type="text" name="username" id="username" placeholder="User Name" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">
-                  <FaUserAlt/>
-                </label>
-                <input type="email" name="email" id="email" placeholder="Email" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="contact">
-                  <FaUserAlt/>
-                </label>
-                <input type="text" name="contact" id="contact" placeholder="Contact" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">
-                  <FaUserAlt/>
-                </label>
-                <input type="password" name="password" id="password" placeholder="Password" />
-              </div>
-              <div className="form-group">
-                <label htmlFor="password">
-                  <FaUserAlt/>
-                </label>
-                <input type="password" name="password" id="password" placeholder="Confirm Password" />
-              </div>
-            </Form>
-          </div>
-        </div>
+    <ThemeProvider theme={theme}>
+      <Container component="main" maxWidth="xs">
+        <CssBaseline />
+        <Box
+          sx={{
+            marginTop: 8,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
+            <LockOutlinedIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Sign up
+          </Typography>
+          <Box component="form" noValidate onSubmit="#" sx={{ mt: 3 }}>
+            <Grid container spacing={2}>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  autoComplete="given-name"
+                  name="firstName"
+                  required
+                  fullWidth
+                  id="firstName"
+                  label="First Name"
+                  autoFocus
+                />
+              </Grid>
+              <Grid item xs={12} sm={6}>
+                <TextField
+                  required
+                  fullWidth
+                  id="lastName"
+                  label="Last Name"
+                  name="lastName"
+                  autoComplete="family-name"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="email"
+                  label="Email Address"
+                  name="email"
+                  autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  name="password"
+                  label="Password"
+                  type="password"
+                  id="password"
+                  autoComplete="new-password"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <FormControlLabel
+                  control={<Checkbox value="allowExtraEmails" color="primary" />}
+                  label="I want to receive inspiration, marketing promotions and updates via email."
+                />
+              </Grid>
+            </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+            >
+              Sign Up
+            </Button>
+            <Grid container justifyContent="flex-end">
+              <Grid item>
+                <Link href="#" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
+        </Box>
+        {/* <Copyright sx={{ mt: 5 }} /> */}
       </Container>
-    </section>
+    </ThemeProvider>
   );
 };
 
