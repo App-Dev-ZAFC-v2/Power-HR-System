@@ -61,8 +61,7 @@ export const loginApplicant = async (req, res) => {
         if(!applicant) return res.status(404).json({ message: "applicant doesn't exist" });
         const isPasswordCorrect = await bcrypt.compare(password, applicant.password);
         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-        const token = jwt.sign({ email: applicant.email, id: applicant._id }, 'test', { expiresIn: "1h" });
-        console.log(applicant);
+        const token = jwt.sign({ username: applicant.username, id: applicant._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result: applicant, token });
     }
     catch(error){
