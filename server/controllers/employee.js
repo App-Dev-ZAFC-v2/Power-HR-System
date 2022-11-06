@@ -1,4 +1,6 @@
 import Employee from '../models/employee.js';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 export const getEmployees = async (req, res) => {
     try{
@@ -51,14 +53,36 @@ export const deleteEmployee = async (req, res) => {
     res.json({ message: "Employee deleted successfully." });
 }
 
-//login for employee
-export const loginEmployee = async (req, res) => {
-    const {username, password } = req.body;
+//signup for employee
+export const registerEmployee = async (req, res) => {
+    const { username, email, password } = req.body;
     try{
-        const employee = await Employee.findOne({ email, username, password });
-        res.status(200).json(employee);
+        const employee = await Employee.findOne({ email });
+        if(employee) return res.status(400).json({ message: "Email already exists" });
+        const user = await Employee.findOne({ username });
+        if(user) return res.status(400).json({ message: "Username already exists" });
+        const hashedPassword = await bcrypt.hash(password, 12);
+        const result = await Employee.create({ username, email, password: hashedPassword });
+        const token = jwt.sign({ email: result.email, id: result._id }, { expiresIn: "1h" });
+        res.status(200).json({ result, token });
     }
     catch(error){
-        res.status(404).json({ message: error.message });
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}
+
+//login for employee
+export const loginEmployee = async (req, res) => {
+    const { username, password } = req.body;
+    try{
+        const employee = await Employee.findOne({ username });
+        if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
+        const isPasswordCorrect = await bcrypt.compare(password, employee.password);
+        if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
+        const token = jwt.sign({ email: employee.email, id: employee._id }, { expiresIn: "1h" });
+        res.status(200).json({ result: employee, token });
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong" });
     }
 }
