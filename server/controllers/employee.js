@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import * as dotenv from 'dotenv';
+import User from '../models/user.js';
 dotenv.config();
 
 export const getEmployees = async (req, res) => {
@@ -58,15 +59,17 @@ export const deleteEmployee = async (req, res) => {
 
 //signup for employee
 export const registerEmployee = async (req, res) => {
-    const { username, password, confirmPassword, employeeName, employeeEmail, employeeContact, employeePosition} = req.body;
+    const { username, password, confirmPassword, employeeName, employeeEmail, employeeContact, employeePosition, executiveRole} = req.body;
     try{
         const employee = await Employee.findOne({ employeeEmail });
         if(employee) return res.status(400).json({ message: "Email already exists" });
-        const user = await Employee.findOne({ username });
+        const user = await User.findOne({ username });
         if(user) return res.status(400).json({ message: "Username already exists" });
         if(password !== confirmPassword) return res.status(400).json({ message: "Passwords don't match" });
         const hashedPassword = await bcrypt.hash(password, 12);
-        const result = await Employee.create({ username, password: hashedPassword, employeeName, employeeEmail, employeeContact, employeePosition });
+        const newUser = new User({ username, password: hashedPassword, userType: 2 });
+        await newUser.save();
+        const result = await Employee.create({ user: newUser._id, employeeName, employeeEmail, employeeContact, employeePosition, executiveRole });
         // const token = jwt.sign({ username: result.username, id: result._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result });
     }

@@ -2,6 +2,7 @@ import Admin from '../models/admin.js';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import User from '../models/user.js';
 
 export const getAdmins = async (req, res) => {
     try{
@@ -74,10 +75,12 @@ export const deleteAdmin = async (req, res) => {
 export const registerAdmin = async (req, res) => {
     const { username, password } = req.body;
     try{
-        const admin = await Admin.findOne({ username });
-        if(admin) return res.status(400).send("Admin already exists");
+        const user = await User.findOne({ username });
+        if(user) return res.status(400).send("Username already exists");
         const hashedPassword = await bcrypt.hash(password, 12);
-        const result = await Admin.create({ username, password: hashedPassword });
+        const newUser = new User({ username, password: hashedPassword, userType: 1 });
+        await newUser.save();
+        const result = await Admin.create({ user: newUser._id });
         // const token = jwt.sign({ username: result.username, id: result._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result });
     }
