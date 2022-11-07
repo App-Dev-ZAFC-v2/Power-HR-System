@@ -19,29 +19,11 @@ const theme = createTheme();
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [login, setLogin] = useState(false);
-  const [userType, setUserType] = useState(["applicants", "admins", "employees"]);
-  const [ userTypeIndex, setUserTypeIndex ] =useState(1);
+  // const [login, setLogin] = useState(false);
+  const [userType] = useState(["applicants", "admins", "employees"]);
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const configuration = {
-  //     method: "post",
-  //     url: "http://localhost:5000/employees/login",
-  //     data: {
-  //       username,
-  //       password,
-  //     },
-  //   };
-  //   axios(configuration)
-  //     .then((response) => {
-  //       console.log(response);
-  //       localStorage.setItem("authToken", response.data.token);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const [userTypeIndex, setUserTypeIndex] = useState(0);
+  console.log(userTypeIndex);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -63,11 +45,7 @@ function Login() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-        style={{ backgroundColour: "darkgray" }}
-      >
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -88,7 +66,6 @@ function Login() {
             noValidate
             sx={{ mt: 1 }}
             onSubmit={(e) => handleSubmit(e)}
-            style={{ backgroundColour: "darkgray" }}
           >
             <TextField
               margin="normal"
@@ -128,6 +105,15 @@ function Login() {
               Sign In
             </Button>
           </Box>
+          <Button variant="contained" onClick={() => setUserTypeIndex(0)}>
+            Applicant
+          </Button>
+          <Button variant="contained" onClick={() => setUserTypeIndex(1)}>
+            Admin
+          </Button>
+          <Button variant="contained" onClick={() => setUserTypeIndex(2)}>
+            Employee
+          </Button>
         </Box>
       </Container>
     </ThemeProvider>
