@@ -34,7 +34,7 @@ function Login() {
       password,
     };
     axios
-      .post(`http://localhost:5000/${userType[userTypeIndex]}/login`, loginData)
+      .post(`http://localhost:5000/login`, loginData)
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);

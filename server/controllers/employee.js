@@ -76,18 +76,18 @@ export const registerEmployee = async (req, res) => {
 }
 
 //login for employee
-export const loginEmployee = async (req, res) => {
-    const { username, password } = req.body;
-    try{
-        const employee = await Employee.findOne({ username });
-        if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
-        const isPasswordCorrect = await bcrypt.compare(password, employee.password);
-        if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-        const token = jwt.sign({ user: employee.username, id: employee._id, type:"employee" }, process.env.JWT_SECRET);
-        console.log(employee);
-        res.status(200).json({ result: employee, token });
-    }
-    catch(error){
-        res.status(500).json({ message: "Something went wrong" });
-    }
-}
+// export const loginEmployee = async (req, res) => {
+//     const { username, password } = req.body;
+//     try{
+//         const employee = await Employee.findOne({ username });
+//         if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
+//         const isPasswordCorrect = await bcrypt.compare(password, employee.password);
+//         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
+//         const token = jwt.sign({ user: employee.username, id: employee._id, type:"employee" }, process.env.JWT_SECRET);
+//         console.log(employee);
+//         res.status(200).json({ result: employee, token });
+//     }
+//     catch(error){
+//         res.status(500).json({ message: "Something went wrong" });
+//     }
+// }
