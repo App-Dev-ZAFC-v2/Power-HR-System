@@ -14,10 +14,12 @@ export const loginUser = async (req, res) => {
         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
         const id = user._id;
         const userType = user.userType;
+        let model;
         userType === 0 ? model = "Applicant" : userType === 1 ? model = "Admin" : model = "Employee";
         const userObject = await mongoose.model(model).findOne({ userID: id });
         const userID = userObject._id;
-        const token = jwt.sign({ id, userType, userID }, process.env.ACCESS_TOKEN_SECRET);
+        //correct up until here
+        const token = jwt.sign({ id, userType, userID }, process.env.JWT_SECRET);
         res.status(200).json({ token });
     }
     catch(error){
