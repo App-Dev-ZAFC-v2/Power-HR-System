@@ -16,6 +16,7 @@ const userSchema = mongoose.Schema({
         validate (value) {
             if (value < 0 || value > 2) {
                 throw new Error("User type must be 0, 1, or 2");
+                //0-Applicant 1-admin 2-employee
             }
         },
     },
