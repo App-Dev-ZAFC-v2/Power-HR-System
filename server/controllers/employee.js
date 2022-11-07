@@ -2,6 +2,9 @@ import Employee from '../models/employee.js';
 import mongoose from 'mongoose';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 export const getEmployees = async (req, res) => {
     try{
@@ -81,7 +84,7 @@ export const loginEmployee = async (req, res) => {
         if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
         const isPasswordCorrect = await bcrypt.compare(password, employee.password);
         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-        const token = jwt.sign({ email: employee.email, id: employee._id }, 'test', { expiresIn: "1h" });
+        const token = jwt.sign({ email: employee.email, id: employee._id }, process.env.JWT_SECRET , { expiresIn: "1h" });
         console.log(employee);
         res.status(200).json({ result: employee, token });
     }
