@@ -59,7 +59,7 @@ export const loginAdmin = async (req, res) => {
     const {username, password } = req.body;
     try{
         const admin = await Admin.findOne({ username });
-        if(!admin) return res.status(404).send("Admin not found");
+        if(!admin) return res.status(404).send("Admin doesn't exist");
         const isPasswordCorrect = await bcrypt.compare(password, admin.password);
         if(!isPasswordCorrect) return res.status(400).send("Invalid credentials");
         const token = jwt.sign({ username: admin.username, id: admin._id }, 'test', { expiresIn: "1h" });
