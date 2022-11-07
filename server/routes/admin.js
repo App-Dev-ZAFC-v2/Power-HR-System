@@ -1,6 +1,6 @@
 import express from 'express'; // import express
 
-import { getAdmins, createAdmin, getAdminByID, updateAdmin, deleteAdmin, loginAdmin} from '../controllers/admin.js'; // import the getAdmins and createAdmin functions from the admin controller
+import { getAdmins, createAdmin, getAdminByID, updateAdmin, deleteAdmin, loginAdmin, registerAdmin} from '../controllers/admin.js'; // import the getAdmins and createAdmin functions from the admin controller
 
 const router = express.Router(); // create a router
 
@@ -15,5 +15,7 @@ router.patch('/:id', updateAdmin);
 router.delete('/:id', deleteAdmin);
 
 router.post('/login', loginAdmin);
+
+router.post('/register', registerAdmin);
 
 export default router; // export the router
