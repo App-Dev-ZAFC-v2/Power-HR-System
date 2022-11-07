@@ -38,7 +38,10 @@ function Login() {
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);
-        window.location = "/admin/dashboard";
+        userTypeIndex === 0 ? window.location="/applicant/dashboard" :
+        userTypeIndex === 1 ? window.location="/admin/dashboard":
+        userTypeIndex === 2 ? window.location="/employee/dashboard" : window.location="/";
+        // window.location = "/admin/dashboard";
       })
       .catch((err) => {
         console.log(err);
