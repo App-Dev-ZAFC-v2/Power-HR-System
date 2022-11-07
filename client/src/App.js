@@ -1,8 +1,8 @@
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Login from "./Pages/Authentication/Login";
+import ApplicantRegister from "./Pages/Applicant/Register";
+import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Switch } from 'react-router-dom';
-import Login from './Pages/Login';
-import ApplicantRegister from './Pages/Applicant/Register';
-import EmployeeDashboard from './Pages/Employee/Dashboard';
 import AdminDashboard from './Pages/Admin/Dashboard';
 import ManageEmployee from './Pages/Admin/ManageEmployee';
 
