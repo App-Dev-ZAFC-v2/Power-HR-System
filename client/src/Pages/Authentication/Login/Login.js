@@ -20,6 +20,8 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [login, setLogin] = useState(false);
+  const [userType, setUserType] = useState(["applicants", "admins", "employees"]);
+  const [ userTypeIndex, setUserTypeIndex ] =useState(1);
 
   // const handleSubmit = (e) => {
   //   e.preventDefault();
@@ -48,7 +50,7 @@ function Login() {
       password,
     };
     axios
-      .post(`http://localhost:5000/admins/login`, loginData)
+      .post(`http://localhost:5000/${userType[userTypeIndex]}/login`, loginData)
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);
