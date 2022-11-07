@@ -21,8 +21,10 @@ function Login() {
   const [password, setPassword] = useState("");
   // const [login, setLogin] = useState(false);
   const [userType] = useState(["applicants", "admins", "employees"]);
+  const [userTitle, setUserTitle] = useState(["Applicant", "Admin", "Employee"]);
+  const [error, setError] = useState("");
 
-  const [userTypeIndex, setUserTypeIndex] = useState(0);
+  const [userTypeIndex, setUserTypeIndex] = useState(2);
   console.log(userTypeIndex);
 
   const handleSubmit = (e) => {
@@ -40,6 +42,7 @@ function Login() {
       })
       .catch((err) => {
         console.log(err);
+        console.log(err.response.data.message);
       });
   };
 
@@ -59,7 +62,7 @@ function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign in as {userTitle[userTypeIndex]}
           </Typography>
           <Box
             component="form"
