@@ -1,10 +1,12 @@
 import express from 'express'; // import express
+// import authenicate middleware
+import { AuthToken } from '../middleware/Auth.js';
 
 import { getEmployees, createEmployee, getEmployeeByID, updateEmployee, deleteEmployee, loginEmployee, registerEmployee} from '../controllers/employee.js'; // import the getEmployees and createEmployee functions from the employee controller
 
 const router = express.Router(); // create a router
 
-router.get('/', getEmployees);
+router.get('/', AuthToken, getEmployees);
 
 router.get('/:id', getEmployeeByID);
 

@@ -83,7 +83,7 @@ export const loginEmployee = async (req, res) => {
         if(!employee) return res.status(404).json({ message: "Employee doesn't exist" });
         const isPasswordCorrect = await bcrypt.compare(password, employee.password);
         if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
-        const token = jwt.sign({ user: employee.username, id: employee._id }, process.env.JWT_SECRET);
+        const token = jwt.sign({ user: employee.username, id: employee._id, type:"employee" }, process.env.JWT_SECRET);
         console.log(employee);
         res.status(200).json({ result: employee, token });
     }
