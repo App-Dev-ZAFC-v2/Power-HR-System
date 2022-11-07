@@ -4,9 +4,14 @@ import Login from "./Pages/Authentication/Login/Login";
 import ApplicantRegister from "./Pages/Applicant/Register";
 import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
+<<<<<<< Updated upstream
 // import './App.css';
 import AdminDashboard from './Pages/Admin/Dashboard';
 import ManageEmployee from './Pages/Admin/ManageEmployee';
+=======
+import AdminDashboard from "./Pages/Admin/Dashboard";
+import ManageEmployee from "./Pages/Admin/ManageEmployee";
+>>>>>>> Stashed changes
 
 function App() {
   return (
@@ -15,7 +20,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<ApplicantRegister />} />
         <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
-        <Route path="/executive/dashboard" element={<EmployeeDashboard />} />
+        <Route path="/executive/dashboard" element={<ExecutiveDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
       </Routes>
