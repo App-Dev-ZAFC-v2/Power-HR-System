@@ -4,8 +4,9 @@ import Login from "./Pages/Authentication/Login/Login";
 import ApplicantRegister from "./Pages/Applicant/Register";
 import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
-import AdminDashboard from "./Pages/Admin/Dashboard";
-import ManageEmployee from "./Pages/Admin/ManageEmployee";
+// import './App.css';
+import AdminDashboard from './Pages/Admin/Dashboard';
+import ManageEmployee from './Pages/Admin/ManageEmployee';
 
 function App() {
   return (

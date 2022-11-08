@@ -14,8 +14,19 @@ import MenuItem from '@mui/material/MenuItem';
 import Link from '@mui/material/Link';
 import Logo from "../Assets/Logo.png";
 
-const pages = ['NAV1', 'NAV2'];
 const settings = [{link:'/profile', name:'Profile'}, {link:'/login', name:'Logout'}];
+
+function getPages(){
+  const type = 1;
+  switch(type){
+      case 0://Applicant
+        return [{link:'/nav1', name:'NAV1'}, {link:'/nav2', name:'NAV2'}];
+      case 1:
+        return [{link:'/nav3', name:'NAV3'}, {link:'/nav4', name:'NAV4'}];
+      case 2:
+        return [{link:'/nav5', name:'NAV5'}, {link:'/nav6', name:'NAV6'}];
+  }
+}
 
 function ResponsiveAppBar() {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -95,10 +106,10 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+              {getPages().map((page) => (
+                <Link href={page.link} underline="none"><MenuItem key={page.name} onClick={handleCloseNavMenu}>
+                  <Typography textAlign="center">{page.name}</Typography>
+                </MenuItem></Link>
               ))}
             </Menu>
           </Box>
@@ -129,14 +140,14 @@ function ResponsiveAppBar() {
             PowerHR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
+            {getPages().map((page) => (
+              <Link href={page.link} underline="none"><Button
+                key={page.name}
                 onClick={handleCloseNavMenu}
                 sx={{ my: 2, color: 'white', display: 'block' }}
               >
-                {page}
-              </Button>
+                {page.name}
+              </Button></Link>
             ))}
           </Box>
 
@@ -162,7 +173,7 @@ function ResponsiveAppBar() {
               open={Boolean(anchorElUser)}
               onClose={handleCloseUserMenu}
             >
-              {(settings).map((setting, index) => (
+              {(settings).map((setting) => (
                 <Link href={setting.link} underline="none"><MenuItem key={setting.name} onClick={handleCloseUserMenu}>
                   <Typography textAlign="center">{setting.name}</Typography>
                 </MenuItem></Link>
