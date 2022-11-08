@@ -43,7 +43,7 @@ function ApplicantRegister() {
     //   applicantContact
     // };
     axios
-      .post(`http://localhost:5000/register`, user)
+      .post(`http://localhost:5000/applicants/register`, user)
       .then((res) => {
         console.log(res);
         setSuccess(true);
