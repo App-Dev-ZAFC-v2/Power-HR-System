@@ -19,27 +19,13 @@ const theme = createTheme();
 function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
-  const [login, setLogin] = useState(false);
+  // const [login, setLogin] = useState(false);
+  const [userArr] = useState(["applicant", "admin", "employee", "executive"]);
+  const [userTitle, setUserTitle] = useState(["Applicant", "Admin", "Employee"]);
+  const [error, setError] = useState("");
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   const configuration = {
-  //     method: "post",
-  //     url: "http://localhost:5000/employees/login",
-  //     data: {
-  //       username,
-  //       password,
-  //     },
-  //   };
-  //   axios(configuration)
-  //     .then((response) => {
-  //       console.log(response);
-  //       localStorage.setItem("authToken", response.data.token);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //     });
-  // };
+  const [userTypeIndex, setUserTypeIndex] = useState(2);
+  console.log(userTypeIndex);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -48,24 +34,26 @@ function Login() {
       password,
     };
     axios
-      .post(`http://localhost:5000/admins/login`, loginData)
+      .post(`http://localhost:5000/login`, loginData)
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);
-        window.location = "/admin/dashboard";
+        // get the user type from the token
+        const userType = res.data.token.split(".")[1];
+        const decodedUserType = atob(userType);
+        const userTypeIndex = JSON.parse(decodedUserType).userType;
+        // go to the user's page
+        window.location.href = `/${userArr[userTypeIndex]}/dashboard`;
       })
       .catch((err) => {
         console.log(err);
+        setError(err.response.data.message);
       });
   };
 
   return (
     <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-        style={{ backgroundColour: "darkgray" }}
-      >
+      <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
           sx={{
@@ -86,7 +74,6 @@ function Login() {
             noValidate
             sx={{ mt: 1 }}
             onSubmit={(e) => handleSubmit(e)}
-            style={{ backgroundColour: "darkgray" }}
           >
             <TextField
               margin="normal"
@@ -126,6 +113,16 @@ function Login() {
               Sign In
             </Button>
           </Box>
+{/*           
+          <Button variant="contained" onClick={() => setUserTypeIndex(0)}>
+            Applicant
+          </Button>
+          <Button variant="contained" onClick={() => setUserTypeIndex(1)}>
+            Admin
+          </Button>
+          <Button variant="contained" onClick={() => setUserTypeIndex(2)}>
+            Employee
+          </Button> */}
         </Box>
       </Container>
     </ThemeProvider>

@@ -2,14 +2,9 @@ import mongoose from "mongoose";
 // import userSchema from "./user.js";
 
 const applicantSchema = mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
-    },
-    password: {
-        type: String,
-        required: true,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
     applicantStatus:{
         type: String,
