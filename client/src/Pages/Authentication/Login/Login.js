@@ -124,6 +124,13 @@ function Login() {
             Employee
           </Button> */}
         </Box>
+        {/* link to register if they dont have an account */}
+        <Box sx={{ mt: 8 }}>
+          <Typography variant="body2" color="text.secondary" align="center">
+            {"Don't have an account? "}
+            <a href="/register">Register</a>
+          </Typography>
+        </Box>
       </Container>
     </ThemeProvider>
   );

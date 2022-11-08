@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import Navbar from '../../Components/Navbar';
 import { Button } from 'react-bootstrap';
 
 function AdminDashboard() {
@@ -11,6 +12,7 @@ function AdminDashboard() {
 
     return (
         <>
+        <Navbar/>
         <div>admin dashboard</div>
         <div>username: {username}</div>
         <Button variant="primary" onClick={() => window.location = '/admin/manage-employee'}>Manage Employee</Button>
