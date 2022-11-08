@@ -47,6 +47,8 @@ function ApplicantRegister() {
       .then((res) => {
         console.log(res);
         setSuccess(true);
+        // go to login page
+        window.location.href = '/login';
       })
       .catch((err) => {
         console.log(err);
