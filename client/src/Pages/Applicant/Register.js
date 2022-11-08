@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
@@ -14,15 +14,46 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import axios from 'axios';
-import { useRef, useState, useEffect} from 'react';
 
 // import '../../styles/Register.css';
 
 function ApplicantRegister() {
   const theme = createTheme();
 
-  const [username, setUsername] = React.useState('');
-  const [password, setPassword] = React.useState('');
+  const [user, setUser] = useState({
+    applicantName: '',
+    username: '',
+    applicantEmail: '',
+    password: '',
+    confirmPassword: '',
+    applicantContact: '',
+  });
+
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // const registerData = {
+    //   username,
+    //   password,
+    //   confirmPassword,
+    //   applicantName,
+    //   applicantEmail,
+    //   applicantContact
+    // };
+    axios
+      .post(`http://localhost:5000/register`, user)
+      .then((res) => {
+        console.log(res);
+        setSuccess(true);
+      })
+      .catch((err) => {
+        console.log(err);
+        setError(err.response.data.message);
+      });
+  };
+
   
   return (
     <ThemeProvider theme={theme}>
@@ -46,16 +77,18 @@ function ApplicantRegister() {
         <Typography component="h1" variant="h5">
           Let's get started!
         </Typography>
-        <Box component="form" noValidate onSubmit="#" sx={{ mt: 3, }}>
+        <Box component="form" noValidate onSubmit={(e) => handleSubmit(e)} sx={{ mt: 3, }}>
           <Grid container spacing={2}>
           <Grid item xs={12}>
               <TextField
                 autoComplete="fname"
-                name="fullname"
+                name="applicantName"
                 required
                 fullWidth
-                id="fullname"
+                id="applicantName"
                 label="Full Name"
+                value={user.applicantName}
+                onChange={(e) => setUser({ ...user, applicantName: e.target.value })}
                 autoFocus
               />
             </Grid>
@@ -67,6 +100,8 @@ function ApplicantRegister() {
                 fullWidth
                 id="username"
                 label="Username"
+                value={user.username}
+                onChange={(e) => setUser({ ...user, username: e.target.value })}
                 autoFocus
               />
             </Grid>
@@ -74,10 +109,12 @@ function ApplicantRegister() {
               <TextField
                 required
                 fullWidth
-                id="email"
+                id="applicantEmail"
                 label="Email Address"
-                name="email"
-                autoComplete="email"
+                name="applicantEmail"
+                autoComplete="applicantEmail"
+                value={user.applicantEmail}
+                onChange={(e) => setUser({ ...user, applicantEmail: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
@@ -88,28 +125,34 @@ function ApplicantRegister() {
                 label="Password"
                 type="password"
                 id="password"
-                autoComplete="new-password"
+                autoComplete="password"
+                value={user.password}
+                onChange={(e) => setUser({ ...user, password: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                name="confirm-password"
+                name="confirmPassword"
                 label="Confirm Password"
                 type="password"
-                id="password"
-                autoComplete="confirm-password"
+                id="confirmPassword"
+                autoComplete="confirmPassword"
+                value={user.confirmPassword}
+                onChange={(e) => setUser({ ...user, confirmPassword: e.target.value })}
               />
             </Grid>
             <Grid item xs={12}>
               <TextField
                 required
                 fullWidth
-                id="contact"
+                id="applicantContact"
                 label="Contact Number"
-                name="contact"
-                autoComplete="contact"
+                name="applicantContact"
+                autoComplete="applicantContact"
+                value={user.applicantContact}
+                onChange={(e) => setUser({ ...user, applicantContact: e.target.value })}
               />
             </Grid>
             {/* <Grid item xs={12}>
@@ -130,6 +173,7 @@ function ApplicantRegister() {
             fullWidth
             variant="contained"
             sx={{ mt: 3, mb: 2 }}
+            onClick={(e) => handleSubmit(e)}
           >
             Register
           </Button>

@@ -20,7 +20,7 @@ function Login() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   // const [login, setLogin] = useState(false);
-  const [userType] = useState(["applicants", "admins", "employees"]);
+  const [userArr] = useState(["applicant", "admin", "employee", "executive"]);
   const [userTitle, setUserTitle] = useState(["Applicant", "Admin", "Employee"]);
   const [error, setError] = useState("");
 
@@ -38,10 +38,12 @@ function Login() {
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);
-        userTypeIndex === 0 ? window.location="/applicant/dashboard" :
-        userTypeIndex === 1 ? window.location="/admin/dashboard":
-        userTypeIndex === 2 ? window.location="/employee/dashboard" : window.location="/";
-        // window.location = "/admin/dashboard";
+        // get the user type from the token
+        const userType = res.data.token.split(".")[1];
+        const decodedUserType = atob(userType);
+        const userTypeIndex = JSON.parse(decodedUserType).userType;
+        // go to the user's page
+        window.location.href = `/${userArr[userTypeIndex]}/dashboard`;
       })
       .catch((err) => {
         console.log(err);
@@ -65,7 +67,7 @@ function Login() {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in as {userTitle[userTypeIndex]}
+            Sign in
           </Typography>
           <Box
             component="form"
@@ -111,6 +113,7 @@ function Login() {
               Sign In
             </Button>
           </Box>
+{/*           
           <Button variant="contained" onClick={() => setUserTypeIndex(0)}>
             Applicant
           </Button>
@@ -119,7 +122,7 @@ function Login() {
           </Button>
           <Button variant="contained" onClick={() => setUserTypeIndex(2)}>
             Employee
-          </Button>
+          </Button> */}
         </Box>
       </Container>
     </ThemeProvider>
