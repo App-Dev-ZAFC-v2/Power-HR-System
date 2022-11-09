@@ -1,22 +1,18 @@
 import * as React from 'react';
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
-import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
-import { positions } from '@mui/system';
 import photo from "../Assets/default.png";
 import { Grid } from '@mui/material';
-import { width } from '@mui/system';
 import bg from '../Assets/BackgroundProfile/Cloudy.png'
 
 export default function ProfileCard() {
   return (
-    <Card sx={{ maxWidth: 345 }}>
+    <Card variant="outlined" sx={{borderRadius: 3, maxHeight:400}}>
       <CardMedia
         component="img"
-        height="150"
+        height="200"
         image={bg}
       />
       <Grid container
@@ -28,12 +24,12 @@ export default function ProfileCard() {
         <CardMedia
             component="img"
             image={photo}
-            sx={{borderRadius: '50%', width:120 , height:120, border:5, borderColor: "white", mt:-8} }
+            sx={{borderRadius: '50%', width:150 , height:150, border:5, borderColor: "white", mt:-10} }
             />
         </Grid></Grid>
       
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h5" component="div" textAlign="center">
           Muhammad Aniq Aqil
         </Typography>
         <Typography variant="body2" color="text.secondary">
