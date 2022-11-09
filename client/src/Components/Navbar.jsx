@@ -49,7 +49,7 @@ function ResponsiveAppBar() {
 
   return (
     <AppBar position="static" sx={{backgroundColor:'#121212'}}>
-      <Container maxWidth="xl">
+      <Container maxWidth="lg">
         <Toolbar disableGutters>
           <Box
             component="img"
@@ -139,12 +139,12 @@ function ResponsiveAppBar() {
           >
             PowerHR
           </Typography>
-          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
+          <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex',} }}>
             {getPages().map((page) => (
               <Link href={page.link} underline="none"><Button
                 key={page.name}
                 onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'white', display: 'block', background: "#121212", '&:hover': {background: "#f00"} }}
               >
                 {page.name}
               </Button></Link>
