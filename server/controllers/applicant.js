@@ -73,9 +73,9 @@ export const deleteApplicant = async (req, res) => {
 
 //register for applicant
 export const registerApplicant = async (req, res) => {
-    const { username, password, confirmPassword, applicantName, applicantEmail, applicantContact} = req.body;
+    const { username, password, confirmPassword, name, email, contact} = req.body;
     try{
-        const applicant = await Applicant.findOne({ applicantEmail });
+        const applicant = await Applicant.findOne({ email });
         if(applicant) return res.status(400).json({ message: "Email already exists" });
         const user = await User.findOne({ username });
         if(user) return res.status(400).json({ message: "Username already exists" });
@@ -83,7 +83,7 @@ export const registerApplicant = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 12);
         const newUser = new User({ username, password: hashedPassword, userType: 0 });
         await newUser.save();
-        const result = await Applicant.create({ user: newUser._id, applicantName, applicantEmail, applicantContact });
+        const result = await Applicant.create({ user: newUser._id, name, email, contact });
         // const token = jwt.sign({ username: result.username, id: result._id }, { expiresIn: "1h" });
         res.status(200).json({ result });
     }
