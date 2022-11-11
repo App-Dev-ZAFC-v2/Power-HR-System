@@ -12,16 +12,17 @@ export default function ProfileCard() {
 
     const [user, setUser] = useState([]);
     const token = localStorage.getItem('authToken');
+    
+    // FIND BETTER WAY TO DO THIS
     const userType = JSON.parse(atob(token.split('.')[1])).userType;
-    const userId = JSON.parse(atob(token.split('.')[1])).UserId;
+    // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
+    const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
 
     useEffect(() => {
-        userType === 0 ? axios.get(`http://localhost:5000/applicants/${userId}`, {headers: {Authorization: `Bearer ${token}`}}) :
-        userType === 1 ? axios.get(`http://localhost:5000/admins/${userId}`, {headers: {Authorization: `Bearer ${token}`}}) :
-        axios.get(`http://localhost:5000/employees/${userId}`, {headers: {Authorization: `Bearer ${token}`}})
+      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}/`) :
+        axios.get(`http://localhost:5000/employees/${detailId}/`))
         .then(res => {
             setUser(res.data);
-            console.log(res.data);
         })
         .catch(err => {
             console.log(err);
@@ -51,10 +52,10 @@ export default function ProfileCard() {
       
       <CardContent>
         <Typography gutterBottom variant="h5" component="div" textAlign="center">
-          Muhammad Aniq Aqil
+          {user?.name}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-            Number: 
+            Number: {user?.contact}
         </Typography>
         <Typography variant="body2" color="text.secondary">
             Address: 
