@@ -27,7 +27,7 @@ export default function ProfileCard() {
         .catch(err => {
             console.log(err);
         })
-    }, [])
+    })
 
 
   return (
@@ -54,14 +54,14 @@ export default function ProfileCard() {
         <Typography gutterBottom variant="h5" component="div" textAlign="center">
           {user?.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Number: {user?.contact}
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+          {user?.contact}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Address: 
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+            {user?.email}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Code: 
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+            {user?.position}
         </Typography>
       </CardContent>
     </Card>

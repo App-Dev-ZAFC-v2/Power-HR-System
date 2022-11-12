@@ -3,8 +3,19 @@ import Navbar from '../../Components/Navbar';
 import ProfileCard from '../../Components/ProfileCard';
 import Welcome from '../../Components/Welcome';
 import Container from '@mui/material/Container';
+import Paper from '@mui/material/Paper';
+import { styled } from '@mui/material/styles';
+import {Box, Button, Grid} from '@mui/material'
+import feedback from '../../Assets/feedback.png'
 
-import {Grid} from '@mui/material'
+const Item = styled(Paper)(({ theme }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'white',
+    ...theme.typography.h4,
+    padding: theme.spacing(5),
+    textAlign: 'center',
+    color: theme.palette.text.secondary,
+    borderRadius: 10,
+  }));
 
 function EmployeeDashboard() {
     return (
@@ -16,6 +27,10 @@ function EmployeeDashboard() {
             </Grid>
             <Grid item xs>
                 <Welcome/>
+                <Item variant='outlined'>
+                    <Box component="img" sx={{height: 200}} src={feedback}/>
+                    <Box variant="outlined" height={50}><Button variant="contained">Feedback survey</Button></Box>
+                </Item>
             </Grid>
         </Grid>
 
