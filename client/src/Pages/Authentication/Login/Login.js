@@ -99,7 +99,7 @@ function Login() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            boxShadow: 8,
+            boxShadow: 10,
             borderRadius: 3,
             padding: 4,
           }}
@@ -188,7 +188,7 @@ function Login() {
           )}
         </Box>
         {/* link to register if they dont have an account */}
-        <Box sx={{ mt: 8 }}>
+        <Box sx={{ mt: 4 }}>
           <Typography variant="body2" color="text.secondary" align="center">
             {"Don't have an account? "}
             <a href="/register">Register</a>
