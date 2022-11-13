@@ -10,9 +10,9 @@ const applicantSchema = mongoose.Schema({
         type: String,
         default: "Active" // Accepted, Rejected, Active, Inactive, Pending
     },
-    applicantName: String,
-    applicantEmail: String,
-    applicantContact: String,
+    name: String,
+    email: String,
+    contact: String,
      
 });
 

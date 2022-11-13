@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -16,15 +17,37 @@ import Logo from "../Assets/Logo.png";
 
 const settings = [{link:'/profile', name:'Profile'}, {link:'/login', name:'Logout'}];
 
-function getPages(){
-  const type = 1;
-  switch(type){
+function GetPages(){
+  const [user, setUser] = useState([]);
+  const token = localStorage.getItem('authToken');
+  
+  // FIND BETTER WAY TO DO THIS
+  const userType = JSON.parse(atob(token.split('.')[1])).userType;
+  const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
+
+  useEffect(() => {
+    (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}/`) :
+      axios.get(`http://localhost:5000/employees/${detailId}/`))
+      .then(res => {
+          setUser(res.data);
+      })
+      .catch(err => {
+          console.log(err);
+      })
+  })
+
+
+  switch(userType){
       case 0://Applicant
-        return [{link:'/nav1', name:'NAV1'}, {link:'/nav2', name:'NAV2'}];
-      case 1:
-        return [{link:'/nav3', name:'NAV3'}, {link:'/nav4', name:'NAV4'}];
-      case 2:
-        return [{link:'/nav5', name:'NAV5'}, {link:'/nav6', name:'NAV6'}];
+        return [{link:'/nav1', name:'STATUS'}];
+      case 2://Employee & executive
+        if(user.executiveRole === true){
+          return [{link:'/nav5', name:'ANALYZE'}, {link:'/nav6', name:'FEEDBACK REVIEW'}]
+        }
+        else
+          return [{link:'/feedback', name:'FEEDBACK'}];
+      default:
+        return;
   }
 }
 
@@ -106,7 +129,7 @@ function ResponsiveAppBar() {
                 display: { xs: 'block', md: 'none' },
               }}
             >
-              {getPages().map((page) => (
+              {GetPages().map((page) => (
                 <Link href={page.link} underline="none"><MenuItem key={page.name} onClick={handleCloseNavMenu}>
                   <Typography textAlign="center">{page.name}</Typography>
                 </MenuItem></Link>
@@ -140,7 +163,7 @@ function ResponsiveAppBar() {
             PowerHR
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex',} }}>
-            {getPages().map((page) => (
+            {GetPages().map((page) => (
               <Link href={page.link} underline="none"><Button
                 key={page.name}
                 onClick={handleCloseNavMenu}

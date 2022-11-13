@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 
 function AdminDashboard() {
     const [users, setUsers] = useState([]);
+    // const [tok, setTok] = useState(localStorage.getItem('authToken'));
 
     // take the token from local storage
     const token = localStorage.getItem('authToken');

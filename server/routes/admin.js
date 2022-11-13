@@ -16,6 +16,6 @@ router.patch('/:id', AuthAdmin, updateAdmin);
 
 router.delete('/:id', AuthAdmin, deleteAdmin);
 
-router.post('/register', AuthAdmin, registerAdmin);
+router.post('/register', registerAdmin);
 
 export default router; // export the router
