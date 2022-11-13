@@ -1,3 +1,4 @@
+
 import React, { useState} from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
@@ -22,21 +23,22 @@ import axios from 'axios';
 const PWD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
 const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+
 function ApplicantRegister() {
 
   const theme = createTheme();
   
   const [user, setUser] = useState({
-    applicantName: '',
-    username: '',
-    applicantEmail: '',
-    password: '',
-    confirmPassword: '',
-    applicantContact: '',
+    applicantName: "",
+    username: "",
+    applicantEmail: "",
+    password: "",
+    confirmPassword: "",
+    applicantContact: "",
   });
   
   const [success, setSuccess] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   //validate inputs
   const validate = () =>{
@@ -63,7 +65,7 @@ function ApplicantRegister() {
         console.log(res);
         setSuccess(true);
         // go to login page
-        window.location.href = '/login';
+        window.location.href = "/login";
       })
       .catch((err) => {
         // console.log(err);
@@ -72,7 +74,6 @@ function ApplicantRegister() {
       });
   };
 
-  
   return (
     <ThemeProvider theme={theme}>
     <Container component="main" maxWidth="xs">
@@ -191,29 +192,29 @@ function ApplicantRegister() {
                 label="By creating account, you agree to our Terms of Service and Privacy Policy."
               />
             </Grid> */}
-          </Grid>
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            sx={{ mt: 3, mb: 2 }}
-            onClick={(e) => handleSubmit(e)}
-          >
-            Register
-          </Button>
-          <Grid container justifyContent="center">
-            <Grid item>
-              <Link href="../../login" variant="body2">
-                Already have an account? Sign in
-              </Link>
             </Grid>
-          </Grid>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              onClick={(e) => handleSubmit(e)}
+            >
+              Register
+            </Button>
+            <Grid container justifyContent="center">
+              <Grid item>
+                <Link href="../../login" variant="body2">
+                  Already have an account? Sign in
+                </Link>
+              </Grid>
+            </Grid>
+          </Box>
         </Box>
-      </Box>
-      {/* <Copyright sx={{ mt: 5 }} /> */}
-    </Container>
-  </ThemeProvider>
+        {/* <Copyright sx={{ mt: 5 }} /> */}
+      </Container>
+    </ThemeProvider>
   );
-};
+}
 
 export default ApplicantRegister;
