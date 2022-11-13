@@ -1,4 +1,5 @@
-import * as React from 'react';
+import React, {useState, useEffect} from 'react';
+import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -8,6 +9,27 @@ import { Grid } from '@mui/material';
 import bg from '../Assets/BackgroundProfile/Cloudy.png'
 
 export default function ProfileCard() {
+
+    const [user, setUser] = useState([]);
+    const token = localStorage.getItem('authToken');
+    
+    // FIND BETTER WAY TO DO THIS
+    const userType = JSON.parse(atob(token.split('.')[1])).userType;
+    // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
+    const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
+
+    useEffect(() => {
+      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}/`) :
+        axios.get(`http://localhost:5000/employees/${detailId}/`))
+        .then(res => {
+            setUser(res.data);
+        })
+        .catch(err => {
+            console.log(err);
+        })
+    })
+
+
   return (
     <Card variant="outlined" sx={{borderRadius: 3, maxHeight:400}}>
       <CardMedia
@@ -30,16 +52,16 @@ export default function ProfileCard() {
       
       <CardContent>
         <Typography gutterBottom variant="h5" component="div" textAlign="center">
-          Muhammad Aniq Aqil
+          {user?.name}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Number: 
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+          {user?.contact}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Address: 
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+            {user?.email}
         </Typography>
-        <Typography variant="body2" color="text.secondary">
-            Code: 
+        <Typography variant="body2" color="text.secondary" textAlign="center">
+            {user?.position}
         </Typography>
       </CardContent>
     </Card>

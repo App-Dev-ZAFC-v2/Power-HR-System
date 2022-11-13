@@ -5,10 +5,10 @@ const employeeSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    employeeName: String,
-    employeeEmail: String,
-    employeeContact: String,
-    employeePosition: String,
+    name: String,
+    email: String,
+    contact: String,
+    position: String,
     // employeeRole differentiate between executive and employee
     executiveRole: Boolean,
 });
