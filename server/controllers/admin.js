@@ -1,8 +1,6 @@
 import Admin from '../models/admin.js';
 import mongoose from 'mongoose';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import User from '../models/user.js';
+import { registerUser } from './user.js';
 
 export const getAdmins = async (req, res) => {
     try{
@@ -54,34 +52,15 @@ export const deleteAdmin = async (req, res) => {
     await Admin.findByIdAndRemove(id);
     res.json({ message: "Admin deleted successfully." });
 }
-
-//login for admin
-// export const loginAdmin = async (req, res) => {
-//     const {username, password } = req.body;
-//     try{
-//         const admin = await Admin.findOne({ username });
-//         if(!admin) return res.status(404).send("Admin doesn't exist");
-//         const isPasswordCorrect = await bcrypt.compare(password, admin.password);
-//         if(!isPasswordCorrect) return res.status(400).send("Invalid credentials");
-//         const token = jwt.sign({ username: admin.username, id: admin._id }, 'test', { expiresIn: "1h" });
-//         res.status(200).json({ result: admin, token });
-//     }
-//     catch(error){
-//         res.status(500).json({ message: "Something went wrong" });
-//     }
-// }
-
 //register for admin
 export const registerAdmin = async (req, res) => {
     const { username, password } = req.body;
     try{
-        const user = await User.findOne({ username });
-        if(user) return res.status(400).send("Username already exists");
-        const hashedPassword = await bcrypt.hash(password, 12);
-        const newUser = new User({ username, password: hashedPassword, userType: 1 });
-        await newUser.save();
+        const newUser = await registerUser(username, password, password, 1, res);
+        if (newUser == null) {
+            return;
+        }
         const result = await Admin.create({ user: newUser._id });
-        // const token = jwt.sign({ username: result.username, id: result._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result });
     }
     catch(error){
