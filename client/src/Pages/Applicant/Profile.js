@@ -63,22 +63,18 @@ function Profile() {
                 <TextField
                   id="outlined-read-only-input"
                   label="Name"
-                  // ternary to check if user exist
                   defaultValue={user.name}
-                  // value={user?.name}
                   margin="normal"
                   InputProps={{
                     readOnly: false,
                   }}
                 />
               </Box>
-              {user.name}
               <Box>
                 <TextField
                   id="outlined-flexible-read-only-input"
                   label="Email"
-                  // defaultValue={`${user.email}`}
-                  // value={user?.email}
+                  defaultValue={user?.email}
                   margin="normal"
                   InputProps={{
                     readOnly: true,
@@ -92,7 +88,7 @@ function Profile() {
                 <TextField
                   id="outlined-read-only-input"
                   label="Contact Number"
-                  defaultValue="Hello World"
+                  defaultValue={user?.contact}
                   margin="normal"
                   InputProps={{
                     readOnly: true,
