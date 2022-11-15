@@ -73,7 +73,7 @@ function Profile() {
                       defaultValue={user.name}
                       margin="normal"
                       InputProps={{
-                        readOnly: false,
+                        readOnly: fill,
                       }}
                     />
                   </Box>
@@ -84,7 +84,7 @@ function Profile() {
                       defaultValue={user?.email}
                       margin="normal"
                       InputProps={{
-                        readOnly: true,
+                        readOnly: fill,
                       }}
                       onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
@@ -98,7 +98,7 @@ function Profile() {
                       defaultValue={user?.contact}
                       margin="normal"
                       InputProps={{
-                        readOnly: true,
+                        readOnly: fill,
                       }}
                     />
                   </Box>
@@ -109,7 +109,7 @@ function Profile() {
                       defaultValue={user?.position}
                       margin="normal"
                       InputProps={{
-                        readOnly: true,
+                        readOnly: fill,
                       }}
                     />
                   </Box>
