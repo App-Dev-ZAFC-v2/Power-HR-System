@@ -9,8 +9,9 @@ import {
   CardContent,
   Button,
   TextField,
+  FormHelperText,
 } from "@mui/material";
-import ProfileCard from "../../Components/ProfileCard";
+
 import axios from "axios";
 
 function Profile() {
@@ -19,6 +20,16 @@ function Profile() {
   const token = localStorage.getItem("authToken");
   const [isLoading, setIsLoading] = useState(true);
   const [isRead, setIsRead] = useState(true);
+
+  const [error, setError] = useState({
+    fetchError: false,
+    fetchErrorMsg: "",
+  });
+
+  const [success, setSuccess] = useState({
+    fetchSuccess: false,
+    fetchSuccessMsg: "",
+  });
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
@@ -47,17 +58,25 @@ function Profile() {
       .put(`http://localhost:5000/applicants/${detailId}/`, user, {
         headers: {
           Authorization: `Bearer ${token}`,
-        }
+        },
       })
       .then((res) => {
         console.log(res);
         setIsRead(true);
+        return setSuccess({
+          ...success,
+          fetchSuccess: true,
+          fetchSuccessMsg: "Profile updated successfully",
+        });
       })
       .catch((err) => {
-        console.log(err);
+        return setError({
+          ...error,
+          fetchError: true,
+          fetchErrorMsg: err.response.data.message,
+        });
       });
   };
-
 
   return (
     <Grid container spacing={2}>
@@ -68,18 +87,22 @@ function Profile() {
         "Loading..."
       ) : (
         <>
-          <Grid item xs={12} md={12} mx={10}>
-            <Box>
-              <ProfileCard />
-            </Box>
-          </Grid>
-          <Grid item xs={12} md={12} mx={10}>
-            <Card sx={{ minWidth: 275 }} boxShadow={8}>
+          <Grid
+            container
+            mt={5}
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Card
+              sx={{ minWidth: 300, boxShadow: 8, borderRadius: 3, padding: 4 }}
+            >
               <CardContent>
                 <Typography variant="h5" component="div" mt={3}>
                   User Profile
                 </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={5}>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={3}>
                   <Box>
                     <TextField
                       id="outlined-read-only-input"
@@ -122,37 +145,63 @@ function Profile() {
                       }}
                     />
                   </Box>
-                  {
-                    user.position &&
-                  <Box>
-                    <TextField
-                      id="outlined-read-only-input"
-                      label="Position"
-                      defaultValue={user?.position}
-                      margin="normal"
-                      InputProps={{
-                        readOnly: isRead,
-                      }}
-                    />
-                  </Box>
-                  }
+                  {user.position && (
+                    <Box>
+                      <TextField
+                        id="outlined-read-only-input"
+                        label="Position"
+                        defaultValue={user?.position}
+                        margin="normal"
+                        InputProps={{
+                          readOnly: isRead,
+                        }}
+                      />
+                    </Box>
+                  )}
                 </Typography>
               </CardContent>
               <CardActions>
-                {isRead ? 
-                <Button size="small" onClick={()=>setIsRead(false)}>
-                  Update Profile
-                </Button>
-                :
-                <>
-                <Button size="small" variant="danger" onClick={()=>setIsRead(true)}>
-                  Cancel
-                </Button>
-                <Button size="small" variant="success" onClick={handleSubmit}>
-                  Submit Update
-                </Button>
-                </>
-                }
+                {isRead ? (
+                  <Button
+                    size="small"
+                    variant="contained"
+                    sx={{
+                      backgroundColor: "blue",
+                    }}
+                    onClick={() => setIsRead(false)}
+                  >
+                    Update Profile
+                  </Button>
+                ) : (
+                  <>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="error"
+                      onClick={() => setIsRead(true)}
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      size="small"
+                      variant="contained"
+                      color="success"
+                      onClick={handleSubmit}
+                    >
+                      Submit Update
+                    </Button>
+                  </>
+                )}
+                {success.fetchSuccess && (
+                  <FormHelperText error contained variant="filled">
+                    {success.fetchSuccessMsg}
+                  </FormHelperText>
+                )}
+                {error.fetchError && (
+                  <FormHelperText error contained variant="filled">
+                    {error.fetchErrorMsg}
+                  </FormHelperText>
+                )}
               </CardActions>
             </Card>
           </Grid>
