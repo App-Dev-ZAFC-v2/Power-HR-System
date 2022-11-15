@@ -76,7 +76,7 @@ function profile() {
                 <br />
                 Phone Number: {user?.contact}
                 <br />
-                Position:{user?.position}
+                {user?.position ? `Position: ${user?.position}` : ""}
               </Typography>
             </Typography>
           </CardContent>
