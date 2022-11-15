@@ -14,10 +14,11 @@ import ProfileCard from "../../Components/ProfileCard";
 import UpdateForm from "./components/updateform";
 import axios from "axios";
 
-function profile() {
+function Profile() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
+  const [isLoading, setIsLoading] = useState(true);
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
@@ -32,6 +33,7 @@ function profile() {
       .then((res) => {
         setUser(res.data);
         console.log(res.data);
+        setIsLoading(false);
       })
       .catch((err) => {
         console.log(err);
@@ -43,6 +45,8 @@ function profile() {
       <Grid item xs={12}>
         <Navbar />
       </Grid>
+      {isLoading ? "Loading..." :
+      <>
       <Grid item xs={12} md={12} mx={10}>
         <Box>
           <ProfileCard />
@@ -59,6 +63,7 @@ function profile() {
                 <TextField
                   id="outlined-read-only-input"
                   label="Name"
+                  // ternary to check if user exist
                   defaultValue={user.name}
                   // value={user?.name}
                   margin="normal"
@@ -67,6 +72,7 @@ function profile() {
                   }}
                 />
               </Box>
+              {user.name}
               <Box>
                 <TextField
                   id="outlined-flexible-read-only-input"
@@ -100,8 +106,10 @@ function profile() {
           </CardActions>
         </Card>
       </Grid>
+      </>
+      }
     </Grid>
   );
 }
 
-export default profile;
+export default Profile;
