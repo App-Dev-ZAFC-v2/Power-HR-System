@@ -39,7 +39,7 @@ function GetPages() {
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   switch (userType) {
     case 0: //Applicant

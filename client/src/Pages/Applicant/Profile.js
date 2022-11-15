@@ -8,26 +8,13 @@ import {
   CardActions,
   CardContent,
   Button,
-  Modal,
+  TextField,
 } from "@mui/material";
 import ProfileCard from "../../Components/ProfileCard";
 import UpdateForm from "./components/updateform";
 import axios from "axios";
 
-const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  transform: "translate(-50%, -50%)",
-  width: 600,
-  bgcolor: "background.paper",
-};
-
 function profile() {
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
   // eslint-disable-next-line react-hooks/rules-of-hooks
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
@@ -44,11 +31,12 @@ function profile() {
     )
       .then((res) => {
         setUser(res.data);
+        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
       });
-  });
+  }, []);
 
   return (
     <Grid container spacing={2}>
@@ -67,33 +55,48 @@ function profile() {
               User Profile
             </Typography>
             <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={5}>
-              <Typography variant="body">
-                Name: {user?.name}
-                <br />
-                Username: {user?.username}
-                <br />
-                Email:{user?.email}
-                <br />
-                Phone Number: {user?.contact}
-                <br />
-                {user?.position ? `Position: ${user?.position}` : ""}
-              </Typography>
+              <Box>
+                <TextField
+                  id="outlined-read-only-input"
+                  label="Name"
+                  defaultValue={user.name}
+                  // value={user?.name}
+                  margin="normal"
+                  InputProps={{
+                    readOnly: false,
+                  }}
+                />
+              </Box>
+              <Box>
+                <TextField
+                  id="outlined-flexible-read-only-input"
+                  label="Email"
+                  // defaultValue={`${user.email}`}
+                  // value={user?.email}
+                  margin="normal"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                  onChange={(e) => {
+                    setUser({ ...user, email: e.target.value });
+                  }}
+                />
+              </Box>
+              <Box>
+                <TextField
+                  id="outlined-read-only-input"
+                  label="Contact Number"
+                  defaultValue="Hello World"
+                  margin="normal"
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+              </Box>
             </Typography>
           </CardContent>
           <CardActions>
-            <Button size="small" onClick={handleOpen}>
-              Update Profile
-            </Button>
-            <Modal
-              open={open}
-              onClose={handleClose}
-              aria-labelledby="modal-modal-title"
-              aria-describedby="modal-modal-description"
-            >
-              <Box sx={style}>
-                <UpdateForm />
-              </Box>
-            </Modal>
+            <Button size="small">Update Profile</Button>
           </CardActions>
         </Card>
       </Grid>
