@@ -16,8 +16,8 @@ import Link from "@mui/material/Link";
 import Logo from "../Assets/Logo.png";
 
 const settings = [
-  { link: "/applicant/profile", name: "Profile" },
-  { link: "/login", name: "Logout" },
+  { link: "/profile", name: "Profile" },
+  { link: "/", name: "Logout" },
 ];
 
 function GetPages() {

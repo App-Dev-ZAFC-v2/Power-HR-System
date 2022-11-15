@@ -12,7 +12,7 @@ router.get('/:id', getApplicantByID);
 
 // router.post('/', createApplicant);
 
-router.patch('/:id', AuthApplicant, updateApplicant);
+router.put('/:id', AuthApplicant, updateApplicant);
 
 router.delete('/:id', AuthAdmin, deleteApplicant);
 

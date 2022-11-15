@@ -11,7 +11,6 @@ import {
   TextField,
 } from "@mui/material";
 import ProfileCard from "../../Components/ProfileCard";
-import UpdateForm from "./components/updateform";
 import axios from "axios";
 
 function Profile() {
@@ -19,17 +18,14 @@ function Profile() {
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
   const [isLoading, setIsLoading] = useState(true);
-  const [fill, setFill] = useState(true);
-
-  const handleSubmit = () => {
-    setFill((current) => !current);
-  };
+  const [isRead, setIsRead] = useState(true);
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
   // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
   const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
   // eslint-disable-next-line react-hooks/rules-of-hooks
+
   useEffect(() => {
     (userType === 0
       ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
@@ -44,6 +40,24 @@ function Profile() {
         console.log(err);
       });
   }, []);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    axios
+      .put(`http://localhost:5000/applicants/${detailId}/`, user, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      .then((res) => {
+        console.log(res);
+        setIsRead(true);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
 
   return (
     <Grid container spacing={2}>
@@ -70,10 +84,13 @@ function Profile() {
                     <TextField
                       id="outlined-read-only-input"
                       label="Name"
-                      defaultValue={user.name}
+                      defaultValue={user?.name}
                       margin="normal"
                       InputProps={{
-                        readOnly: fill,
+                        readOnly: isRead,
+                      }}
+                      onChange={(e) => {
+                        setUser({ ...user, name: e.target.value });
                       }}
                     />
                   </Box>
@@ -84,7 +101,7 @@ function Profile() {
                       defaultValue={user?.email}
                       margin="normal"
                       InputProps={{
-                        readOnly: fill,
+                        readOnly: isRead,
                       }}
                       onChange={(e) => {
                         setUser({ ...user, email: e.target.value });
@@ -98,10 +115,15 @@ function Profile() {
                       defaultValue={user?.contact}
                       margin="normal"
                       InputProps={{
-                        readOnly: fill,
+                        readOnly: isRead,
+                      }}
+                      onChange={(e) => {
+                        setUser({ ...user, contact: e.target.value });
                       }}
                     />
                   </Box>
+                  {
+                    user.position &&
                   <Box>
                     <TextField
                       id="outlined-read-only-input"
@@ -109,16 +131,28 @@ function Profile() {
                       defaultValue={user?.position}
                       margin="normal"
                       InputProps={{
-                        readOnly: fill,
+                        readOnly: isRead,
                       }}
                     />
                   </Box>
+                  }
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="small" onClick={handleSubmit}>
+                {isRead ? 
+                <Button size="small" onClick={()=>setIsRead(false)}>
                   Update Profile
                 </Button>
+                :
+                <>
+                <Button size="small" variant="danger" onClick={()=>setIsRead(true)}>
+                  Cancel
+                </Button>
+                <Button size="small" variant="success" onClick={handleSubmit}>
+                  Submit Update
+                </Button>
+                </>
+                }
               </CardActions>
             </Card>
           </Grid>

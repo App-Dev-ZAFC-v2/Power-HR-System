@@ -66,7 +66,7 @@ function ApplicantRegister() {
         setSuccess(true);
         window.alert("You have successfully registered!");
         // go to login page
-        window.location.href = "/login";
+        window.location.href = "/";
       })
       .catch((err) => {
         // console.log(err);
