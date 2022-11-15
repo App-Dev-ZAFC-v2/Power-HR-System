@@ -19,6 +19,11 @@ function Profile() {
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
   const [isLoading, setIsLoading] = useState(true);
+  const [fill, setFill] = useState(true);
+
+  const handleSubmit = () => {
+    setFill((current) => !current);
+  };
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
@@ -45,65 +50,80 @@ function Profile() {
       <Grid item xs={12}>
         <Navbar />
       </Grid>
-      {isLoading ? "Loading..." :
-      <>
-      <Grid item xs={12} md={12} mx={10}>
-        <Box>
-          <ProfileCard />
-        </Box>
-      </Grid>
-      <Grid item xs={12} md={12} mx={10}>
-        <Card sx={{ minWidth: 275 }} boxShadow={8}>
-          <CardContent>
-            <Typography variant="h5" component="div" mt={3}>
-              User Profile
-            </Typography>
-            <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={5}>
-              <Box>
-                <TextField
-                  id="outlined-read-only-input"
-                  label="Name"
-                  defaultValue={user.name}
-                  margin="normal"
-                  InputProps={{
-                    readOnly: false,
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id="outlined-flexible-read-only-input"
-                  label="Email"
-                  defaultValue={user?.email}
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                  onChange={(e) => {
-                    setUser({ ...user, email: e.target.value });
-                  }}
-                />
-              </Box>
-              <Box>
-                <TextField
-                  id="outlined-read-only-input"
-                  label="Contact Number"
-                  defaultValue={user?.contact}
-                  margin="normal"
-                  InputProps={{
-                    readOnly: true,
-                  }}
-                />
-              </Box>
-            </Typography>
-          </CardContent>
-          <CardActions>
-            <Button size="small">Update Profile</Button>
-          </CardActions>
-        </Card>
-      </Grid>
-      </>
-      }
+      {isLoading ? (
+        "Loading..."
+      ) : (
+        <>
+          <Grid item xs={12} md={12} mx={10}>
+            <Box>
+              <ProfileCard />
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={12} mx={10}>
+            <Card sx={{ minWidth: 275 }} boxShadow={8}>
+              <CardContent>
+                <Typography variant="h5" component="div" mt={3}>
+                  User Profile
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={5}>
+                  <Box>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="Name"
+                      defaultValue={user.name}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: false,
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      id="outlined-flexible-read-only-input"
+                      label="Email"
+                      defaultValue={user?.email}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                      onChange={(e) => {
+                        setUser({ ...user, email: e.target.value });
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="Contact Number"
+                      defaultValue={user?.contact}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Box>
+                  <Box>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="Position"
+                      defaultValue={user?.position}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: true,
+                      }}
+                    />
+                  </Box>
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="small" onClick={handleSubmit}>
+                  Update Profile
+                </Button>
+              </CardActions>
+            </Card>
+          </Grid>
+        </>
+      )}
     </Grid>
   );
 }
