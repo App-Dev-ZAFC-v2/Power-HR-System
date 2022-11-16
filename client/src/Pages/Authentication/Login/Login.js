@@ -76,7 +76,6 @@ function Login() {
         const userType = res.data.token.split(".")[1];
         const decodedUserType = atob(userType);
         const userTypeIndex = JSON.parse(decodedUserType).userType;
-        // go to the user's page
         window.location.href = `/${userArr[userTypeIndex]}/dashboard`;
       })
       .catch((err) => {

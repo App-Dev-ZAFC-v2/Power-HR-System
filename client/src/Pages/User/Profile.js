@@ -52,6 +52,10 @@ function Profile() {
       });
   }, []);
 
+  function refreshPage() {
+    window.location.reload();
+  }
+  
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -161,7 +165,8 @@ function Profile() {
                 </Typography>
               </CardContent>
               <CardActions>
-                {isRead ? (
+                {userType === 0 && (
+                isRead ? (
                   <Button
                     size="small"
                     variant="contained"
@@ -178,7 +183,7 @@ function Profile() {
                       size="small"
                       variant="contained"
                       color="error"
-                      onClick={() => setIsRead(true)}
+                      onClick={() => refreshPage()}
                     >
                       Cancel
                     </Button>
@@ -191,6 +196,7 @@ function Profile() {
                       Submit Update
                     </Button>
                   </>
+                )
                 )}
                 {success.fetchSuccess && (
                   <FormHelperText error contained variant="filled">

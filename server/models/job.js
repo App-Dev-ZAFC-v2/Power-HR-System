@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
-// import criteriaSchema from "./criteria";
+import criteriaSchema from "./criteria.js";
 
 const jobSchema = mongoose.Schema({
     jobName: String,
     jobDescription: String,
-    // criteria: criteriaSchema,
+    criteria: criteriaSchema,
 });
 
 const Job = mongoose.model("Job", jobSchema);

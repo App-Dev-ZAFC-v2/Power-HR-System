@@ -1,9 +1,9 @@
-import job from '../models/job.js';
+import Job from '../models/job.js';
 import mongoose from 'mongoose';
 
 export const getJobs = async (req, res) => {
     try{
-        const jobs = await job.find();
+        const jobs = await Job.find();
         res.status(200).json(jobs);
     }
     catch(error){
@@ -14,7 +14,7 @@ export const getJobs = async (req, res) => {
 export const getJobByID = async (req, res) => {
     const { id } = req.params;
     try{
-        const job = await job.findById(id);
+        const job = await Job.findById(id);
         res.status(200).json(job);
     }
     catch(error){
@@ -25,7 +25,7 @@ export const getJobByID = async (req, res) => {
 // post request to create a new job
 export const createJob = async (req, res) => {
     const job = req.body;
-    const newJob = new job(job);
+    const newJob = new Job(job);
     try{
         await newJob.save();
         res.status(201).json(newJob);
@@ -40,7 +40,7 @@ export const updateJob = async (req, res) => {
     const { id } = req.params;
     const job = req.body;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No job with id: ${id}`);
-    const updatedJob = await job.findByIdAndUpdate(id, job
+    const updatedJob = await Job.findByIdAndUpdate(id, job
         , { new: true });
     res.json(updatedJob);
 }
@@ -49,6 +49,6 @@ export const updateJob = async (req, res) => {
 export const deleteJob = async (req, res) => {
     const { id } = req.params;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No job with id: ${id}`);
-    await job.findByIdAndRemove(id);
+    await Job.findByIdAndRemove(id);
     res.json({ message: "Job deleted successfully." });
 }
