@@ -11,7 +11,7 @@ export const loginUser = async (req, res) => {
         const user = await User.findOne({ username });
         if(!user) return res.status(404).json({ message: "User doesn't exist" });
         const isPasswordCorrect = await bcrypt.compare(password, user.password);
-        if(!isPasswordCorrect) return res.status(400).json({ message: "Invalid credentials" });
+        if(!isPasswordCorrect) return res.status(400).json({ message: "Incorrect password!" });
         const UserId = user._id;
         const userType = user.userType;
         let model;
