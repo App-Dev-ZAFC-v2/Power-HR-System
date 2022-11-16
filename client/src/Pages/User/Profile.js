@@ -55,7 +55,7 @@ function Profile() {
   function refreshPage() {
     window.location.reload();
   }
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
@@ -165,49 +165,54 @@ function Profile() {
                 </Typography>
               </CardContent>
               <CardActions>
-                {userType === 0 && (
-                isRead ? (
-                  <Button
-                    size="small"
-                    variant="contained"
-                    sx={{
-                      backgroundColor: "blue",
-                    }}
-                    onClick={() => setIsRead(false)}
-                  >
-                    Update Profile
-                  </Button>
-                ) : (
-                  <>
+                {userType === 0 &&
+                  (isRead ? (
                     <Button
                       size="small"
                       variant="contained"
-                      color="error"
-                      onClick={() => refreshPage()}
+                      sx={{
+                        backgroundColor: "blue",
+                      }}
+                      onClick={() => setIsRead(false)}
                     >
-                      Cancel
+                      Update Profile
                     </Button>
-                    <Button
-                      size="small"
-                      variant="contained"
-                      color="success"
-                      onClick={handleSubmit}
+                  ) : (
+                    <>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        onClick={() => refreshPage()}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="success"
+                        onClick={handleSubmit}
+                      >
+                        Submit Update
+                      </Button>
+                    </>
+                  ))}
+                <Grid>
+                  {success.fetchSuccess && (
+                    <FormHelperText
+                      severity="success"
+                      contained
+                      variant="filled"
                     >
-                      Submit Update
-                    </Button>
-                  </>
-                )
-                )}
-                {success.fetchSuccess && (
-                  <FormHelperText error contained variant="filled">
-                    {success.fetchSuccessMsg}
-                  </FormHelperText>
-                )}
-                {error.fetchError && (
-                  <FormHelperText error contained variant="filled">
-                    {error.fetchErrorMsg}
-                  </FormHelperText>
-                )}
+                      {success.fetchSuccessMsg}
+                    </FormHelperText>
+                  )}
+                  {error.fetchError && (
+                    <FormHelperText error contained variant="filled">
+                      {error.fetchErrorMsg}
+                    </FormHelperText>
+                  )}
+                </Grid>
               </CardActions>
             </Card>
           </Grid>
