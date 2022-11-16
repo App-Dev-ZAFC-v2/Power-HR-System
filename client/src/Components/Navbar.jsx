@@ -20,6 +20,36 @@ const settings = [
   { link: "/", name: "Logout" },
 ];
 
+function GetDashboard(){
+  const [user, setUser] = useState([]);
+  const token = localStorage.getItem("authToken");
+  const [userArr] = useState(["applicant", "admin", "employee", "executive"]);
+  const role = 0;
+
+  // FIND BETTER WAY TO DO THIS
+  const userType = JSON.parse(atob(token.split(".")[1])).userType;
+  const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
+
+  useEffect(() => {
+    (userType === 0
+      ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
+      : axios.get(`http://localhost:5000/employees/${detailId}/`)
+    )
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+    if(user.executiveRole){
+      role = 1;
+    }
+    
+    return `/${userArr[userType + role]}/dashboard`;
+}
+
 function GetPages() {
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
@@ -93,7 +123,7 @@ function ResponsiveAppBar() {
             variant="h6"
             noWrap
             component="a"
-            href="/"
+            href={GetDashboard()}
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -159,7 +189,7 @@ function ResponsiveAppBar() {
             variant="h5"
             noWrap
             component="a"
-            href=""
+            href={GetDashboard()}
             sx={{
               mr: 2,
               display: { xs: "flex", md: "none" },
