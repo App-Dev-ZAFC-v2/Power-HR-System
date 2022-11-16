@@ -25,6 +25,7 @@ function GetDashboard(){
   const token = localStorage.getItem("authToken");
   const [userArr] = useState(["applicant", "admin", "employee", "executive"]);
 
+
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
   const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
@@ -77,7 +78,7 @@ function GetPages() {
         ];
       } else return [{ link: "/feedback", name: "FEEDBACK" }];
     default:
-      return;
+      return [];
   }
 }
 

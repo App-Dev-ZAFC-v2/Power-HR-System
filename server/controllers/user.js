@@ -16,7 +16,7 @@ export const loginUser = async (req, res) => {
         const userType = user.userType;
         let model;
         userType === 0 ? model = "Applicant" : userType === 1 ? model = "Admin" : model = "Employee";
-        const userObject = await mongoose.model(model).findOne({ userID: UserId });
+        const userObject = await mongoose.model(model).findOne({ user: UserId });
         const detailId = userObject._id;
         const token = jwt.sign({ UserId, userType, detailId }, process.env.JWT_SECRET);
         res.status(200).json({ token });
