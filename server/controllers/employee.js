@@ -62,12 +62,13 @@ export const registerEmployee = async (req, res) => {
     try{
         const employee = await Employee.findOne({ email });
         if(employee) return res.status(400).json({ message: "Email already exists" });
-        const newUser = await registerUser(username, password, password, 2, res);
+        console.log("executiveRole: " + executiveRole);
+        const newUser = await registerUser(username, password, password, 2, res, executiveRole);
+        console.log("newUser: " + newUser);
         if (newUser == null) {
             return;
         }
         const result = await Employee.create({ user: newUser._id, name, email, contact, position, executiveRole });
-        // const token = jwt.sign({ username: result.username, id: result._id }, 'test', { expiresIn: "1h" });
         res.status(200).json({ result });
     }
     catch(error){

@@ -26,7 +26,7 @@ export const loginUser = async (req, res) => {
     }
 }
 
-export const registerUser = async (username, rawpassword, confirmPassword, userType, res) => {
+export const registerUser = async (username, rawpassword, confirmPassword, userType, res, role) => {
     try{
         const user = await User.findOne({ username });
         if(user){
@@ -38,11 +38,16 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
             return;
         }
         const hashedPassword = await bcrypt.hash(rawpassword, 12);
+        // if role is true, set userType to 3 (executive)
+        console.log("role: " + role);
+        if (role) {
+            userType = 3;
+        }
         const newUser = new User({ username, password: hashedPassword, userType });
         await newUser.save();
         return newUser;
     }
     catch(error){
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: "Something went wrong in registering user" });
     }
 }
