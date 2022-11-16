@@ -24,7 +24,6 @@ function GetDashboard(){
   const [user, setUser] = useState([]);
   const token = localStorage.getItem("authToken");
   const [userArr] = useState(["applicant", "admin", "employee", "executive"]);
-  const role = 0;
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
@@ -43,11 +42,7 @@ function GetDashboard(){
       });
   }, []);
 
-    if(user.executiveRole){
-      role = 1;
-    }
-    
-    return `/${userArr[userType + role]}/dashboard`;
+    return `/${userArr[userType]}/dashboard`;
 }
 
 function GetPages() {
