@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar';
-import EmployeesTable from '../../Components/EmployeesTable';
+import EmployeesTable from '../../Components/Admin/EmployeesTable';
 import { Button, Table } from 'react-bootstrap';
 
 function ManageEmployee() {

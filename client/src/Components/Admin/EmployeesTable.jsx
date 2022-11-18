@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import DeleteEmployee from './DeleteEmployee';
+import axios from 'axios';
 import { Button } from 'react-bootstrap';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
@@ -231,12 +233,29 @@ EnhancedTableToolbar.propTypes = {
 
 export default function EmployeesTable(props) {
   const [order, setOrder] = useState('asc');
-  const [orderBy, setOrderBy] = useState('calories');
+  const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const {rows} = props;
+
+  const handleDelete = (id) => {
+    console.log(id);
+    // axios.delete(`http://localhost:5000/employees/${id}`, {
+    //     headers: {
+    //         Authorization: `Bearer ${localStorage.getItem('authToken')}`
+    //     }
+    // })
+    //     .then(res => {
+    //         console.log(res);
+    //         // reload the page
+    //         window.location.reload();
+    //     })
+    //     .catch(err => {
+    //         console.log(err);
+    //     })
+}
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -352,7 +371,7 @@ export default function EmployeesTable(props) {
                       <TableCell align="left">{row.contact}</TableCell>
                       <TableCell align="left">
                         <Button variant="primary">Edit</Button>
-                        <Button variant="danger">Delete</Button>
+                        <Button variant='danger' onClick={handleDelete(row._id)}>Delete</Button>
                       </TableCell>
                     </TableRow>
                   );

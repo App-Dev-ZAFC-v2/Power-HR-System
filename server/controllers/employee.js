@@ -51,8 +51,13 @@ export const updateEmployee = async (req, res) => {
 // delete request to delete an employee
 export const deleteEmployee = async (req, res) => {
     const { id } = req.params;
+    //get the user value from the employee
+    const employee = await Employee.findById(id);
+    const user = employee.user;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
     await Employee.findByIdAndRemove(id);
+    //delete the user
+    await User.findByIdAndRemove(user);
     res.json({ message: "Employee deleted successfully." });
 }
 
