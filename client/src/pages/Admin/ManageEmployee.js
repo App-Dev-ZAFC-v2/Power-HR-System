@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar';
+import EmployeesTable from '../../Components/EmployeesTable';
 import { Button, Table } from 'react-bootstrap';
 
 function ManageEmployee() {
@@ -25,6 +26,7 @@ function ManageEmployee() {
             }
         })
         .then(res => {
+            console.log(res.data);
             setEmployees(res.data);
             setIsLoading(false);
         })
@@ -39,7 +41,8 @@ function ManageEmployee() {
         <Navbar/>
         <div className="container">
             <h1>Manage Employees</h1>
-            <Table bordered hover>
+            <EmployeesTable rows={employees} />
+            {/* <Table bordered hover>
                 <thead>
                     <tr>
                         <th scope="col">Name</th>
@@ -63,7 +66,7 @@ function ManageEmployee() {
                         </tr>
                     ))}
                 </tbody>
-            </Table>
+            </Table> */}
         </div>
 
         
