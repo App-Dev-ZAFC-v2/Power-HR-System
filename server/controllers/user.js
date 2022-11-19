@@ -5,13 +5,10 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 
-export const getUserByID = async (req, res) => {
-    const { id } = req.params;
+export const getUserByID = async (id, res) => {
     try {
         const user = await User.findById(id);
-        // unhash the password
-        const password = await bcrypt.compare(user.password, user.password);
-        res.status(200).json({ user, password });
+        hashedPassword = user.password;
         res.status(200).json(user);
     } catch (error) {
         res.status(404).json({ message: error.message });

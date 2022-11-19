@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 
 function UpdateEmployee(){
     const{ id } = useParams();
+    const [username, setUsername] = useState('');
     const [employee, setEmployee] = useState({
         username: '',
         password: '',
@@ -15,6 +16,8 @@ function UpdateEmployee(){
         position: '',
         executiveRole: ''
     });
+    // const { username, password, name, email, contact, position, executiveRole } = employee;
+
 
     useEffect(() => {
         axios.get(`http://localhost:5000/employees/${id}`, {
@@ -23,20 +26,8 @@ function UpdateEmployee(){
             }
         })
         .then(res => {
-            console.log(res.data);
-            setEmployee(res.data);
-            axios.get(`http://localhost:5000/users/${res.data.user}`, {
-                headers: {
-                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
-                }
-            })
-            .then(r => {
-                console.log(r.data);
-                setEmployee(r.data);
-            })
-            .catch(err => {
-                console.log(err);
-            })
+            console.log(res.data.employeeObject);
+            setEmployee(res.data.employeeObject);
         })
         .catch(err => {
             console.log(err);
