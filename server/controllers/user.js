@@ -51,3 +51,14 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
         res.status(500).json({ message: "Something went wrong in registering user" });
     }
 }
+
+export const deleteUser = async (id, res) => {
+    try{
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No user with id: ${id}`);
+        await User.findByIdAndRemove(id);
+        res.json({ message: "User deleted successfully." });
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong" });
+    }
+}

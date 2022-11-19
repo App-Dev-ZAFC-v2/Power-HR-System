@@ -231,30 +231,51 @@ EnhancedTableToolbar.propTypes = {
   numSelected: PropTypes.number.isRequired,
 };
 
-export default function EmployeesTable(props) {
+export default function EmployeesTable() {
   const [order, setOrder] = useState('asc');
   const [orderBy, setOrderBy] = useState('name');
   const [selected, setSelected] = useState([]);
   const [page, setPage] = useState(0);
   const [dense, setDense] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const {rows} = props;
+  const [rows, setRows] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('http://localhost:5000/employees', {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+    })
+    .then(res => {
+        console.log(res.data);
+        setRows(res.data);
+        setIsLoading(false);
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}, [])
+    
+  
 
   const handleDelete = (id) => {
     console.log(id);
-    // axios.delete(`http://localhost:5000/employees/${id}`, {
-    //     headers: {
-    //         Authorization: `Bearer ${localStorage.getItem('authToken')}`
-    //     }
-    // })
-    //     .then(res => {
-    //         console.log(res);
-    //         // reload the page
-    //         window.location.reload();
-    //     })
-    //     .catch(err => {
-    //         console.log(err);
-    //     })
+    axios.delete(`http://localhost:5000/employees/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+    })
+        .then(res => {
+            console.log(res);
+            // remove the deleted employee from the table
+            const newRows = rows.filter(row => row.id !== id);
+            setRows(newRows);
+
+        })
+        .catch(err => {
+            console.log(err);
+        })
 }
 
   const handleRequestSort = (event, property) => {
@@ -341,7 +362,7 @@ export default function EmployeesTable(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.name)}
+                      // onClick={(event) => handleClick(event, row.name)}
                       role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
@@ -370,8 +391,8 @@ export default function EmployeesTable(props) {
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="left">{row.contact}</TableCell>
                       <TableCell align="left">
-                        <Button variant="primary">Edit</Button>
-                        <Button variant='danger' onClick={handleDelete(row._id)}>Delete</Button>
+                        <Button variant="primary" href={`/admin/update-employee/${row._id}`} >Edit</Button>
+                        <Button variant='danger' onClick={() => handleDelete(row._id)}>Delete</Button>
                       </TableCell>
                     </TableRow>
                   );
