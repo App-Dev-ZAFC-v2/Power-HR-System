@@ -56,7 +56,7 @@ function descendingComparator(a, b, orderBy) {
   
   const headCells = [
     {
-      id: 'jobTitle',
+      id: 'jobName',
       numeric: false,
       disablePadding: true,
       label: 'Job Title',
@@ -68,7 +68,7 @@ function descendingComparator(a, b, orderBy) {
       label: 'Job Description',
     },
     {
-        id: 'qualify',
+        id: 'qualification',
         numeric: false,
         disablePadding: false,
         label: 'Qualifications',
@@ -322,7 +322,7 @@ function descendingComparator(a, b, orderBy) {
                 {stableSort(rows, getComparator(order, orderBy))
                   .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((row, index) => {
-                    const isItemSelected = isSelected(row.name);
+                    const isItemSelected = isSelected(row.jobName);
                     const labelId = `enhanced-table-checkbox-${index}`;
   
                     return (
@@ -335,7 +335,7 @@ function descendingComparator(a, b, orderBy) {
                         key={row._id}
                         selected={isItemSelected}
                       >
-                        <TableCell padding="checkbox">
+                        <TableCell padding="checkbox" sx={{m: 2}}>
                           <Checkbox
                             color="primary"
                             checked={isItemSelected}
@@ -344,17 +344,9 @@ function descendingComparator(a, b, orderBy) {
                             }}
                           />
                         </TableCell>
-                        <TableCell
-                          component="th"
-                          id={labelId}
-                          scope="row"
-                          padding="none"
-                        >
-                          {row.name}
-                        </TableCell>
-                        <TableCell align="left">{row.jobTitle}</TableCell>
+                        <TableCell align="left">{row.jobName}</TableCell>
                         <TableCell align="left">{row.jobDescription}</TableCell>
-                        <TableCell align="left">{row.qualify}</TableCell>
+                        <TableCell align="left">{row.qualification}</TableCell>
                         <TableCell align="left">{row.cgpa}</TableCell>
                         <TableCell align="left">
                           <Button variant="primary" href={`/admin/update-job/${row._id}`} >Edit</Button>
