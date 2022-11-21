@@ -49,7 +49,6 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
         }
         const hashedPassword = await bcrypt.hash(rawpassword, 12);
         // if role is true, set userType to 3 (executive)
-        console.log("role: " + role);
         if (role) {
             userType = 3;
         }

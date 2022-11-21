@@ -24,7 +24,8 @@ function App() {
         <Route path="/applicant/dashboard" element={<ApplicantDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
-        <Route path="/admin/update-employee/:id" element={<UpdateEmployee />} />
+        <Route path="/admin/update-employee" element={<UpdateEmployee />} />
+        <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
