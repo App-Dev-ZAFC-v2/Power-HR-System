@@ -12,6 +12,8 @@ import AdminDashboard from "./Pages/Admin/Dashboard";
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import Profile from "./Pages/User/Profile";
 
+import Feedback from "./Pages/Employee/Feedback";
+
 function App() {
   return (
     <div className="App">
@@ -24,6 +26,7 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/employee/feedback" element={<Feedback />} />
       </Routes>
     </div>
   );
