@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import { Button, Table } from 'react-bootstrap';
+import { Button } from 'react-bootstrap';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar';
 import Form from 'react-bootstrap/Form';
