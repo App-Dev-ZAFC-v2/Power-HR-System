@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import { Button, Table } from 'react-bootstrap';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar';
+import FeedbackTable from '../../Components/FeedbackTable';
 
 
 function ManageFeedback() {
@@ -26,30 +27,9 @@ function ManageFeedback() {
         <div>manage feedback</div>
         <Button variant="primary" onClick={() => window.location = '/admin/dashboard'}>Back to Dashboard</Button>
         <Button variant="primary" onClick={() => window.location = '/admin/add-feedback'}>Admin Add Feedback</Button>
-        <Table striped bordered hover>
-        <thead>
-            <tr>
-            <th>Employee Name</th>
-            <th>Title</th>
-            <th>Message</th>
-            <th>Action</th>
-            </tr>
-        </thead>
-        <tbody>
-            {feedback.map((feedback) => (
-                <tr>
-                    <td>{feedback.createdByName}</td>
-                    <td>{feedback.feedbackTitle}</td>
-                    <td>{feedback.feedbackMessage}</td>
-                    <td>
-                        <Button variant="primary" onClick={() => window.location = '/admin/updatefeedback'}>Update</Button>
-                        <Button variant="danger">Delete</Button>
-                        </td>
-                    
-                </tr>
-            ))}
-        </tbody>
-        </Table>
+        <FeedbackTable/>
+            
+
 
         </>
     )
