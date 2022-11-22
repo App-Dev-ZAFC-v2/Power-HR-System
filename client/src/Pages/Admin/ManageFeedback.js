@@ -25,9 +25,7 @@ function ManageFeedback() {
         <Navbar/>
         <div>manage feedback</div>
         <Button variant="primary" onClick={() => window.location = '/admin/dashboard'}>Back to Dashboard</Button>
-        <Button> ADMIN ADD FEEDBACK </Button>
-
-
+        <Button variant="primary" onClick={() => window.location = '/admin/add-feedback'}>Admin Add Feedback</Button>
         <Table striped bordered hover>
         <thead>
             <tr>

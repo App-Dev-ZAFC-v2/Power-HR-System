@@ -12,7 +12,7 @@ import AdminDashboard from "./Pages/Admin/Dashboard";
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import Profile from "./Pages/User/Profile";
 import ManageFeedback from "./Pages/Admin/ManageFeedback";
-
+import AddFeedback from "./Pages/Admin/AddFeedback";
 
 function App() {
   return (
@@ -27,6 +27,7 @@ function App() {
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
+        <Route path="/admin/add-feedback" element={<AddFeedback />} />
       </Routes>
     </div>
   );
