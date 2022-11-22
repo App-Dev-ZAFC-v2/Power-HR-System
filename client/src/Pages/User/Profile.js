@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 
 import axios from "axios";
+import { Stack } from "@mui/system";
 
 function Profile() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -215,6 +216,24 @@ function Profile() {
                 </Grid>
               </CardActions>
             </Card>
+          </Grid>
+          <Grid
+            container
+            mt={3}
+            spacing={2}
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Grid item xs={12}>
+              <Button variant="contained" color="primary">
+                Update Username
+              </Button>
+
+              <Button variant="contained" color="primary">
+                Update Password
+              </Button>
+            </Grid>
           </Grid>
         </>
       )}
