@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
+import { Button } from 'react-bootstrap';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Table from '@mui/material/Table';
@@ -97,6 +98,12 @@ const headCells = [
     numeric: false,
     disablePadding: false,
     label: 'Feedback Message',
+  },
+  {
+    id: 'action',
+    numeric: false,
+    disablePadding: false,
+    label: 'Action',
   },
   
 ];
@@ -238,6 +245,22 @@ export default function FeedbackTable() {
     })
 }, [])
     
+const handleDelete = (id) => {
+    axios.delete(`http://localhost:5000/feedbacks/${id}`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+    })
+    .then(res => {
+        console.log(res.data);
+        setRows(rows.filter(row => row._id !== id));
+    })
+    .catch(err => {
+        console.log(err);
+    })
+}
+
+
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
@@ -348,9 +371,14 @@ export default function FeedbackTable() {
                       >
                         {row.createdByName}
                       </TableCell>
-                      <TableCell align="right">{row.feedbackTitle}</TableCell>
-                      <TableCell align="right">{row.feedbackMessage}</TableCell>
+                      <TableCell align="left">{row.feedbackTitle}</TableCell>
+                      <TableCell align="left">{row.feedbackMessage}</TableCell>
+                      <TableCell align="left">
+                      <Button variant="primary" href={`/admin/update-employee/${row._id}`} >Edit</Button>
+                      <Button variant='danger' onClick={() => handleDelete(row._id)}>Delete</Button>
 
+                      
+                      </TableCell>
                     </TableRow>
                   );
                 })}
