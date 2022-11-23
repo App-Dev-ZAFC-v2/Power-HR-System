@@ -54,20 +54,20 @@ function UpdateEmployee(){
         setValidated(true);
         try {
             console.log(employee);
-            // axios.post('http://localhost:5000/employees/register/', employee, {
-            //     headers: {
-            //         Authorization: `Bearer ${localStorage.getItem('authToken')}`
-            //     }
-            // })
-            // .then(res => {
-            //     console.log(res);
-            //     setIsSuccess(true);
-            // }
-            // )
-            // .catch(err => {
-            //     console.log(err);
-            // }
-            // )
+            axios.post('http://localhost:5000/employees/register/', employee, {
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('authToken')}`
+                }
+            })
+            .then(res => {
+                console.log(res);
+                setIsSuccess(true);
+            }
+            )
+            .catch(err => {
+                console.log(err);
+            }
+            )
 
         } catch (error) {
             console.log(error);
