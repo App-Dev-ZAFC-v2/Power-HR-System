@@ -11,9 +11,10 @@ import {
   TextField,
   FormHelperText,
 } from "@mui/material";
+import Link from "@mui/material/Link";
+// import updateusername from "./updateusername";
 
 import axios from "axios";
-import { Stack } from "@mui/system";
 
 function Profile() {
   // eslint-disable-next-line react-hooks/rules-of-hooks
@@ -217,22 +218,34 @@ function Profile() {
               </CardActions>
             </Card>
           </Grid>
-          <Grid
-            container
-            mt={3}
-            spacing={2}
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Grid item xs={12}>
-              <Button variant="contained" color="primary">
-                Update Username
-              </Button>
-
-              <Button variant="contained" color="primary">
-                Update Password
-              </Button>
+          <Grid container mt={2} rowSpacing={1} direction="row">
+            <Grid item xs={6}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                ml={55}
+              >
+                <Link href="/profile/update-username">
+                  <Button variant="contained" color="primary">
+                    Update Username
+                  </Button>
+                </Link>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mr={55}
+              >
+                <Link href="/profile/update-password">
+                  <Button variant="contained" color="primary">
+                    Update Password
+                  </Button>
+                </Link>
+              </Box>
             </Grid>
           </Grid>
         </>

@@ -11,6 +11,8 @@ import AdminDashboard from "./Pages/Admin/Dashboard";
 //profileupdate
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import Profile from "./Pages/User/Profile";
+import UpdateUsername from "./Pages/User/Pages/updateusername";
+import UpdatePassword from "./Pages/User/Pages/updatepassword";
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/profile/update-username" element={<UpdateUsername />} />
+        <Route path="/profile/update-password" element={<UpdatePassword />} />
       </Routes>
     </div>
   );
