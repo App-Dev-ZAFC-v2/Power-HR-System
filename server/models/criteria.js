@@ -5,6 +5,6 @@ const criteriaSchema = mongoose.Schema({
     cgpa: Number,
 });
 
-// const Criteria = mongoose.model("Criteria", criteriaSchema);
+const Criteria = mongoose.model("Criteria", criteriaSchema);
 
 export default criteriaSchema;
