@@ -359,7 +359,7 @@ export default function JobTable() {
                           href={`/admin/update-job/${row._id}`}
                         >
                           Edit
-                        </Button>
+                        </Button>&nbsp;&nbsp;
                         <Button
                           variant="danger"
                           onClick={() => handleDelete(row._id)}

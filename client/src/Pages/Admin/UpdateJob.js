@@ -1,87 +1,21 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import axios from "axios";
 import Navbar from "../../Components/Navbar";
 import { Form, Button, Container, Row, Col } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { Typography } from "@mui/material";
-// import { IMaskInput } from "react-imask";
-// import NumberFormat from "react-number-format";
-// import PropTypes from "prop-types";
+import { Box } from "@mui/system";
 
-//ONLY NUMBER IN CGPA
-// const TextMaskCustom = React.forwardRef(function TextMaskCustom(props, ref) {
-//   const { onChange, ...other } = props;
-//   return (
-//     <IMaskInput
-//       {...other}
-//       mask="(#00) 000-0000"
-//       definitions={{
-//         "#": /[1-9]/,
-//       }}
-//       inputRef={ref}
-//       onAccept={(value) => onChange({ target: { name: props.name, value } })}
-//       overwrite
-//     />
-//   );
-// });
-
-// TextMaskCustom.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   onChange: PropTypes.func.isRequired,
-// };
-
-// const NumberFormatCustom = React.forwardRef(function NumberFormatCustom(
-//   props,
-//   ref
-// ) {
-//   const { onChange, ...other } = props;
-
-//   return (
-//     <NumberFormat
-//       {...other}
-//       getInputRef={ref}
-//       onValueChange={(values) => {
-//         onChange({
-//           target: {
-//             name: props.name,
-//             value: values.value,
-//           },
-//         });
-//       }}
-//       thousandSeparator
-//       isNumericString
-//       prefix="$"
-//     />
-//   );
-// });
-
-// NumberFormatCustom.propTypes = {
-//   name: PropTypes.string.isRequired,
-//   onChange: PropTypes.func.isRequired,
-// };
-
-// export function FormattedInputs() {
-//   const [values, setValues] = React.useState({
-//     textmask: "(100) 000-0000",
-//     numberformat: "1320",
-//   });
-
-//   const handleChange = (event) => {
-//     setValues({
-//       ...values,
-//       [event.target.name]: event.target.value,
-//     });
-//   };
 function UpdateJob() {
   const { id } = useParams();
   const [job, setJob] = useState({
     jobTitle: "",
     jobDescription: "",
     qualification: "",
-    cgpa: "",
+    cgpa: 0.00,
   });
 
-  //VALIDATION
+  //VALIDATION (NOT IMPLEMENT YET)
   const [error, setError] = useState("");
 
   const validate = () => {
@@ -89,7 +23,7 @@ function UpdateJob() {
     temp.jobTitle = job.jobTitle ? "" : "This field is required.";
     temp.jobDescription = job.jobDescription ? "" : "This field is required.";
     temp.qualification = job.qualification ? "" : "This field is required.";
-    temp.cgpa = job.cgpa ? "" : "This field is required.";
+    temp.cgpa = job.cgpa ? 0.00 : "This field is required.";
 
     setError({
       ...temp,
@@ -98,38 +32,35 @@ function UpdateJob() {
     return Object.values(temp).every((x) => x === "");
   };
 
-  useEffect(() => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     axios
-      .get(`http://localhost:5000/jobs/${id}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+      .put(`http://localhost:5000/job/update/${id}`, job)
       .then((res) => {
-        console.log(res.data.jobObject);
-        setJob(res.data.jobObject);
+        console.log(res.data);
+        alert("Job updated successfully!");
       })
       .catch((err) => {
-        console.log(err);
+        validate();
       });
-  }, [id]);
-
-  const onChangeInput = (e) => {
-    const { name, value } = e.target;
-    setJob({ ...job, [name]: value });
   };
+
+  // const onChangeInput = (e) => {
+  //   const { name, value } = e.target;
+  //   setJob({ ...job, [name]: value });
+  // };
 
   return (
     <>
       <Navbar />
-      <Container>
+      <Container >
         <Row>
-          <Col md={6}>
+          <Col md={100}>
             <br></br>
             <Typography align="center">
               {id ? <h1>Update Job</h1> : <h1>Add Job</h1>}
             </Typography>
-            <Form>
+            <Form onSubmit={(e) => handleSubmit(e)}>
               <Form.Group controlId="formBasicJobTitle">
                 <Form.Label>Job Title</Form.Label>
                 <Form.Control
@@ -137,9 +68,13 @@ function UpdateJob() {
                   placeholder="Enter job title"
                   name="jobTitle"
                   value={job.jobTitle}
-                  onChange={onChangeInput}
+                  onChange={(e) => setJob({ ...job, jobTitle: e.target.value })}
+                  {...(error.jobTitle && {
+                    error: true,
+                    helperText: error.jobTitle,
+                  })}
                 />
-              </Form.Group>
+              </Form.Group><br></br>
               <Form.Group controlId="formBasicJobDescription">
                 <Form.Label>Job Description</Form.Label>
                 <Form.Control
@@ -147,9 +82,13 @@ function UpdateJob() {
                   placeholder="Enter job description"
                   name="jobDescription"
                   value={job.jobDescription}
-                  onChange={onChangeInput}
+                  onChange={(e) => setJob({ ...job, jobDescription: e.target.value })}
+                  {...(error.jobDescription && {
+                    error: true,
+                    helperText: error.jobDescription,
+                  })}
                 />
-              </Form.Group>
+              </Form.Group><br></br>
               <Form.Group controlId="formBasicQualification">
                 <Form.Label>Qualification</Form.Label>
                 <Form.Control
@@ -157,9 +96,13 @@ function UpdateJob() {
                   placeholder="Enter qualification"
                   name="qualification"
                   value={job.qualification}
-                  onChange={onChangeInput}
+                  onChange={(e) => setJob({ ...job, qualification: e.target.value })}
+                  {...(error.qualification && {
+                    error: true,
+                    helperText: error.qualification,
+                  })}
                 />
-              </Form.Group>
+              </Form.Group><br></br>
               <Form.Group controlId="formBasicCgpa">
                 <Form.Label>CGPA</Form.Label>
                 <Form.Control
@@ -167,15 +110,24 @@ function UpdateJob() {
                   placeholder="Enter CGPA"
                   name="cgpa"
                   value={job.cgpa}
-                  onChange={onChangeInput}
+                  onChange={(e) => setJob({ ...job, cgpa: e.target.value })}
+                  {...(error.cgpa && {
+                    error: true,
+                    helperText: error.cgpa,
+                  })}
                 />
               </Form.Group>
-              <Button variant="primary" type="submit">
+              <br></br>
+              <Box textAlign="center">
+                <Button variant="primary" type="submit" onClick={(e) => handleSubmit(e)} align="center">
                 Submit
-              </Button>
-              <Button variant="danger" href="/admin/manage-job">
+              </Button>&nbsp;&nbsp;
+              <Button variant="danger" href="/admin/manage-job" align="center">
                 Cancel
               </Button>
+              </Box>
+
+              
             </Form>
           </Col>
         </Row>
