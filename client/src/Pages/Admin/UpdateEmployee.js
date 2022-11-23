@@ -46,12 +46,12 @@ function UpdateEmployee(){
     }
 
     const handleAdd = async e => {
-        const form = e.currentTarget;
-        if (form.checkValidity() === false) {
-            e.preventDefault();
-            e.stopPropagation();
-        }
-        setValidated(true);
+        // const form = e.currentTarget;
+        // if (form.checkValidity() === false) {
+        //     e.preventDefault();
+        //     e.stopPropagation();
+        // }
+        // setValidated(true);
         try {
             console.log(employee);
             axios.post('http://localhost:5000/employees/register/', employee, {
@@ -143,7 +143,7 @@ function UpdateEmployee(){
                             <Form.Label>Contact</Form.Label>
                             <Form.Control 
                             required
-                            type="text" 
+                            type="number" 
                             placeholder="Enter contact" 
                             name="contact" 
                             value={employee.contact} 
