@@ -76,7 +76,7 @@ function GetPages() {
           { link: "/nav5", name: "ANALYZE" },
           { link: "/nav6", name: "FEEDBACK REVIEW" },
         ];
-      } else return [{ link: "/feedback", name: "FEEDBACK" }];
+      } else return [{ link: "feedback", name: "FEEDBACK" }];
     default:
       return [];
   }
