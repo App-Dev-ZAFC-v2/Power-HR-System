@@ -8,10 +8,12 @@ import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
 import ApplicantDashboard from "./Pages/Applicant/Dashboard";
 import AdminDashboard from "./Pages/Admin/Dashboard";
-//profileupdate
+//profile update
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
 import Profile from "./Pages/User/Profile";
+import ManageFeedback from "./Pages/Admin/ManageFeedback";
+import AddFeedback from "./Pages/Admin/AddFeedback";
 
 function App() {
   return (
@@ -27,6 +29,8 @@ function App() {
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
         <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
+        <Route path="/admin/add-feedback" element={<AddFeedback />} />
       </Routes>
     </div>
   );
