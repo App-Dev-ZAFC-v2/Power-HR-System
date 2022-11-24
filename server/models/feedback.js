@@ -1,10 +1,12 @@
 import mongoose from "mongoose";
 
 const feedbackSchema = mongoose.Schema({
-    createdBy: {
+    createdByID: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Employee",
     },
+
+    createdByName: String,
     feedbackTitle: String,
     feedbackMessage: String,
 

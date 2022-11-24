@@ -19,7 +19,7 @@ export const AuthAdmin = (req, res, next) => {
         //send status with json
         if(err) return res.status(403).json({message: 'You are not authorized to access this resource'});
         // if(err) return res.sendStatus(403);
-        if(user.userType !== 1) return res.sendStatus(403);
+        if(user.userType !== 1) return res.status(403).json({message: 'You are not logged in as an admin'});
         req.user = user;
         next();
     });
