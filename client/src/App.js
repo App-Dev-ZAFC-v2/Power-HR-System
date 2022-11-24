@@ -8,6 +8,10 @@ import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
 import ApplicantDashboard from "./Pages/Applicant/Dashboard";
 import AdminDashboard from "./Pages/Admin/Dashboard";
+//profileupdate
+// import ManageEmployee from "./Pages/Admin/ManageEmployee";
+import ManageJob from "./Pages/Admin/ManageJob";
+import UpdateJob from "./Pages/Admin/UpdateJob";
 //profile update
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
@@ -25,6 +29,10 @@ function App() {
         <Route path="/executive/dashboard" element={<ExecutiveDashboard />} />
         <Route path="/applicant/dashboard" element={<ApplicantDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
+        {/* <Route path="/admin/manage-employee" element={<ManageEmployee />} /> */}
+        <Route path="/admin/manage-job" element={<ManageJob />} />
+        <Route path="/admin/update-job" element={<UpdateJob />} />
+        <Route path="/admin/update-job/:id" element={<UpdateJob />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
         <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
