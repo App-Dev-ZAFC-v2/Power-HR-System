@@ -63,28 +63,32 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
         const newUser = new User({ username, password: hashedPassword, userType });
         await newUser.save();
         return newUser;
-
-export const registerUser = async (
-  username,
-  rawpassword,
-  confirmPassword,
-  userType,
-  res,
-  role
-) => {
-  try {
-    const user = await User.findOne({ username });
-    if (user) {
-      res.status(400).json({ message: "Username already exists" });
-      return;
-
+    } catch (error) {
+        res.status(500).json({ message: "Something went wrong" });
     }
-    if (rawpassword !== confirmPassword) {
-      res.status(400).json({ message: "Passwords don't match" });
-      return;
-    }
-
 }
+
+// export const registerUser = async (
+//   username,
+//   rawpassword,
+//   confirmPassword,
+//   userType,
+//   res,
+//   role
+// ) => {
+//   try {
+//     const user = await User.findOne({ username });
+//     if (user) {
+//       res.status(400).json({ message: "Username already exists" });
+//       return;
+
+//     }
+//     if (rawpassword !== confirmPassword) {
+//       res.status(400).json({ message: "Passwords don't match" });
+//       return;
+//     }
+
+
 
 export const deleteUser = async (id, res) => {
     try{
@@ -97,21 +101,7 @@ export const deleteUser = async (id, res) => {
     }
 }
 
-    const hashedPassword = await bcrypt.hash(rawpassword, 12);
-    // if role is true, set userType to 3 (executive)
-    console.log("role: " + role);
-    if (role) {
-      userType = 3;
-    }
-    const newUser = new User({ username, password: hashedPassword, userType });
-    await newUser.save();
-    return newUser;
-  } catch (error) {
-    res
-      .status(500)
-      .json({ message: "Something went wrong in registering user" });
-  }
-};
+    
 
 //update username and password
 export const updateUser = async (req, res) => {
