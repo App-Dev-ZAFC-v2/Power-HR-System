@@ -12,7 +12,12 @@ import AdminDashboard from "./Pages/Admin/Dashboard";
 // import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import ManageJob from "./Pages/Admin/ManageJob";
 import UpdateJob from "./Pages/Admin/UpdateJob";
+//profile update
+import ManageEmployee from "./Pages/Admin/ManageEmployee";
+import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
 import Profile from "./Pages/User/Profile";
+import ManageFeedback from "./Pages/Admin/ManageFeedback";
+import AddFeedback from "./Pages/Admin/AddFeedback";
 
 function App() {
   return (
@@ -28,7 +33,12 @@ function App() {
         <Route path="/admin/manage-job" element={<ManageJob />} />
         <Route path="/admin/update-job" element={<UpdateJob />} />
         <Route path="/admin/update-job/:id" element={<UpdateJob />} />
+        <Route path="/admin/manage-employee" element={<ManageEmployee />} />
+        <Route path="/admin/update-employee" element={<UpdateEmployee />} />
+        <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
+        <Route path="/admin/add-feedback" element={<AddFeedback />} />
       </Routes>
     </div>
   );

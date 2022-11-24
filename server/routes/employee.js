@@ -8,7 +8,7 @@ const router = express.Router(); // create a router
 
 router.get('/', AuthAdmin, getEmployees);
 
-router.get('/:id', getEmployeeByID);
+router.get('/:id', AuthAdmin, getEmployeeByID);
 
 router.post('/', AuthAdmin, createEmployee);
 

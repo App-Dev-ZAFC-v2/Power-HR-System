@@ -5,6 +5,16 @@ import jwt from "jsonwebtoken";
 import * as dotenv from "dotenv";
 dotenv.config();
 
+export const getUserByID = async (id, res) => {
+    try {
+        const user = await User.findById(id);
+        hashedPassword = user.password;
+        res.status(200).json(user);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 export const loginUser = async (req, res) => {
     try{
         const { username, password } = req.body;
@@ -39,7 +49,6 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
         }
         const hashedPassword = await bcrypt.hash(rawpassword, 12);
         // if role is true, set userType to 3 (executive)
-        console.log("role: " + role);
         if (role) {
             userType = 3;
         }
@@ -49,5 +58,16 @@ export const registerUser = async (username, rawpassword, confirmPassword, userT
     }
     catch(error){
         res.status(500).json({ message: "Something went wrong in registering user" });
+    }
+}
+
+export const deleteUser = async (id, res) => {
+    try{
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No user with id: ${id}`);
+        await User.findByIdAndRemove(id);
+        res.json({ message: "User deleted successfully." });
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong" });
     }
 }

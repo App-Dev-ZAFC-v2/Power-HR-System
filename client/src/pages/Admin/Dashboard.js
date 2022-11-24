@@ -19,6 +19,7 @@ function AdminDashboard() {
         <Button variant="primary" onClick={() => window.location = '/admin/manage-employee'}>Manage Employee</Button>
         <br></br>
         <Button variant="primary" onClick={() => window.location = '/admin/manage-job'}>Manage Job</Button>
+        <Button variant="primary" onClick={() => window.location = '/admin/manage-feedback'}>Manage Feedback</Button>
         </>
     )
     }
