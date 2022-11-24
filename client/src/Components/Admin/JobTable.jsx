@@ -351,8 +351,8 @@ export default function JobTable() {
                       </TableCell> */}
                       <TableCell align="center">{row.jobName}</TableCell>
                       <TableCell align="center">{row.jobDescription}</TableCell>
-                      <TableCell align="center">{row.qualification}</TableCell>
-                      <TableCell align="center">{row.cgpa}</TableCell>
+                      <TableCell align="center">{row.criteria?.qualification}</TableCell>
+                      <TableCell align="center">{row.criteria?.cgpa}</TableCell>
                       <TableCell align="center">
                         <Button
                           variant="primary"
