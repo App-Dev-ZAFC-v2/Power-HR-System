@@ -19,7 +19,13 @@ export const getEmployeeByID = async (req, res) => {
     const { id } = req.params;
     try{
         const employee = await Employee.findById(id);
-        res.status(200).json(employee);
+        const user = await User.findById(employee.user);
+        //combine the two objects
+        const employeeObject = {
+            ...employee._doc,
+            username: user.username,
+        }
+        res.status(200).json({employeeObject});
     }
     catch(error){
         res.status(404).json({ message: error.message });
@@ -51,27 +57,32 @@ export const updateEmployee = async (req, res) => {
 // delete request to delete an employee
 export const deleteEmployee = async (req, res) => {
     const { id } = req.params;
+    //get the user value from the employee
+    const employee = await Employee.findById(id);
+    const user = employee.user;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
     await Employee.findByIdAndRemove(id);
+    //delete the user
+    await User.findByIdAndRemove(user);
     res.json({ message: "Employee deleted successfully." });
 }
 
 //signup for employee
 export const registerEmployee = async (req, res) => {
-    const { username, password, confirmPassword, name, email, contact, position, executiveRole} = req.body;
+    const { username, password, name, email, contact, position, executiveRole} = req.body;
     try{
         const employee = await Employee.findOne({ email });
         if(employee) return res.status(400).json({ message: "Email already exists" });
-        console.log("executiveRole: " + executiveRole);
         const newUser = await registerUser(username, password, password, 2, res, executiveRole);
-        console.log("newUser: " + newUser);
         if (newUser == null) {
             return;
         }
+        console.log("before employee");
         const result = await Employee.create({ user: newUser._id, name, email, contact, position, executiveRole });
+        console.log("after employee: " + result);
         res.status(200).json({ result });
     }
     catch(error){
-        res.status(500).json({ message: "Something went wrong" });
+        res.status(500).json({ message: "Something went wrong in registering employee", error });
     }
 }

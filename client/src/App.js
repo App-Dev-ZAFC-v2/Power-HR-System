@@ -10,6 +10,7 @@ import ApplicantDashboard from "./Pages/Applicant/Dashboard";
 import AdminDashboard from "./Pages/Admin/Dashboard";
 //profileupdate
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
+import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
 import Profile from "./Pages/User/Profile";
 
 function App() {
@@ -23,6 +24,8 @@ function App() {
         <Route path="/applicant/dashboard" element={<ApplicantDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
+        <Route path="/admin/update-employee" element={<UpdateEmployee />} />
+        <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
       </Routes>
     </div>
