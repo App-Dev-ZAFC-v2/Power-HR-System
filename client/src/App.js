@@ -41,7 +41,7 @@ function App() {
         <Route path="/admin/update-job/:id" element={<UpdateJob />} />
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
-        <Route path="/admin/update-employee/:id?" element={<UpdateEmployee />} />
+        <Route path="/admin/update-employee/:id" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
         <Route path="/admin/add-feedback" element={<AddFeedback />} />
