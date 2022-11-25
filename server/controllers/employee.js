@@ -19,13 +19,13 @@ export const getEmployeeByID = async (req, res) => {
     const { id } = req.params;
     try{
         const employee = await Employee.findById(id);
-        const user = await User.findById(employee.user);
-        //combine the two objects
-        const employeeObject = {
-            ...employee._doc,
-            username: user.username,
-        }
-        res.status(200).json({employeeObject});
+        // const user = await User.findById(employee.user);
+        // //combine the two objects
+        // const employeeObject = {
+        //     ...employee._doc,
+        //     username: user.username,
+        // }
+        res.status(200).json(employee);
     }
     catch(error){
         res.status(404).json({ message: error.message });
