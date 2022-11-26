@@ -73,9 +73,9 @@ function UpdateJob() {
         .then((res) => {
           console.log(res.data);
           setIsSuccess(true);
-
           window.alert("Job added successfully!");
           window.location.href = "/admin/manage-job";
+          
         })
         .catch((err) => {
           console.log(err);
@@ -90,15 +90,15 @@ function UpdateJob() {
     try {
       console.log(job);
       axios
-        .put(`http://localhost:5000/jobs/${id}`, job, {
+        .patch(`http://localhost:5000/jobs/${id}`, job, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("authToken")}`,
           },
         })
         .then((res) => {
           console.log(job);
-          window.alert("Job updated successfully!");
           setIsSuccess(true);
+          window.alert("Job updated successfully!");
           window.location.href = "/admin/manage-job";
         })
         .catch((err) => {
@@ -162,7 +162,7 @@ function UpdateJob() {
                     type="text"
                     placeholder="Enter qualification"
                     name="qualification"
-                    value={job?.criteria?.qualification}
+                    value={job?.qualification}
                     onChange={onChangeInput}
                     // {...(error.qualification && {
                     //   error: true,
@@ -177,7 +177,7 @@ function UpdateJob() {
                     type="text"
                     placeholder="Enter CGPA"
                     name="cgpa"
-                    value={job?.criteria?.cgpa}
+                    value={job?.cgpa}
                     onChange={onChangeInput}
                     // {...(error.cgpa && {
                     //   error: true,
