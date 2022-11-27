@@ -10,7 +10,7 @@ function UpdateJob() {
   const { id } = useParams();
   const [isLoading, setIsLoading] = useState(true);
   const [validated, setValidated] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
+  const [, setIsSuccess] = useState(false);
 
   const [job, setJob] = useState({
     jobName: "",
@@ -18,23 +18,6 @@ function UpdateJob() {
     qualification: "",
     cgpa: 0.0,
   });
-
-  // //VALIDATION (NOT IMPLEMENT YET)
-  // const [error, setError] = useState("");
-
-  // const validate = () => {
-  //   let temp = {};
-  //   temp.jobTitle = job.jobTitle ? "" : "This field is required.";
-  //   temp.jobDescription = job.jobDescription ? "" : "This field is required.";
-  //   temp.qualification = job.qualification ? "" : "This field is required.";
-  //   temp.cgpa = job.cgpa ? 0.0 : "This field is required.";
-
-  //   setError({
-  //     ...temp,
-  //   });
-
-  //   return Object.values(temp).every((x) => x === "");
-  // };
 
   useEffect(() => {
     axios
@@ -58,56 +41,57 @@ function UpdateJob() {
     const val = e.target.type === "number" ? parseFloat(value) : value;
     setJob({ ...job, [name]: value });
     setJob({ ...job, [name]: val });
+  };
 
+  const validate = (e) => {
+    const form = e.currentTarget;
+    if (form.checkValidity() === false) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    setValidated(true);
   };
 
   const handleAdd = async (e) => {
-    try {
-      console.log(job);
-      axios
-        .post("http://localhost:5000/jobs/", job, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        })
-        .then((res) => {
-          console.log(res.data);
-          setIsSuccess(true);
-
-          window.alert("Job added successfully!");
-          window.location.href = "/admin/manage-job";
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-      // validate();
-    }
+    console.log(job);
+    e.preventDefault();
+    axios
+      .post("http://localhost:5000/jobs/", job, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(res.data);
+        setIsSuccess(true);
+        window.alert("Job added successfully!");
+        window.location.href = "/admin/manage-job";
+      })
+      .catch((err) => {
+        console.log(err);
+        validate(e);
+      });
   };
 
   const handleUpdate = async (e) => {
-    try {
-      console.log(job);
-      axios
-        .put(`http://localhost:5000/jobs/${id}`, job, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-          },
-        })
-        .then((res) => {
-          console.log(job);
-          window.alert("Job updated successfully!");
-          setIsSuccess(true);
-          window.location.href = "/admin/manage-job";
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    } catch (error) {
-      console.log(error);
-      // validate();
-    }
+    console.log(job);
+    e.preventDefault();
+    axios
+      .patch(`http://localhost:5000/jobs/${id}`, job, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+      })
+      .then((res) => {
+        console.log(job);
+        setIsSuccess(true);
+        window.alert("Job updated successfully!");
+        window.location.href = "/admin/manage-job";
+      })
+      .catch((err) => {
+        console.log(err);
+        validate(e);
+      });
   };
 
   return (
@@ -125,65 +109,66 @@ function UpdateJob() {
                 <Typography>Loading...</Typography>
               </Box>
             ) : (
-              <Form>
+              <Form noValidate validated={validated}>
                 <Form.Group controlId="formBasicJobTitle">
                   <Form.Label>Job Name</Form.Label>
                   <Form.Control
+                    required
                     type="text"
                     placeholder="Enter job name"
                     name="jobName"
                     value={job?.jobName}
                     onChange={onChangeInput}
-                    // {...(error.jobTitle && {
-                    //   error: true,
-                    //   helperText: error.jobName,
-                    // })}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    This field is required{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <br></br>
                 <Form.Group controlId="formBasicJobDescription">
                   <Form.Label>Job Description</Form.Label>
-                  <Form.Control
+                  <Form.Control as = "textarea" rows = {6}
+                    required
                     type="text"
                     placeholder="Enter job description"
                     name="jobDescription"
                     value={job?.jobDescription}
                     onChange={onChangeInput}
-                    // {...(error.jobDescription && {
-                    //   error: true,
-                    //   helperText: error.jobDescription,
-                    // })}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    This field is required{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <br></br>
                 <Form.Group controlId="formBasicQualification">
                   <Form.Label>Qualification</Form.Label>
-                  <Form.Control
+                  <Form.Control as = "textarea" rows = {6}
+                    required
                     type="text"
                     placeholder="Enter qualification"
                     name="qualification"
-                    value={job?.criteria?.qualification}
+                    value={job?.qualification}
                     onChange={onChangeInput}
-                    // {...(error.qualification && {
-                    //   error: true,
-                    //   helperText: error.qualification,
-                    // })}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    This field is required{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <br></br>
                 <Form.Group controlId="formBasicCgpa">
                   <Form.Label>CGPA</Form.Label>
                   <Form.Control
+                    required
                     type="text"
                     placeholder="Enter CGPA"
                     name="cgpa"
-                    value={job?.criteria?.cgpa}
+                    value={job?.cgpa}
                     onChange={onChangeInput}
-                    // {...(error.cgpa && {
-                    //   error: true,
-                    //   helperText: error.cgpa,
-                    // })}
+                    isInvalid={job?.cgpa <= 0 && job?.cgpa > 4}
                   />
+                  <Form.Control.Feedback type="invalid">
+                    CGPA must between 0 and 4.00{" "}
+                  </Form.Control.Feedback>
                 </Form.Group>
                 <br></br>
 

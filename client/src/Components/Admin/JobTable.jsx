@@ -14,16 +14,11 @@ import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
-
-// import Toolbar from "@mui/material/Toolbar";
-// import Typography from "@mui/material/Typography";
-// import Checkbox from "@mui/material/Checkbox";
-// import IconButton from "@mui/material/IconButton";
-// import Tooltip from "@mui/material/Tooltip";
-// import DeleteIcon from "@mui/icons-material/Delete";
-// import FilterListIcon from "@mui/icons-material/FilterList";
-// import PropTypes from "prop-types";
-// import { alpha } from "@mui/material/styles";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -87,14 +82,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const {
-    // onSelectAllClick,
-    order,
-    orderBy,
-    // numSelected,
-    // rowCount,
-    onRequestSort,
-  } = props;
+  const { order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -102,22 +90,10 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        {/* <TableCell padding="checkbox">
-          <Checkbox
-            color="primary"
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{
-              "aria-label": "select all desserts",
-            }}
-          />
-        </TableCell> */}
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
             align="center"
-            // padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -139,71 +115,6 @@ function EnhancedTableHead(props) {
   );
 }
 
-// EnhancedTableHead.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-//   onRequestSort: PropTypes.func.isRequired,
-//   onSelectAllClick: PropTypes.func.isRequired,
-//   order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-//   orderBy: PropTypes.string.isRequired,
-//   rowCount: PropTypes.number.isRequired,
-// };
-
-// function EnhancedTableToolbar(props) {
-//   const { numSelected } = props;
-
-//   return (
-//     <Toolbar
-//       // sx={{
-//       //   pl: { sm: 2 },
-//       //   pr: { xs: 1, sm: 1 },
-//       //   ...(numSelected > 0 && {
-//       //     bgcolor: (theme) =>
-//       //       alpha(
-//       //         theme.palette.primary.main,
-//       //         theme.palette.action.activatedOpacity
-//       //       ),
-//       //   }),
-//       // }}
-//     >
-//       {/* {numSelected > 0 ? (
-//         <Typography
-//           sx={{ flex: "1 1 100%" }}
-//           color="inherit"
-//           variant="subtitle1"
-//           component="div"
-//         >
-//           {numSelected}
-//         </Typography>
-//       ) : (
-//         <Typography
-//           sx={{ flex: "1 1 100%" }}
-//           variant="h6"
-//           id="tableTitle"
-//           component="div"
-//         ></Typography>
-//       )}
-
-//       {numSelected > 0 ? (
-//         <Tooltip title="Delete">
-//           <IconButton>
-//             <DeleteIcon />
-//           </IconButton>
-//         </Tooltip>
-//       ) : (
-//         <Tooltip title="Filter list">
-//           <IconButton>
-//             <FilterListIcon />
-//           </IconButton>
-//         </Tooltip>
-//       )} */}
-//     </Toolbar>
-//   );
-// }
-
-// EnhancedTableToolbar.propTypes = {
-//   numSelected: PropTypes.number.isRequired,
-// };
-
 export default function JobTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("name");
@@ -212,7 +123,8 @@ export default function JobTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -229,7 +141,7 @@ export default function JobTable() {
       .catch((err) => {
         console.log(err);
       });
-  }, [isLoading]);
+  }, []);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -246,10 +158,11 @@ export default function JobTable() {
         },
       })
       .then((res) => {
-        console.log(res);
+        console.log(res.data);
         // remove the deleted job from the table
         const newRows = rows.filter((row) => row.id !== id);
         setRows(newRows);
+        window.location.href = "/admin/manage-job";
       })
       .catch((err) => {
         console.log(err);
@@ -265,27 +178,7 @@ export default function JobTable() {
     setSelected([]);
   };
 
-  // const handleClick = (event, name) => {
-  //   const selectedIndex = selected.indexOf(name);
-  //   let newSelected = [];
-
-  //   if (selectedIndex === -1) {
-  //     newSelected = newSelected.concat(selected, name);
-  //   } else if (selectedIndex === 0) {
-  //     newSelected = newSelected.concat(selected.slice(1));
-  //   } else if (selectedIndex === selected.length - 1) {
-  //     newSelected = newSelected.concat(selected.slice(0, -1));
-  //   } else if (selectedIndex > 0) {
-  //     newSelected = newSelected.concat(
-  //       selected.slice(0, selectedIndex),
-  //       selected.slice(selectedIndex + 1)
-  //     );
-  //   }
-
-  //   setSelected(newSelected);
-  // };
-
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = (_event, newPage) => {
     setPage(newPage);
   };
 
@@ -298,7 +191,13 @@ export default function JobTable() {
     setDense(event.target.checked);
   };
 
-  // const isSelected = (name) => selected.indexOf(name) !== -1;
+  const handleClickOpen = () => {
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -307,7 +206,6 @@ export default function JobTable() {
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        {/* <EnhancedTableToolbar numSelected={selected.length} /> */}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -327,45 +225,55 @@ export default function JobTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row) => {
-                  // const isItemSelected = isSelected(row.jobName);
-                  // const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
-                    <TableRow
-                      hover
-                      // onClick={(event) => handleClick(event, row.name)}
-                      // role="checkbox"
-                      // aria-checked={isItemSelected}
-                      // tabIndex={-1}
-                      // key={row._id}
-                      // selected={isItemSelected}
-                    >
-                      {/* <TableCell padding="checkbox" sx={{ m: 4 }}>
-                        <Checkbox
-                          color="primary"
-                          checked={isItemSelected}
-                          inputProps={{
-                            "aria-labelledby": labelId,
-                          }}
-                        />
-                      </TableCell> */}
+                    <TableRow hover>
                       <TableCell align="center">{row.jobName}</TableCell>
                       <TableCell align="center">{row.jobDescription}</TableCell>
-                      <TableCell align="center">{row.criteria?.qualification}</TableCell>
-                      <TableCell align="center">{row.criteria?.cgpa}</TableCell>
+                      <TableCell align="center">{row.qualification}</TableCell>
+                      <TableCell align="center">
+                        {row.cgpa.toFixed(2)}
+                      </TableCell>
                       <TableCell align="center">
                         <Button
                           variant="primary"
                           href={`/admin/update-job/${row._id}`}
                         >
                           Edit
-                        </Button>&nbsp;&nbsp;
-                        <Button
-                          variant="danger"
-                          onClick={() => handleDelete(row._id)}
-                        >
+                        </Button>
+                        &nbsp;&nbsp;
+                        <Button variant="danger" onClick={handleClickOpen}>
                           Delete
                         </Button>
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"Are you sure you want to delete this job?"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              You cannot undo this action.
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              variant="success"
+                              onClick={() => handleDelete(row._id)}
+                            >
+                              Proceed
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={handleClose}
+                              autoFocus
+                            >
+                              Cancel
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   );
