@@ -123,7 +123,7 @@ export default function JobTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -230,7 +230,9 @@ export default function JobTable() {
                       <TableCell align="center">{row.jobName}</TableCell>
                       <TableCell align="center">{row.jobDescription}</TableCell>
                       <TableCell align="center">{row.qualification}</TableCell>
-                      <TableCell align="center">{row.cgpa}</TableCell>
+                      <TableCell align="center">
+                        {row.cgpa.toFixed(2)}
+                      </TableCell>
                       <TableCell align="center">
                         <Button
                           variant="primary"
@@ -239,35 +241,39 @@ export default function JobTable() {
                           Edit
                         </Button>
                         &nbsp;&nbsp;
-                        <>
-                          <Button
-                            variant="danger"
-                            onClick={handleClickOpen}
-                          >
-                            Delete
-                          </Button>
-                          <Dialog
-                            open={open}
-                            onClose={handleClose}
-                            aria-labelledby="alert-dialog-title"
-                            aria-describedby="alert-dialog-description"
-                          >
-                            <DialogTitle id="alert-dialog-title">
-                              {"Are you sure you want to delete this job?"}
-                            </DialogTitle>
-                            <DialogContent>
-                              <DialogContentText id="alert-dialog-description">
-                                You cannot undo this action.
-                              </DialogContentText>
-                            </DialogContent>
-                            <DialogActions>
-                              <Button variant="success" onClick={() => handleDelete(row._id)}>Proceed</Button>
-                              <Button variant="danger" onClick={handleClose} autoFocus>
-                                Cancel
-                              </Button>
-                            </DialogActions>
-                          </Dialog>
-                        </>
+                        <Button variant="danger" onClick={handleClickOpen}>
+                          Delete
+                        </Button>
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"Are you sure you want to delete this job?"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              You cannot undo this action.
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button
+                              variant="success"
+                              onClick={() => handleDelete(row._id)}
+                            >
+                              Proceed
+                            </Button>
+                            <Button
+                              variant="danger"
+                              onClick={handleClose}
+                              autoFocus
+                            >
+                              Cancel
+                            </Button>
+                          </DialogActions>
+                        </Dialog>
                       </TableCell>
                     </TableRow>
                   );
