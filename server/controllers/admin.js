@@ -1,4 +1,6 @@
 import Admin from '../models/admin.js';
+import mongoose from 'mongoose';
+import { registerUser } from './user.js';
 
 export const getAdmins = async (req, res) => {
     try{
@@ -50,15 +52,18 @@ export const deleteAdmin = async (req, res) => {
     await Admin.findByIdAndRemove(id);
     res.json({ message: "Admin deleted successfully." });
 }
-
-//login for admin
-export const loginAdmin = async (req, res) => {
-    const {username, password } = req.body;
+//register for admin
+export const registerAdmin = async (req, res) => {
+    const { username, password } = req.body;
     try{
-        const admin = await Admin.findOne({ email, username, password });
-        res.status(200).json(admin);
+        const newUser = await registerUser(username, password, password, 1, res);
+        if (newUser == null) {
+            return;
+        }
+        const result = await Admin.create({ user: newUser._id });
+        res.status(200).json({ result });
     }
     catch(error){
-        res.status(404).json({ message: error.message });
+        res.status(500).json({ message: "Something went wrong" });
     }
 }

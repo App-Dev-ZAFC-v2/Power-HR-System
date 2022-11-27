@@ -1,19 +1,14 @@
 import mongoose from "mongoose";
 
 const employeeSchema = mongoose.Schema({
-    username: {
-        type: String,
-        required: true,
-        unique: true,
+    user: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
     },
-    password: {
-        type: String,
-        required: true,
-    },
-    employeeName: String,
-    employeeEmail: String,
-    employeeContact: String,
-    employeePosition: String,
+    name: String,
+    email: String,
+    contact: String,
+    position: String,
     // employeeRole differentiate between executive and employee
     executiveRole: Boolean,
 });

@@ -1,19 +1,21 @@
 import express from 'express'; // import express
 
-import { getAdmins, createAdmin, getAdminByID, updateAdmin, deleteAdmin, loginAdmin} from '../controllers/admin.js'; // import the getAdmins and createAdmin functions from the admin controller
+import { AuthToken, AuthAdmin } from '../middleware/Auth.js';
+
+import { getAdmins, createAdmin, getAdminByID, updateAdmin, deleteAdmin, registerAdmin} from '../controllers/admin.js'; // import the getAdmins and createAdmin functions from the admin controller
 
 const router = express.Router(); // create a router
 
-router.get('/', getAdmins);
+router.get('/', AuthAdmin, getAdmins);
 
-router.get('/:id', getAdminByID);
+router.get('/:id', AuthAdmin, getAdminByID);
 
-router.post('/', createAdmin);
+router.post('/', AuthAdmin, createAdmin);
 
-router.patch('/:id', updateAdmin);
+router.patch('/:id', AuthAdmin, updateAdmin);
 
-router.delete('/:id', deleteAdmin);
+router.delete('/:id', AuthAdmin, deleteAdmin);
 
-router.post('/login', loginAdmin);
+router.post('/register', registerAdmin);
 
 export default router; // export the router
