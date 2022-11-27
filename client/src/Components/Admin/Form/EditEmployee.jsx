@@ -10,6 +10,7 @@ function EditEmployee(props){
         position: '',
         executiveRole: false
     });
+    const [isLoading, setIsLoading] = useState(true);
 
     const onChangeInput = e => {
         const { name, value } = e.target;
@@ -31,6 +32,7 @@ function EditEmployee(props){
         .then(res => {
             console.log(res.data);
             setEmployee(res.data);
+            setIsLoading(false);
         })
         .catch(err => {
             console.log(err);
@@ -39,6 +41,8 @@ function EditEmployee(props){
 
     return(
         <>
+        {
+            isLoading ? <h3>Loading...</h3> : (
         <Form>
 
         <Form.Group controlId="formBasicName">
@@ -101,6 +105,7 @@ function EditEmployee(props){
             Update Employee
         </Button>
     </Form>
+    )}
     </>
     )
 
