@@ -123,8 +123,9 @@ export default function JobTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
-  const [, setIsLoading] = useState(true);
+  const [IsLoading, setIsLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  const [idtoDelete, setIdtoDelete] = useState("");
 
   useEffect(() => {
     axios
@@ -191,8 +192,10 @@ export default function JobTable() {
     setDense(event.target.checked);
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
+    setIdtoDelete(id);
     setOpen(true);
+    
   };
 
   const handleClose = () => {
@@ -241,7 +244,7 @@ export default function JobTable() {
                           Edit
                         </Button>
                         &nbsp;&nbsp;
-                        <Button variant="danger" onClick={handleClickOpen}>
+                        <Button variant="danger" onClick={()=>handleClickOpen(row._id)}>
                           Delete
                         </Button>
                         <Dialog
@@ -261,7 +264,7 @@ export default function JobTable() {
                           <DialogActions>
                             <Button
                               variant="success"
-                              onClick={() => handleDelete(row._id)}
+                              onClick={() => handleDelete(idtoDelete)}
                             >
                               Proceed
                             </Button>
