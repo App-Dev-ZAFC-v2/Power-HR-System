@@ -3,14 +3,15 @@ import Navbar from "../../../Components/Navbar";
 import {
   Grid,
   Typography,
-  // Box,
-  // Card,
-  // CardActions,
-  // CardContent,
-  // Button,
-  // TextField,
-  // FormHelperText,
+  Box,
+  Card,
+  CardActions,
+  CardContent,
+  Button,
+  TextField,
+  FormHelperText,
 } from "@mui/material";
+import Link from "@mui/material/Link";
 
 import axios from "axios";
 
@@ -91,10 +92,119 @@ function ProfileUsername() {
         "Loading..."
       ) : (
         <>
-          <Grid item xs={12}>
-            <Typography variant="h4" align="center">
-              Profile Username Change
-            </Typography>
+          <Grid
+            container
+            mt={5}
+            spacing={0}
+            direction="column"
+            alignItems="center"
+            justify="center"
+          >
+            <Card
+              sx={{ minWidth: 300, boxShadow: 8, borderRadius: 3, padding: 4 }}
+            >
+              <CardContent>
+                <Typography variant="h5" component="div" mt={3}>
+                  Update Username
+                </Typography>
+                <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={3}>
+                  <Box>
+                    <TextField
+                      id="outlined-read-only-input"
+                      label="Username"
+                      defaultValue={user?.name}
+                      margin="normal"
+                      InputProps={{
+                        readOnly: isRead,
+                      }}
+                      onChange={(e) => {
+                        setUser({ ...user, name: e.target.value });
+                      }}
+                    />
+                  </Box>
+                </Typography>
+              </CardContent>
+              <CardActions>
+                {userType === 0 &&
+                  (isRead ? (
+                    <Button
+                      size="small"
+                      variant="contained"
+                      sx={{
+                        backgroundColor: "blue",
+                      }}
+                      onClick={() => setIsRead(false)}
+                    >
+                      Update Username
+                    </Button>
+                  ) : (
+                    <>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="error"
+                        onClick={() => refreshPage()}
+                      >
+                        Cancel
+                      </Button>
+                      <Button
+                        size="small"
+                        variant="contained"
+                        color="success"
+                        onClick={handleSubmit}
+                      >
+                        Submit Update
+                      </Button>
+                    </>
+                  ))}
+                <Grid>
+                  {success.fetchSuccess && (
+                    <FormHelperText
+                      severity="success"
+                      contained
+                      variant="filled"
+                    >
+                      {success.fetchSuccessMsg}
+                    </FormHelperText>
+                  )}
+                  {error.fetchError && (
+                    <FormHelperText error contained variant="filled">
+                      {error.fetchErrorMsg}
+                    </FormHelperText>
+                  )}
+                </Grid>
+              </CardActions>
+            </Card>
+          </Grid>
+          <Grid container mt={2} rowSpacing={1} direction="row">
+            <Grid item xs={6}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                ml={55}
+              >
+                <Link href="/profile">
+                  <Button variant="contained" color="primary">
+                    Update Profile
+                  </Button>
+                </Link>
+              </Box>
+            </Grid>
+            <Grid item xs={6}>
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                mr={55}
+              >
+                <Link href="/profile/update-password">
+                  <Button variant="contained" color="primary">
+                    Update Password
+                  </Button>
+                </Link>
+              </Box>
+            </Grid>
           </Grid>
         </>
       )}
