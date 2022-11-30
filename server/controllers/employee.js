@@ -50,6 +50,9 @@ export const updateEmployee = async (req, res) => {
     const { id } = req.params;
     const employee = req.body;
     if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+    //check if email is already in use
+    const existingEmployee = await Employee.findOne({ email: employee.email });
+    if(existingEmployee && existingEmployee._id != id) return res.status(409).json({ message: 'Email already in use' });
     const updatedEmployee = await Employee.findByIdAndUpdate(id, employee, { new: true });
     res.json(updatedEmployee);
 }
