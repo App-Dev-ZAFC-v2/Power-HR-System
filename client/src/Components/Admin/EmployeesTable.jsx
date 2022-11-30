@@ -270,7 +270,10 @@ export default function EmployeesTable() {
             console.log(res);
             // remove the deleted employee from the table
             const newRows = rows.filter(row => row.id !== id);
-            setRows(newRows);
+            setRows([...newRows]);
+            //refresh the page
+            window.location.reload();
+
 
         })
         .catch(err => {

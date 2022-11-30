@@ -4,6 +4,7 @@ import ProfileCard from '../../Components/ProfileCard';
 import Welcome from '../../Components/Welcome';
 import Container from '@mui/material/Container';
 import {Grid} from '@mui/material'
+import { Button } from 'react-bootstrap';
 
 function ApplicantDashboard() {
     // const [jobs, setJobs] = useState([]);
@@ -49,6 +50,7 @@ function ApplicantDashboard() {
             <p>{job.salary}</p>
             </div>
         ))} */}
+        <Button variant="primary" href="/applicant/jobs">View Available Jobs</Button>
         </>
     );
     }
