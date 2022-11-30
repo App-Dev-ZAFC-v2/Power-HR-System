@@ -122,12 +122,17 @@ export const updateUser = async (req, res) => {
 
 export const changePassword = async (req, res) => {
   try {
-    const { oldPassword, newPassword } = req.body;
-    const user = await User.findById(req.params.id);
-    const isPasswordCorrect = await bcrypt.compare(oldPassword, user.password);
+    const { id } = req.params;
+    const { oldpassword, newpassword } = req.body;
+    console.log("1");
+    const user = await User.findById(id);
+    console.log("2");
+    const isPasswordCorrect = await bcrypt.compare(oldpassword, user.password);
+    console.log("3");
     if (!isPasswordCorrect)
       return res.status(400).json({ message: "Incorrect password!" });
-    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    const hashedPassword = await bcrypt.hash(newpassword, 12);
+    console.log("4");
     const updateduser = await User.findByIdAndUpdate(
       req.params.id,
       { password: hashedPassword },
@@ -135,6 +140,8 @@ export const changePassword = async (req, res) => {
     );
     res.status(200).json(updateduser);
   } catch (error) {
-    res.status(500).json({ message: "Something went wrong" });
+    res
+      .status(500)
+      .json({ message: "Something went wrong with changing pasword" });
   }
 };

@@ -135,7 +135,7 @@ function ProfileUsername() {
                       }}
                       onClick={() => setIsRead(false)}
                     >
-                      Update Profile
+                      Update Username
                     </Button>
                   ) : (
                     <>
