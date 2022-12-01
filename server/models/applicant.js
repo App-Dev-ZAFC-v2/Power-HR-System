@@ -6,13 +6,14 @@ const applicantSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
-    applicantStatus:{
-        type: String,
-        default: "Active" // Accepted, Rejected, Active, Inactive, Pending
-    },
     name: String,
     email: String,
     contact: String,
+    qualification: String,
+    applications: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Application",
+    }],
      
 });
 
