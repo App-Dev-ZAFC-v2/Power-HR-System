@@ -26,6 +26,8 @@ import UpdatePassword from "./Pages/User/Pages/updatepassword";
 import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
 
+import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
+
 function App() {
   return (
     <div className="App">
@@ -52,6 +54,10 @@ function App() {
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
         <Route path="/applicant/jobs" element={<JobPage />} />
+
+        <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
+
+        
       </Routes>
     </div>
   );
