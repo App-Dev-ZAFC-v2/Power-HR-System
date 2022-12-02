@@ -13,6 +13,7 @@ import applicantRoutes from './routes/applicant.js'; // import the applicant rou
 import jobRoutes from './routes/job.js'; // import the job router
 import feedbackRoutes from './routes/feedback.js'; // import the feedback router
 import applicationRoutes from './routes/application.js'; // import the application router
+import formRoutes from './routes/form.js'; // import the form router
 
 
 const app = express();
@@ -26,8 +27,9 @@ app.use('/employees', employeeRoutes); // when a request is made to the /employe
 app.use('/admins', adminRoutes); // when a request is made to the /admins endpoint, use the adminRoutes router
 app.use('/applicants', applicantRoutes); // when a request is made to the /applicants endpoint, use the applicantRoutes router
 app.use('/feedbacks', feedbackRoutes); // when a request is made to the /feedbacks endpoint, use the feedbackRoutes router
-app.use('/jobs', jobRoutes); // when a request is made to the /job endpoint, use the jobRoutes router')
+app.use('/jobs', jobRoutes); // when a request is made to the /job endpoint, use the jobRoutes router'
 app.use('/applications', applicationRoutes); // when a request is made to the /application endpoint, use the applicationRoutes router
+app.use('/forms', formRoutes); // when a request is made to the /job endpoint, use the jobRoutes router')
 
 
 app.post('/login', loginUser); // when a request is made to the /login endpoint, use the loginUser function
