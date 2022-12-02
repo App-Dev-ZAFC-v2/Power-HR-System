@@ -3,7 +3,7 @@ import FormModel from "../models/form";
 
 //Manage Form
 
-export const getForm = async (req, res) =>{
+export const getForms = async (req, res) =>{
     try {
         const form = await FormModel.find().lean();
         res.status(200).json(form);
