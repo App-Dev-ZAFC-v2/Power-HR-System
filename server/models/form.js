@@ -19,8 +19,13 @@ const formSchema = mongoose.Schema({
         options: [{
             optionText: String,
             optionImage: {type: String, default: ""},
-        }]
-    }]
+        }],
+    }],
+
+    once:{
+        type: Boolean,
+        default: false,
+    }
 });
 
 const Form = mongoose.model("Form", formSchema);
