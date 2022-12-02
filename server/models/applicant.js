@@ -10,10 +10,6 @@ const applicantSchema = mongoose.Schema({
     email: String,
     contact: String,
     qualification: String,
-    applications: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Application",
-    }],
      
 });
 

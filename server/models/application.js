@@ -13,6 +13,10 @@ const applicationSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "Job"
     },
+    applicant : {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Applicant"
+    },
     
 });
 

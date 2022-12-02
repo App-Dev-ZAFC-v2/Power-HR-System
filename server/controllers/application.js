@@ -21,13 +21,21 @@ export const getApplicationByID = async (req, res) => {
     }
 
 //get all applications for a specific job or applicant
-export const getApplicationsByJobID = async (req, res, attr) => {
-    const { id } = req.params;
-    //create an array of with values of "job" and "applicant"
-    const arr = ["job", "applicant"];
+export const getApplicationsByAttrID = async (req, res) => {
+    const { attr, id } = req.params;
+    // attr is either job or applicant
     try {
-        const applications = await Application.find({ [arr[attr]]: id });
-        res.status(200).json(applications);
+        if (attr === "job") {
+            const applications = await Application.find({ job: id });
+            res.status(200).json(applications);
+        } else if (attr === "applicant") {
+            const applications = await Application.find({ applicant: id });
+            res.status(200).json(applications);
+        } else {
+            res.status(404).json({ message: "Invalid attribute" });
+        }
+        // const applications = await Application.find({ [attr]: id });
+        // res.status(200).json(applications);
     } catch (error) {
         res.status(404).json({ message: error.message });
     }
