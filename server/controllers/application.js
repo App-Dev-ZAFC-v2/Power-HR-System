@@ -1,4 +1,4 @@
-import Application from "../models/application";
+import Application from "../models/application.js";
 import mongoose from "mongoose";
 
 export const getApplications = async (req, res) => {

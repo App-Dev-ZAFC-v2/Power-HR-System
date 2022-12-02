@@ -7,7 +7,7 @@ const applicationSchema = mongoose.Schema({
     },
     applicationStatus: {
         type: String,
-        default: "Pending"
+        default: "New"
     },
     job : {
         type: mongoose.Schema.Types.ObjectId,

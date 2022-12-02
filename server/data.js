@@ -16,3 +16,12 @@ registeredEmployee = {
         "employeePosition": "mission",
         "executiveRole": true
     }
+
+    // {
+    //   "jobName": "Software Engineer II",
+    //   "jobDescription":"Design, develop and mantain system for JS environment",
+    //   "quota": 12,
+    //   "dateStart":"2024-12-01",
+    //   "dateEnd":"2023-01-05",
+    //   "qualification": "Bachelor's Degree"
+    // }
