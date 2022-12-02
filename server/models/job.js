@@ -1,19 +1,28 @@
 import mongoose from "mongoose";
 
 const jobSchema = mongoose.Schema({
-    name: String,
+    name: {
+        type: String,
+        required: true,
+    },
     description: String,
-    level: String,
-    salary: Number,
-    location: String,
-    experience: Number,
-    skills: [String],
+    scope:{
+        type: [String]
+    },
     requirements: {
         type: [String],
-
     },
+    level: {
+        type: String,
+        enum: ["Internship","Entry", "Mid", "Senior"]
+    },
+    salary: {
+        min: Number,
+        max: Number
+    },
+    location: String,
     specializations: {
-        type: [String],
+        type: String,
         enum: ["Not Specified","Accounting/Finance", 
         "Admin/HR", "Sales/Marketing", 
         "Arts/Media/Communications", "Services", 
@@ -21,7 +30,7 @@ const jobSchema = mongoose.Schema({
         "Software Development", "Engineering",
         "Healthcare", "Legal", "Manufacturing",
         "Science", "Other"],
-        default: ["Not Specified"]
+        default: "Not Specified"
     },
     quota: Number,
     dateStart: {
