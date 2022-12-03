@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import FormModel from "../models/form";
+import FormModel from "../models/form.js";
 
 //Manage Form
 
