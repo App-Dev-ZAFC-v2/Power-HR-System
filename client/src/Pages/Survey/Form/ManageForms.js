@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import FormAPI from '../../API/form';
+import FormAPI from '../../../API/form';
 import { CircularProgress, Container, Box, Grid, Typography } from '@mui/material';
-import Navbar from '../../Components/Navbar';
-import FormCard from '../../Components/Survey/FormCard.jsx';
-import FormCardCreate from '../../Components/Survey/FormCardCreate';
+import Navbar from '../../../Components/Navbar';
+import FormCard from '../../../Components/Survey/FormCard.jsx';
+import FormCardCreate from '../../../Components/Survey/FormCardCreate';
 
 function ManageForms() {
 

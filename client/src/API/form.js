@@ -2,7 +2,7 @@ import axios from 'axios';
 const API_URL = "http://localhost:5000/forms/";
 
 
-export default {
+const FormAPI = {
     async getForms(){
         const response = await axios.get(API_URL);
         return response.data;
@@ -28,3 +28,5 @@ export default {
         return response.data;
     }
 }
+
+export default FormAPI;

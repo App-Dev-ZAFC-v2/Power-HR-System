@@ -42,7 +42,7 @@ function FormCardCreate() {
 
     return (
               <Grid item  xs={12} sm={6} md={3} >
-                    <Card sx={{ maxWidth: 345, height: 308.34}}>
+                    <Card sx={{ height: 308.34}}>
                         <CardActionArea sx={{p:0, m:0, height: 308.34}} onClick={handleClickOpen}>
                             <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
                                 <Box component="img" src={icon} height={64}/>

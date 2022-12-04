@@ -26,8 +26,8 @@ import UpdatePassword from "./Pages/User/Pages/updatepassword";
 import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
 
-import ManageForms from "./Pages/Survey/ManageForms";
-import EditForm from "./Pages/Survey/EditForm";
+import ManageForms from "./Pages/Survey/Form/ManageForms";
+import EditForm from "./Pages/Survey/Form/EditForm";
 
 function App() {
   return (
