@@ -14,6 +14,13 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
 import {Button} from "react-bootstrap";
+import { Typography } from "@mui/material";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
+import DialogContentText from "@mui/material/DialogContentText";
+import DialogTitle from "@mui/material/DialogTitle";
+import { useParams } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -131,7 +138,14 @@ export default function ShortlistTable() {
   const [rows, setRows] = useState([]);
   // const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
+  // const [error, setError] = useState("");
+  const [details, setDetails] = useState("");
+
+  const [status, setStatus] = useState({
+    applicationStatus: "",
+  });
+
+  const {id} = useParams();
 
   useEffect(() => {
     axios
@@ -178,13 +192,31 @@ export default function ShortlistTable() {
     setDense(event.target.checked);
   };
 
-  const handleClickOpen = () => {
+  const handleClickOpen = (id) => {
+    setDetails(id);
     setOpen(true);
   };
 
   const handleClose = () => {
     setOpen(false);
   };
+
+  const handleShortlist = async(e) => {
+    e.preventDefault();
+    axios
+      .patch(`http://localhost:5000/applications/${id}`, status, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
+        
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+  }
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -211,11 +243,9 @@ export default function ShortlistTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow hover>
-                      <TableCell align="center" id={labelId}>
+                      <TableCell align="center">
                         {row.name}
                       </TableCell>
                       <TableCell align="center">{row.jobApplied}</TableCell>
@@ -223,12 +253,37 @@ export default function ShortlistTable() {
                       <TableCell align="center">{row.status}</TableCell>
                       <TableCell align="center">
                         <Button
-                          variant="contained"
                           color="primary"
-                          onClick={handleClickOpen}
+                          onClick={() => handleClickOpen(row._id)}
                         > Details
                         </Button>
-                        </TableCell>
+                        <Dialog
+                          open={open}
+                          onClose={handleClose}
+                          aria-labelledby="alert-dialog-title"
+                          aria-describedby="alert-dialog-description"
+                        >
+                          <DialogTitle id="alert-dialog-title">
+                            {"Candidate Details"}
+                          </DialogTitle>
+                          <DialogContent>
+                            <DialogContentText id="alert-dialog-description">
+                              Name: {row.name}
+                              <br />
+                              Email: {row.email}
+                              <br />
+                              Phone: {row.contact}
+                              <br />
+                              Qualification: {row.qualification}
+                            </DialogContentText>
+                          </DialogContent>
+                          <DialogActions>
+                            <Button onClick={handleShortlist} variant = "success">Shortlist</Button>
+                            <Button onClick={handleShortlist} variant = "danger">Not Shortlist</Button>
+                            <Button onClick={handleClose}>Close</Button>
+                          </DialogActions>
+                        </Dialog>
+                      </TableCell>
 
                     </TableRow>
                   );
