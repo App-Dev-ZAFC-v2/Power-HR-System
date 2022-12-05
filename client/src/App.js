@@ -50,7 +50,7 @@ function App() {
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
         <Route path="/admin/add-feedback" element={<AddFeedback />} />
         <Route path="/admin/manage-forms" element={<ManageForms />} />
-        <Route path="/admin/edit-form" element={<EditForm />} />
+        <Route path="/admin/edit-form/:id" element={<EditForm />} />
 
         <Route path="/employee/feedback" element={<Feedback />} />
         <Route path="/profile/update-username" element={<UpdateUsername />} />

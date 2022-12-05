@@ -9,7 +9,7 @@ const formSchema = mongoose.Schema({
 
     name: String,
 
-    description:{type: String, default: ""},
+    description:{type: String, default: "No description"},
 
     questions: [{
         questionText: String,

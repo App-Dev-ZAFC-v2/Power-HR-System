@@ -29,7 +29,7 @@ function FormCardCreate() {
         var form = {
             createdBy: adminId,
             name : formTitle,
-            description: formDescription
+            description: ((formDescription === "")? "No description" : formDescription)
         }
         
         if(form.name !==""){

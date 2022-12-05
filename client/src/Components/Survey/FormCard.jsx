@@ -63,7 +63,7 @@ function FormCard(props) {
                             WebkitBoxOrient: 'vertical',
                             WebkitLineClamp: 3,
                         }} variant="body2" color="text.secondary" height={60}>
-                            {(form.description === "")? "No description" : form.description}
+                            {form.description}
                         </Typography>
                         </CardContent>
                     </CardActionArea>
