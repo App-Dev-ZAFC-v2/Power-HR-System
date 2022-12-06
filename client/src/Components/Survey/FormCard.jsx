@@ -41,7 +41,7 @@ function FormCard(props) {
     return (
               <Grid item  xs={12} sm={6} md={3}>
                     <Card>
-                    <CardActionArea onClick={() => window.location = '/admin/edit-form/' + form._id}>
+                    <CardActionArea onClick={() => window.location = '/form/edit-form/' + form._id}>
                         <CardMedia
                         component="img"
                         height="140"

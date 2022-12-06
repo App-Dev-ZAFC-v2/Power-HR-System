@@ -34,7 +34,7 @@ function FormCardCreate() {
         
         if(form.name !==""){
             formAPI.createForm(form).then((newForm) => {
-                window.open('/admin/edit-form/' + newForm._id);
+                window.open('/form/edit-form/' + newForm._id);
             })
             handleClose();
         }
