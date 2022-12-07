@@ -1,49 +1,48 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../../Components/Navbar';
 import FormAPI from '../../../API/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, Divider, FormControl, FormControlLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, Select, Stack, TextField, Typography  } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, Divider, Fab, FormControl, FormControlLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, Select, TextField, Typography  } from '@mui/material';
 import { Container } from '@mui/system';
 import FormBar from '../../../Components/Survey/FormBar';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CloseIcon from '@mui/icons-material/Close';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddIcon from '@mui/icons-material/Add';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
 import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import SubjectIcon from '@mui/icons-material/Subject';
+import SaveIcon from '@mui/icons-material/Save';
 import Question from '../../../Components/Survey/Question';
 
 
 function EditForm(){
+    const scrollRef = useRef(null);
     const [questions, setQuestions] = useState([]);
     const [open, setOpen] = useState([])
     const [form, setForm] = useState([]);
     const [loadingForm, setLoading] = useState(true);
     const { id } = useParams();
-
+    const [save, setSave] = useState(true);
+    const [bottom, setBottom] = useState(false);
 
     useEffect(()=>{
         FormAPI.getFormByID(id)
         .then((data) => {
-            if(data.questions !== undefined){
-                if (data.questions.length === 0){
-                    setQuestions([{
-                        questionText: "Untitled Question",
-                        questionType: "Multiple Choice",
-                        questionImage: "",
-                        required: false,
-                        options: [{optionText: "Option 1", optionImage: ""}]
-                    }])
-                    setOpen([true]);
-                } else {
-                    setQuestions(data.questions)
-                }
+            setQuestions(data.questions)
+
+            var tempOpen = [...open];
+            tempOpen.push(true);
+            for (let i = 1; i < data.questions.length; i++) {
+                tempOpen.push(false);
             }
+
+            setOpen(tempOpen);
+
             setForm(data);
             setLoading(false);
         })
@@ -53,7 +52,11 @@ function EditForm(){
 
     }, [])
 
-    
+    useEffect(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollIntoView({ behaviour: "smooth" });
+        }
+      }, [questions]);
 
     function onDragEnd(result) {
         if (!result.destination) {
@@ -61,13 +64,19 @@ function EditForm(){
         }
         var tempOneQuestion = [...questions];
       
-        const tempQuestions = reorder(
+        const tempQuestion = reorder(
             tempOneQuestion,
             result.source.index,
             result.destination.index
         );
-      
-        setQuestions(tempQuestions);
+
+        var tempOpen = [...open];
+        var swapOpen = tempOpen[result.destination.index];
+        tempOpen[result.destination.index] = tempOpen[result.source.index];
+        tempOpen[result.source.index] = swapOpen;
+        setOpen(tempOpen);
+        setQuestions(tempQuestion);
+        setSave(false);
     };
 
     const reorder = (list, startIndex, endIndex) => {
@@ -92,30 +101,36 @@ function EditForm(){
     function handleQuestionValue(qtext, i){
         var tempQuestion = [...questions];
         tempQuestion[i].questionText = qtext;
-        setQuestions(tempQuestion);
+        setQuestions(tempQuestion)
+        setSave(false);
     }
 
     function handleOptionValue(otext,i, j){
         var tempQuestion = [...questions];
         tempQuestion[i].options[j].optionText = otext;
-        setQuestions(tempQuestion);
+        setQuestions(tempQuestion)
+        setSave(false);
     }
 
     function removeOption(i, j){
+        setBottom(false);
         var tempQuestion = [...questions];
         if(tempQuestion[i].options.length > 1){
             tempQuestion[i].options.splice(j, 1);
-          setQuestions(tempQuestion)
-        }   
+            setQuestions(tempQuestion)
+            setSave(false);
+        }  
     }
 
     function addOption(i){
+        setBottom(false);
         var tempQuestion = [...questions];
-        tempQuestion[i].options.push({optionText: "Option " + (tempQuestion[i].options.length + 1)});
+        tempQuestion[i].options.push({optionText: "Option " + (tempQuestion[i].options.length + 1), optionImage: ""});
         setQuestions(tempQuestion);
+        setSave(false);
     }
 
-    function addMoreQuestionField(){
+    function addMoreQuestion(){
         var tempQuestion = [...questions];
         var tempOpen = [...open];
 
@@ -131,39 +146,60 @@ function EditForm(){
             options: [{optionText: "Option 1", optionImage: ""}]
         })
         tempOpen.push(true);
-        setQuestions(tempQuestion);
         setOpen(tempOpen);
+        setQuestions(tempQuestion);
+        setSave(false);
+        setBottom(true);
     }
 
     function deleteQuestion(i){
-        let tempQuestions = [...questions];
-        let tempOpen = [...open];
+        setBottom(false);
+        var tempQuestion = [...questions];
+        var tempOpen = [...open];
         if(questions.length > 1){
-            tempQuestions.splice(i, 1);
+            tempQuestion.splice(i, 1);
             tempOpen.splice(i,1);
         }
         tempOpen[i-1] = true;
-        setQuestions(tempQuestions)
+        setQuestions(tempQuestion);
         setOpen(tempOpen);
-      }
+        setSave(false);
+    }
+
+    function saveQuestions(){
+        var data = {
+          name: form.name,
+          description: form.description,
+          questions: questions
+        }
+        setLoading(true);
+        FormAPI.updateForm(id, data)
+        .then((result) => {     
+             setQuestions(result.questions);
+             setLoading(false);
+             setSave(true);
+            },
+        ).catch(err => {console.log(err)});
+        
+    }
 
 
     function question(){
         return questions.map((q, i) => (
-            <Draggable key={i} draggableId={i + 'id'} index={i}>
-                {(provided, snapshot) => (
+            <Draggable key={i} draggableId={i + " id"} index={i}>
+                {(provided) => (
                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                         <div>
                             <div style={{marginBottom: "15px"}}>
                                 <div style={{width:'100%', marginBottom: '-10px' }}>
                                     <DragIndicatorIcon style={{transform: "rotate(-90deg)", color:'#DAE0E2'}} fontSize="small"/>
                                 </div>
-                                <Accordion onChange={()=>{handleExpand(i)}} expanded={open[i]}>
+                                <Accordion onChange={()=>{handleExpand(i)}} expanded={open[i] || false}>
                                     <AccordionSummary aria-controls="panel1a-content" id="panel1a-header" elevation={1} style={{width:'100%'}}>
                                         { !open[i]? (
                                             <div style={{display: 'flex',flexDirection:'column', alignItems:'flex-start', paddingTop: '15px', paddingBottom: '15px'}}>
                                                 <Typography variant="subtitle1" style={{marginLeft: '0px'}}>{q.questionText}</Typography>
-                                                {q.questionImage !==""?(
+                                                {(q.questionImage !=="")?(
                                                     <div>
                                                         <img src={q.questionImage} width="400px" height="auto" /><br></br><br></br>
                                                     </div>
@@ -180,7 +216,7 @@ function EditForm(){
                                                         </div>
 
                                                         <div>
-                                                            {op.optionImage !==""?(
+                                                            {(op.optionImage !== "")?(
                                                                 <img src={op.optionImage} width="160px" height="auto" />
                                                             ): "" }
                                                         </div>
@@ -196,7 +232,7 @@ function EditForm(){
                                                 <TextField 
                                                         fullWidth={true} 
                                                         placeholder="Question Text" 
-                                                        rowsMax={20}
+                                                        rowsmax={20}
                                                         multiline={true}
                                                         value={q.questionText}
                                                         variant="filled"
@@ -263,34 +299,38 @@ function EditForm(){
     }
 
     return(
-        <><Navbar/><Container>
-            <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5 }}>
-                {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : ""}
-                <Grid item xs={12} sm={5} sx={{ width: '100%' }}>
-                    <FormBar dataform ={form}/>
-
-                    <DragDropContext onDragEnd={onDragEnd}>
-                      <Droppable droppableId="droppable">
-                        {(provided, snapshot) => (
-                          <div {...provided.droppableProps} ref={provided.innerRef}>
-                            {question()}
-                            {provided.placeholder}
-                          </div>
-                        )}
-                      </Droppable>
-                    </DragDropContext>
-                    <div>                       
-                        <Button
-                          variant="contained"
-                          onClick={addMoreQuestionField}
-                          endIcon={<AddCircleIcon />}
-                          style={{margin: '5px'}}
-                        >Add Question </Button>
-
-                    </div>
+        <><Navbar/>
+            {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
+            <Container>
+                <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
+                    <Grid item xs={12} sm={5} sx={{ width: '100%' }}>
+                        <FormBar dataform={form} />
+                        <DragDropContext onDragEnd={onDragEnd}>
+                            <Droppable droppableId="droppable">
+                                {(provided) => (
+                                    <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
+                                        {question()}
+                                        {provided.placeholder}
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
+                        {bottom? (<div ref={scrollRef}/>) : ""}
+                    </Grid>
                 </Grid>
-            </Grid>
-        </Container></>
+                <Paper elevation={2} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} >
+                    <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
+                        <Fab variant="extended" onClick={addMoreQuestion}>
+                            <AddIcon sx={{ mr: 1 }} />
+                            Add Question
+                        </Fab>
+                        <Fab variant="extended" onClick={saveQuestions} disabled={save && true}>
+                            <SaveIcon sx={{ mr: 1 }} />
+                            Save
+                        </Fab>
+                    </Box>
+                </Paper>
+            </Container></>
     )
 }
 

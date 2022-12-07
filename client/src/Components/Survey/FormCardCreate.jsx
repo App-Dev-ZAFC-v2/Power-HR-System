@@ -29,7 +29,14 @@ function FormCardCreate() {
         var form = {
             createdBy: adminId,
             name : formTitle,
-            description: ((formDescription === "")? "No description" : formDescription)
+            description: ((formDescription === "")? "No description" : formDescription),
+            questions: [{
+                questionText: "Untitled Question",
+                questionType: "Multiple Choice",
+                questionImage: "",
+                required: false,
+                options: [{optionText: "Option 1", optionImage: ""}]
+            }]
         }
         
         if(form.name !==""){
