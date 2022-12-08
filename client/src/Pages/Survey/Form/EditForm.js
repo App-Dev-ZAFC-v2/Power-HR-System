@@ -23,8 +23,9 @@ import Question from '../../../Components/Survey/Question';
 function EditForm(){
     const scrollRef = useRef(null);
     const [questions, setQuestions] = useState([]);
-    const [open, setOpen] = useState([])
-    const [form, setForm] = useState([]);
+    const [open, setOpen] = useState([]);
+    const [openBar, setOpenBar] = useState(true);
+    const [form, setForm] = useState({});
     const [loadingForm, setLoading] = useState(true);
     const { id } = useParams();
     const [save, setSave] = useState(true);
@@ -36,13 +37,10 @@ function EditForm(){
             setQuestions(data.questions)
 
             var tempOpen = [...open];
-            tempOpen.push(true);
-            for (let i = 1; i < data.questions.length; i++) {
+            for (let i = 0; i < data.questions.length; i++) {
                 tempOpen.push(false);
             }
-
             setOpen(tempOpen);
-
             setForm(data);
             setLoading(false);
         })
@@ -95,8 +93,18 @@ function EditForm(){
                 tempOpen[j] = false;
             }
         }
-         setOpen(tempOpen);
-      }
+        setOpen(tempOpen);
+        setOpenBar(false);
+    }
+
+    function handleExpandBar(){
+        var tempOpen = [...open];
+        for (let j = 0; j < tempOpen.length; j++) {
+            tempOpen[j] = false;
+        }
+        setOpen(tempOpen);
+        setOpenBar(true);
+    }
 
     function handleQuestionValue(qtext, i){
         var tempQuestion = [...questions];
@@ -109,6 +117,20 @@ function EditForm(){
         var tempQuestion = [...questions];
         tempQuestion[i].options[j].optionText = otext;
         setQuestions(tempQuestion)
+        setSave(false);
+    }
+
+    function handleNameValue(textname){
+        var tempForm = form;
+        tempForm.name = textname;
+        setForm(tempForm)
+        setSave(false);
+    }
+
+    function handleDescriptionValue(textdescription){
+        var tempForm = form;
+        tempForm.description = textdescription;
+        setForm(tempForm)
         setSave(false);
     }
 
@@ -303,22 +325,42 @@ function EditForm(){
     }
 
     return(
-        <><Navbar/>
+        <>
+            <Navbar/>
             {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
             <Container>
                 <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
                     <Grid item xs={12} sm={5} sx={{ width: '100%' }}>
-                        <FormBar dataform={form} />
-                        <DragDropContext onDragEnd={onDragEnd}>
-                            <Droppable droppableId="droppable">
-                                {(provided) => (
-                                    <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
-                                        {question()}
-                                        {provided.placeholder}
-                                    </div>
-                                )}
-                            </Droppable>
-                        </DragDropContext>
+                        <Grid sx={{ borderTop: '10px solid black', borderRadius: 2 }}>
+                        <Accordion onChange={handleExpandBar} expanded={openBar || false}>
+                            <AccordionSummary aria-controls="panel1a-content" id="formBar" elevation={1} style={{width:'100%'}}>
+                                { !openBar? (
+                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '15px', paddingBottom: '15px' }}>
+                                        <Typography variant="h4" sx={{ fontFamily: 'sans-serif Roboto', marginBottom: "15px" }}>{form.name}</Typography>
+                                        <Typography variant="subtitle1" style={{ marginLeft: '0px' }}>{form.description}</Typography>
+                                    </div>) : "" 
+                                }
+                            </AccordionSummary>
+
+                            <AccordionDetails sx={{mt:"-48px"}}>
+                                <div style={{display:'flex', width: '100%', flexWrap: "wrap"}}>
+                                    <TextField onChange={(e)=>{handleNameValue(e.target.value)}} fullWidth={true} placeholder="Form Text" rowsmax={3} multiline={true} defaultValue={form.name} variant="standard" sx={{m: 1}} inputProps={{style: {fontSize: 40, fontFamily: 'sans-serif Roboto', lineHeight:"50px"}}} margin="normal"/>
+                                    <TextField onChange={(e)=>{handleDescriptionValue(e.target.value)}} fullWidth={true} placeholder="Form Text" rowsmax={3} multiline={true} defaultValue={form.description} variant="standard" sx={{m: 1}} inputProps={{style: {fontFamily: 'sans-serif Roboto'}}} margin="normal"/>
+                                </div>
+                            </AccordionDetails>
+                        </Accordion>
+                    </Grid>
+                    {/* <FormBar onChange={handleExpandBar}  dataform={form} opened={openBar}/> */}
+                    <DragDropContext onDragEnd={onDragEnd}>
+                        <Droppable droppableId="droppable">
+                            {(provided) => (
+                                <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
+                                    {question()}
+                                    {provided.placeholder}
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
                         {bottom? (<div ref={scrollRef}/>) : ""}
                     </Grid>
                 </Grid>
@@ -330,7 +372,7 @@ function EditForm(){
                         </Fab>
                         <Fab variant="extended" onClick={saveQuestions} disabled={save && true}>
                             <SaveIcon sx={{ mr: 1 }} />
-                            Save
+                            {loadingForm? "Saving..." : (save? "Saved" : "Save")}
                         </Fab>
                     </Box>
                 </Paper>
