@@ -1,3 +1,4 @@
+/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -14,7 +15,7 @@ import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
 import {Button} from "react-bootstrap";
-import { Typography } from "@mui/material";
+// import { Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -222,6 +223,7 @@ export default function ShortlistTable() {
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
+    
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
@@ -243,6 +245,7 @@ export default function ShortlistTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  
                   return (
                     <TableRow hover>
                       <TableCell align="center">
@@ -250,9 +253,10 @@ export default function ShortlistTable() {
                       </TableCell>
                       <TableCell align="center">{row.jobApplied}</TableCell>
                       <TableCell align="center">{row.dateApplied}</TableCell>
-                      <TableCell align="center">{row.status}</TableCell>
+                      <TableCell align="center">{row.status ? {handleShortlist} : "Not confirmed"}</TableCell>
                       <TableCell align="center">
                         <Button
+                          key={row._id}
                           color="primary"
                           onClick={() => handleClickOpen(row._id)}
                         > Details
@@ -267,15 +271,21 @@ export default function ShortlistTable() {
                             {"Candidate Details"}
                           </DialogTitle>
                           <DialogContent>
-                            <DialogContentText id="alert-dialog-description">
-                              Name: {row.name}
-                              <br />
-                              Email: {row.email}
-                              <br />
-                              Phone: {row.contact}
-                              <br />
-                              Qualification: {row.qualification}
-                            </DialogContentText>
+                            {rows.map((row) => {
+                              if (row._id === details) {
+                                return (
+                                  <DialogContentText id="alert-dialog-description" scope="row">
+                                    Name: {row.name}
+                                    <br />
+                                    Email: {row.email}
+                                    <br />
+                                    Phone: {row.contact}
+                                    <br />
+                                    Qualification: {row.qualification}
+                                  </DialogContentText>
+                                );
+                              }
+                            })}
                           </DialogContent>
                           <DialogActions>
                             <Button onClick={handleShortlist} variant = "success">Shortlist</Button>
