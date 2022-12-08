@@ -14,7 +14,7 @@ import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
-import {Button} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 // import { Typography } from "@mui/material";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
@@ -137,23 +137,28 @@ export default function ShortlistTable() {
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   const [rows, setRows] = useState([]);
-  // const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState(false);
+  // const [shortlist, setShortlist] = useState(false);
+  // const [reject, setReject] = useState(false);
+  // const [loading, setLoading] = useState(true);
   // const [error, setError] = useState("");
+
   const [details, setDetails] = useState("");
 
-  const [status, setStatus] = useState({
+  const [data, setData] = useState({
     applicationStatus: "",
   });
+  
+  const [status, setStatus] = useState("");
 
-  const {id} = useParams();
+  const { id } = useParams();
 
   useEffect(() => {
     axios
       .get("http://localhost:5000/applicants", {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`
-      }
+          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+        },
       })
       .then((res) => {
         console.log(res.data);
@@ -202,28 +207,28 @@ export default function ShortlistTable() {
     setOpen(false);
   };
 
-  const handleShortlist = async(e) => {
-    e.preventDefault();
+  const handleShortlist = async (e) => {
+    // e.preventDefault();
     axios
-      .patch(`http://localhost:5000/applications/${id}`, status, {
+      .patch(`http://localhost:5000/applications/${id}`, data, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
-        
+        status: data.applicationStatus,
       })
       .then((res) => {
         console.log(res.data);
+        window.location.href = `/executive/manage-applicant`;
       })
       .catch((err) => {
         console.log(err);
-      })
-  }
+      });
+  };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
-    
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
@@ -245,21 +250,20 @@ export default function ShortlistTable() {
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
-                  
                   return (
                     <TableRow hover>
-                      <TableCell align="center">
-                        {row.name}
-                      </TableCell>
+                      <TableCell align="center">{row.name}</TableCell>
                       <TableCell align="center">{row.jobApplied}</TableCell>
                       <TableCell align="center">{row.dateApplied}</TableCell>
-                      <TableCell align="center">{row.status ? {handleShortlist} : "Not confirmed"}</TableCell>
+                      <TableCell align="center">{row.status}</TableCell>
                       <TableCell align="center">
                         <Button
                           key={row._id}
                           color="primary"
                           onClick={() => handleClickOpen(row._id)}
-                        > Details
+                        >
+                          {" "}
+                          Details
                         </Button>
                         <Dialog
                           open={open}
@@ -274,7 +278,10 @@ export default function ShortlistTable() {
                             {rows.map((row) => {
                               if (row._id === details) {
                                 return (
-                                  <DialogContentText id="alert-dialog-description" scope="row">
+                                  <DialogContentText
+                                    id="alert-dialog-description"
+                                    scope="row"
+                                  >
                                     Name: {row.name}
                                     <br />
                                     Email: {row.email}
@@ -288,13 +295,30 @@ export default function ShortlistTable() {
                             })}
                           </DialogContent>
                           <DialogActions>
-                            <Button onClick={handleShortlist} variant = "success">Shortlist</Button>
-                            <Button onClick={handleShortlist} variant = "danger">Not Shortlist</Button>
+                            <Button
+                              onClick={() =>
+                                handleShortlist(() =>
+                                  setStatus({ status: "Shortlist" })
+                                )
+                              }
+                              variant="success"
+                            >
+                              Shortlist
+                            </Button>
+                            <Button
+                              onClick={() =>
+                                handleShortlist(() =>
+                                  setStatus({ status: "Not Shortlist" })
+                                )
+                              }
+                              variant="danger"
+                            >
+                              Not Shortlist
+                            </Button>
                             <Button onClick={handleClose}>Close</Button>
                           </DialogActions>
                         </Dialog>
                       </TableCell>
-
                     </TableRow>
                   );
                 })}
