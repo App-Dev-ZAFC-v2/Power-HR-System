@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState} from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../../../Components/Navbar';
 import FormAPI from '../../../API/form';
@@ -20,6 +20,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Question from '../../../Components/Survey/Question';
 
 
+
 function EditForm(){
     const scrollRef = useRef(null);
     const [questions, setQuestions] = useState([]);
@@ -30,12 +31,21 @@ function EditForm(){
     const { id } = useParams();
     const [save, setSave] = useState(true);
     const [bottom, setBottom] = useState(false);
+    
+    var timer = null;
+
+    const SavingState = Object.freeze({
+        NOT_SAVED: 0,
+        SAVING: 1,
+        SAVED: 2
+    })
+
+    const [savingState, setSavingState] = useState(SavingState.SAVED);
 
     useEffect(()=>{
         FormAPI.getFormByID(id)
         .then((data) => {
             setQuestions(data.questions)
-
             var tempOpen = [...open];
             for (let i = 0; i < data.questions.length; i++) {
                 tempOpen.push(false);
@@ -54,30 +64,43 @@ function EditForm(){
         if (scrollRef.current) {
           scrollRef.current.scrollIntoView({ behaviour: "smooth" });
         }
-      }, [questions]);
+    }, [questions]);
 
-    function onDragEnd(result) {
+    async function onDragEnd(result) {
+        setBottom(false);
         if (!result.destination) {
           return;
         }
         var tempOneQuestion = [...questions];
       
-        const tempQuestion = reorder(
+        const tempQuestion = await reorder(
             tempOneQuestion,
             result.source.index,
             result.destination.index
         );
 
         var tempOpen = [...open];
-        var swapOpen = tempOpen[result.destination.index];
-        tempOpen[result.destination.index] = tempOpen[result.source.index];
-        tempOpen[result.source.index] = swapOpen;
+
+        if((tempOpen[result.destination.index] === false && tempOpen[result.source.index] === true) || (tempOpen[result.destination.index] === true && tempOpen[result.source.index] === false)){
+            var swapOpen = tempOpen[result.destination.index];
+            tempOpen[result.destination.index] = tempOpen[result.source.index];
+            tempOpen[result.source.index] = swapOpen;
+        }
+        else if((tempOpen[result.destination.index] === false && tempOpen[result.source.index] === false)){
+            for(let i = 0; i < tempOpen.length; i++){
+                if(tempOpen[i] === true){
+                    tempOpen[i] = false;
+                    tempOpen[i-1] = true;
+                }
+            }
+        }
+        
         setOpen(tempOpen);
         setQuestions(tempQuestion);
         setSave(false);
     };
 
-    const reorder = (list, startIndex, endIndex) => {
+     const reorder = async (list, startIndex, endIndex) => {
         const result = Array.from(list);
         const [removed] = result.splice(startIndex, 1);
         result.splice(endIndex, 0, removed);
@@ -107,6 +130,7 @@ function EditForm(){
     }
 
     function handleQuestionValue(qtext, i){
+        setBottom(false);
         var tempQuestion = [...questions];
         tempQuestion[i].questionText = qtext;
         setQuestions(tempQuestion)
@@ -114,6 +138,7 @@ function EditForm(){
     }
 
     function handleOptionValue(otext,i, j){
+        setBottom(false);
         var tempQuestion = [...questions];
         tempQuestion[i].options[j].optionText = otext;
         setQuestions(tempQuestion)
@@ -121,6 +146,7 @@ function EditForm(){
     }
 
     function handleNameValue(textname){
+        setBottom(false);
         var tempForm = form;
         tempForm.name = textname;
         setForm(tempForm)
@@ -128,6 +154,7 @@ function EditForm(){
     }
 
     function handleDescriptionValue(textdescription){
+        setBottom(false);
         var tempForm = form;
         tempForm.description = textdescription;
         setForm(tempForm)
@@ -161,7 +188,7 @@ function EditForm(){
         }
 
         tempQuestion.push({
-            questionText: "Untitled Question",
+            questionText: "Untitled Question " + (tempQuestion.length + 1),
             questionType: "Multiple Choice",
             questionImage: "",
             required: false,
@@ -182,13 +209,19 @@ function EditForm(){
             tempQuestion.splice(i, 1);
             tempOpen.splice(i,1);
         }
-        tempOpen[i-1] = true;
+        if(i === 0){
+            tempOpen[i] = true;
+        }
+        else{
+            tempOpen[i-1] = true;
+        }
+        
         setQuestions(tempQuestion);
         setOpen(tempOpen);
         setSave(false);
     }
 
-    function saveQuestions(){
+    function saveForm(){
         var data = {
           name: form.name,
           description: form.description,
@@ -202,8 +235,27 @@ function EditForm(){
              setSave(true);
             },
         ).catch(err => {console.log(err)});
-        
+
+        // clearTimeout(timer);
+        // setSavingState(SavingState.NOT_SAVED);
+        // timer = setTimeout(() => {
+        //     setSavingState(SavingState.SAVING);
+        //     FormAPI.updateForm(id, data).then((result) => {
+        //         setQuestions(result.questions);
+        //         setForm(result);
+        //         setLoading(false);
+        //         setSavingState(SavingState.SAVED);
+        //     }).catch(err => {console.log(err)})
+        // }, 10000);
     }
+
+    // function saveState(){
+    //     if(savingState === SavingState.SAVED){
+    //         return <Typography variant='subtitle' style={{color: "green"}}>Saved</Typography>
+    //     }else{
+    //         return <Typography variant='subtitle' style={{color: "blue"}}>Saving...</Typography>
+    //     }
+    // }
 
 
     function question(){
@@ -365,16 +417,18 @@ function EditForm(){
                     </Grid>
                 </Grid>
                 <Paper elevation={2} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} >
+                    {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
                     <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
                         <Fab variant="extended" onClick={addMoreQuestion}>
                             <AddIcon sx={{ mr: 1 }} />
                             Add Question
                         </Fab>
-                        <Fab variant="extended" onClick={saveQuestions} disabled={save && true}>
+                        <Fab variant="extended" onClick={saveForm} disabled={save && true}>
                             <SaveIcon sx={{ mr: 1 }} />
                             {loadingForm? "Saving..." : (save? "Saved" : "Save")}
                         </Fab>
                     </Box>
+
                 </Paper>
             </Container></>
     )
