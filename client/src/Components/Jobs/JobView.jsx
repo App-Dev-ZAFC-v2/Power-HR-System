@@ -7,29 +7,12 @@ function JobView(props) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(false);
     const [placeholder, setPlaceholder] = useState(false);
+    // const [isClose, setIsClose] = useState(true);
 
-    // useEffect(() => {
-    //     if(props.jobId){
-    //     axios.get(`http://localhost:5000/jobs/view/${props.jobId}`)
-    //         .then(res => {
-    //             setJob(res.data);
-    //             setLoading(false);
-    //             console.log(res.data);
-    //         })
-    //         .catch(err => {
-    //             console.log(err);
-    //             setError(true);
-    //         })
-    //     } else {
-    //         console.log("No job id");
-    //     }
-    // }, [props.jobId]);
+   
 
     return (
         <>
-            {
-                !props.close ? (
-            <>
             <h1>{props.job?.name}</h1>
             <p>{props.job?.description}</p>
             <p> Job Scope: </p>
@@ -49,15 +32,8 @@ function JobView(props) {
             <p>{props.job?.location}</p>
             <p>{props.job?.specializations}</p>
             <p>{props.job?.dateEnd}</p>
-            </>
-            ) : (
-                <>
-                <h3>We have {props.count} jobs for you</h3>
-                <p>Select a job to view details</p>
-                </>
-            )
-            }
         </>
+           
         );
 }
 

@@ -36,9 +36,13 @@ const options = [
 
 function JobPage(){
 
+    // get user id from local storage
+    // const token = localStorage.getItem('authToken');
+    const detailId = JSON.parse(atob(localStorage.getItem('authToken').split('.')[1])).detailId;
+
     const [jobs, setJobs] = useState([]);
     const [job, setJob] = useState({});
-    const [jobId, setJobId] = useState("");
+    const [appliedJob, setAppliedJob] = useState([]);
     const [loading, setLoading] = useState(true);
     const [close, setClose] = useState(true);
     const [pagination, setPagination] = useState({
@@ -76,6 +80,16 @@ function JobPage(){
 
     useEffect(() => {
         handlePageClick(active);
+        // get the applied jobs
+        axios.get(`http://localhost:5000/applications/appliedby/${detailId}`)
+            .then(res => {
+                setAppliedJob(res.data);
+                console.log(res.data);
+            })
+            .catch(err => {
+                console.log(err);
+            }
+        );
     }, []);
 
     const handlePageClick = (e) => {
@@ -122,6 +136,27 @@ function JobPage(){
         </Pagination.Item>,
     );
     }
+
+    const handleApply = (e) => {
+        
+        console.log(job?._id);
+        console.log("apply");
+        axios.post(`http://localhost:5000/applications/${detailId}/apply/${job?._id}`)
+            .then(res => { 
+                console.log(res.data);
+                setAppliedJob([...appliedJob, job?._id]);
+            })
+            .catch(err => { 
+                console.log(err);
+            }
+        );
+    }
+
+    // a function that compares job id with applied job id
+    const isApplied = (id) => {
+        return appliedJob.includes(id);
+    }
+
 
     return (
         <>
@@ -180,9 +215,27 @@ function JobPage(){
                     <br />
                 </div>
                 </Col>
-                <Col xs={12} md={8}>
-                    <JobView close={close} job={job} jobId={jobId} count={pagination.count}/>
-                </Col>
+                <Col xs={12} md={8} className="overflow-scroll">
+                    {close ? 
+                    <>
+                    <h3>We have {pagination.count} jobs for you</h3>
+                    <p>Select a job to view details</p>
+                    </>
+                    :
+                    <>
+                    <Row>
+                        {
+                            isApplied(job?._id) ?
+                            <Button variant="success" disabled>Applied</Button>
+                            :
+                            <Button onClick={()=>handleApply()}>Apply Now</Button>
+                        }
+                        <Button onClick={()=>setClose(true)} variant="danger">Close</Button>
+                    </Row>
+                    <JobView job={job}/>
+                    </>
+                    }
+                    </Col>
             </Row>
         </Container>
         </>

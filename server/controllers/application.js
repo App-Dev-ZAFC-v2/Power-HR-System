@@ -41,6 +41,31 @@ export const getApplicationsByAttrID = async (req, res) => {
     }
     }
 
+// get all applications for a specific applicant and only return the job id
+export const getApplicantAppliedJob = async (req, res) => {
+    const { id } = req.params;
+    try {
+        const applications = await Application.find({ applicant: id });
+        const appliedJobs = applications.map((application) => application.job);
+        res.status(200).json(appliedJobs);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+    }
+    
+// post request to create a new application using the job id and applicant id
+export const createApplicationByIDs = async (req, res) => {
+    const {  applicantID, jobID } = req.params;
+    const application = { job: jobID, applicant: applicantID };
+    const newApplication = new Application(application);
+    try {
+        await newApplication.save();
+        res.status(201).json(newApplication);
+    } catch (error) {
+        res.status(409).json({ message: error.message });
+    }
+    }
+
 // post request to create a new application
 export const createApplication = async (req, res) => {
     const application = req.body;
