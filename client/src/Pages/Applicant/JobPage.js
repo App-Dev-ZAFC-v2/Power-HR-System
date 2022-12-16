@@ -8,11 +8,12 @@ import JobView from "../../Components/Jobs/JobView";
 // import JobSearchBar from '../../Components/Jobs/SearchBar';
 // import Card from "react-bootstrap/Card";
 // import Accordion from 'react-bootstrap/Accordion';
-import Pagination from "react-bootstrap/Pagination";
+// import Pagination from "react-bootstrap/Pagination";
+import SearchIcon from "@mui/icons-material/Search";
 
 import "../../styles/Job.css";
 
-import { Form, Container, Row, Col } from "react-bootstrap";
+import { Form } from "react-bootstrap";
 
 import {
   Button,
@@ -21,6 +22,9 @@ import {
   CardHeader,
   CardActionArea,
   Typography,
+  Grid,
+  Container,
+  Pagination,
 } from "@mui/material";
 import Moment from "react-moment";
 
@@ -64,6 +68,7 @@ function JobPage() {
     start: 1,
     end: 1,
   });
+  const [page, setPage] = React.useState(1);
   // const [active, setActive] = useState(1);
   // const [max, setMax] = useState(1);
   const [active, setActive] = useState(1);
@@ -104,6 +109,11 @@ function JobPage() {
         console.log(err);
       });
   }, []);
+
+  const handleChange = (event, value) => {
+    setPage(value);
+    handlePageClick(value);
+  };
 
   const handlePageClick = (e) => {
     setActive(e);
@@ -146,18 +156,18 @@ function JobPage() {
     setJob(jobs.find((job) => job._id === e));
   };
 
-  let items = [];
-  for (let number = 1; number <= pagination?.maxPage; number++) {
-    items.push(
-      <Pagination.Item
-        onClick={() => handlePageClick(number)}
-        key={number}
-        active={number === active}
-      >
-        {number}
-      </Pagination.Item>
-    );
-  }
+  // let items = [];
+  // for (let number = 1; number <= pagination?.maxPage; number++) {
+  //   items.push(
+  //     <Pagination.Item
+  //       onClick={() => handlePageClick(number)}
+  //       key={number}
+  //       active={number === active}
+  //     >
+  //       {number}
+  //     </Pagination.Item>
+  //   );
+  // }
 
   const handleApply = (e) => {
     console.log(job?._id);
@@ -212,19 +222,21 @@ function JobPage() {
               <Button
                 type="submit"
                 variant="contained"
-                color="success"
+                color="primary"
                 size="small"
               >
-                Search
+                <SearchIcon />
               </Button>
             </Form>
           </Navbar.Collapse>
         </Container>
       </Navbar>
       <Container>
-        <Row>
-          <Col xs={6} md={4}>
-            {pagination.start} - {pagination.end} of {pagination.count} jobs
+        <Grid container spacing={2}>
+          <Grid item xs={12} md={4}>
+            <Typography variant="body2" gutterBottom mt={3}>
+              {pagination.start} - {pagination.end} of {pagination.count} jobs
+            </Typography>
             {jobs.map((job) => (
               <Card
                 onClick={() => handleCardClick(job._id)}
@@ -252,46 +264,75 @@ function JobPage() {
                 </CardActionArea>
               </Card>
             ))}
-            <div>
-              <Pagination>{items}</Pagination>
-              <br />
-            </div>
-          </Col>
-          <Col xs={12} md={8}>
+            <Pagination
+              count={pagination?.maxPage}
+              page={page}
+              onChange={handleChange}
+            />
+          </Grid>
+          <Grid item xs={12} sm={8}>
             {close ? (
               <>
-                <h3>We have {pagination.count} jobs for you</h3>
-                <p>Select a job to view details</p>
+                <Typography variant="h5" component="div" mt={20} align="center">
+                  We have {pagination.count} jobs for you
+                </Typography>
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  align="center"
+                >
+                  Select a job to view details
+                </Typography>
               </>
             ) : (
               <>
-                <Row>
-                  {isApplied(job?._id) ? (
-                    <Button variant="text" color="success">
-                      Applied
-                    </Button>
-                  ) : (
+                <Grid container spacing={2}>
+                  <Grid item xs={12} md={6}>
+                    {isApplied(job?._id) ? (
+                      <Button fullWidth disabled>
+                        Applied
+                      </Button>
+                    ) : (
+                      <Button
+                        variant="contained"
+                        color="success"
+                        onClick={() => handleApply()}
+                        fullWidth
+                      >
+                        Apply Now
+                      </Button>
+                    )}
+                  </Grid>
+                  <Grid item xs={12} md={6}>
                     <Button
+                      onClick={() => setClose(true)}
                       variant="contained"
-                      color="success"
-                      onClick={() => handleApply()}
+                      color="error"
+                      fullWidth
                     >
-                      Apply Now
+                      Close
                     </Button>
-                  )}
-                  <Button
-                    onClick={() => setClose(true)}
-                    variant="contained"
-                    color="error"
-                  >
-                    Close
-                  </Button>
-                </Row>
-                <JobView job={job} />
+                  </Grid>
+                </Grid>
+                <Card
+                  sx={{
+                    maxWidth: 845,
+                    boxShadow: 10,
+                    borderRadius: 3,
+                    padding: 1,
+                    margin: 1,
+                    width: "100%",
+                  }}
+                  overflow="auto"
+                >
+                  <CardActionArea>
+                    <JobView job={job} />
+                  </CardActionArea>
+                </Card>
               </>
             )}
-          </Col>
-        </Row>
+          </Grid>
+        </Grid>
       </Container>
     </>
   );
