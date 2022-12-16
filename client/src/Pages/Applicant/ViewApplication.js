@@ -39,7 +39,7 @@ function ViewApplication() {
       .catch((err) => {
         console.log(err);
       });
-  }, []);
+  }, [applicantId]);
 
   return (
     <>
@@ -65,17 +65,9 @@ function ViewApplication() {
               <CardActionArea>
                 <CardHeader
                   title={application?.job?.name}
-                  subheader="Company Name"
+                  subheader={application?.job?.location}
                 />
-
                 <CardContent>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    {application?.job?.location}
-                  </Typography>
                   <Typography
                     variant="body2"
                     color="textSecondary"
