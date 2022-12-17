@@ -9,7 +9,7 @@ const formSchema = mongoose.Schema({
 
     name: String,
 
-    description:{type: String, default: ""},
+    description:{type: String, default: "No description"},
 
     questions: [{
         questionText: String,
@@ -19,8 +19,13 @@ const formSchema = mongoose.Schema({
         options: [{
             optionText: String,
             optionImage: {type: String, default: ""},
-        }]
-    }]
+        }],
+    }],
+
+    once:{
+        type: Boolean,
+        default: false,
+    }
 });
 
 const Form = mongoose.model("Form", formSchema);
