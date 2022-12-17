@@ -26,6 +26,7 @@ import UpdatePassword from "./Pages/User/Pages/updatepassword";
 import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
 import AddJob from "./Pages/Applicant/AddJob";
+import ViewApplication from "./Pages/Applicant/ViewApplication";
 
 function App() {
   return (
@@ -48,13 +49,19 @@ function App() {
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
         <Route path="/admin/add-feedback" element={<AddFeedback />} />
 
-
         <Route path="/employee/feedback" element={<Feedback />} />
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
         <Route path="/applicant/jobs" element={<JobPage />} />
-        <Route path="/applicant/jobs/:search/:specialization" element={<JobPage />} />
+        <Route
+          path="/applicant/jobs/:search/:specialization"
+          element={<JobPage />}
+        />
         <Route path="/applicant/add-job" element={<AddJob />} />
+        <Route
+          path="/applicant/view-application"
+          element={<ViewApplication />}
+        />
       </Routes>
     </div>
   );
