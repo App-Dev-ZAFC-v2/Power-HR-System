@@ -3,6 +3,8 @@ import Navbar from '../../Components/Navbar';
 import ProfileCard from '../../Components/ProfileCard';
 import Container from '@mui/material/Container';
 import Welcome from '../../Components/Welcome';
+import { Button } from 'react-bootstrap';
+
 import {Grid} from '@mui/material'
 
 function ExecutiveDashboard() {
@@ -23,6 +25,8 @@ function ExecutiveDashboard() {
                 <ProfileCard/>
             </Grid>
         </Grid>
+        <br></br>
+        <Button variant="primary" onClick={() => window.location = '/executive/manage-applicant'}>Manage Applicant</Button>
         </Container></>
     )
     }

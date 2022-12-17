@@ -1,9 +1,9 @@
 import mongoose from "mongoose";
-import FormModel from "../models/form";
+import FormModel from "../models/form.js";
 
 //Manage Form
 
-export const getForm = async (req, res) =>{
+export const getForms = async (req, res) =>{
     try {
         const form = await FormModel.find().lean();
         res.status(200).json(form);
