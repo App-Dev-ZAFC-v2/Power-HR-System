@@ -34,15 +34,14 @@ function ProfileUsername() {
 
   // FIND BETTER WAY TO DO THIS
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
-  // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
+  const userId = JSON.parse(atob(token.split(".")[1])).UserId;
   const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
   // eslint-disable-next-line react-hooks/rules-of-hooks
 
   useEffect(() => {
-    (userType === 0
-      ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-      : axios.get(`http://localhost:5000/employees/${detailId}/`)
-    )
+    console.log(userId);
+    axios
+      .get(`http://localhost:5000/users/username/${userId}/`)
       .then((res) => {
         setUser(res.data);
         console.log(res.data);
@@ -60,25 +59,20 @@ function ProfileUsername() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/applicants/${detailId}/`, user, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      })
+      .put(`http://localhost:5000/users/updateusername/${userId}/`, user)
       .then((res) => {
-        console.log(res);
-        setIsRead(true);
-        return setSuccess({
-          ...success,
+        console.log(res.data);
+        setSuccess({
           fetchSuccess: true,
-          fetchSuccessMsg: "Profile updated successfully",
+          fetchSuccessMsg: "Username Updated Successfully",
         });
+        refreshPage();
       })
       .catch((err) => {
-        return setError({
-          ...error,
+        console.log(err);
+        setError({
           fetchError: true,
-          fetchErrorMsg: err.response.data.message,
+          fetchErrorMsg: "Username Update Failed",
         });
       });
   };
@@ -112,13 +106,13 @@ function ProfileUsername() {
                     <TextField
                       id="outlined-read-only-input"
                       label="Username"
-                      defaultValue={user?.name}
+                      defaultValue={user?.username}
                       margin="normal"
                       InputProps={{
                         readOnly: isRead,
                       }}
                       onChange={(e) => {
-                        setUser({ ...user, name: e.target.value });
+                        setUser({ ...user, username: e.target.value }); // this is the line that is causing the error
                       }}
                     />
                   </Box>

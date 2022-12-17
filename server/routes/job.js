@@ -1,12 +1,18 @@
 import express from 'express'; // import express
 
-import {getJobs, getJobByID, createJob, updateJob, deleteJob} from '../controllers/job.js'; // import the functions from the controller
+import {getJobs, getJobsSearchPaginate, getJobByID, getJobsCount, getAllJobs, createJob, updateJob, deleteJob} from '../controllers/job.js'; // import the functions from the controller
 
 const router = express.Router(); // create a router
 
-router.get('/', getJobs);
+router.get('/all', getAllJobs);
 
-router.get('/:id', getJobByID);
+router.get('/view/:id', getJobByID);
+
+router.get('/count', getJobsCount);
+
+// router.get('/', getJobs);
+
+router.get('/', getJobs);
 
 router.post('/', createJob);
 

@@ -15,6 +15,16 @@ export const getUserByID = async (id, res) => {
   }
 };
 
+export const getUsernameByID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const user = await User.findById(id);
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
 export const loginUser = async (req, res) => {
   try {
     const { username, password } = req.body;
@@ -105,16 +115,18 @@ export const deleteUser = async (id, res) => {
   }
 };
 
-//update username and password
-export const updateUser = async (req, res) => {
+//patch request to change username
+export const changeUsername = async (req, res) => {
   try {
+    const { id } = req.params;
     const { username } = req.body;
-    const user = await User.findByIdAndUpdate(
+    const user = await User.findById(id);
+    const updated = await User.findByIdAndUpdate(
       req.params.id,
       { username },
       { new: true }
     );
-    res.status(200).json(user);
+    res.status(200).json(updated);
   } catch (error) {
     res.status(500).json({ message: "Something went wrong" });
   }
@@ -128,17 +140,18 @@ export const changePassword = async (req, res) => {
     const user = await User.findById(id);
     console.log("2");
     const isPasswordCorrect = await bcrypt.compare(oldpassword, user.password);
-    console.log("3");
-    if (!isPasswordCorrect)
-      return res.status(400).json({ message: "Incorrect password!" });
+
+    if (!isPasswordCorrect) {
+      res.status(400).json({ message: "Incorrect password!" });
+      return;
+    }
     const hashedPassword = await bcrypt.hash(newpassword, 12);
-    console.log("4");
-    const updateduser = await User.findByIdAndUpdate(
+    const updated = await User.findByIdAndUpdate(
       req.params.id,
       { password: hashedPassword },
       { new: true }
     );
-    res.status(200).json(updateduser);
+    res.status(200).json(updated);
   } catch (error) {
     res
       .status(500)
