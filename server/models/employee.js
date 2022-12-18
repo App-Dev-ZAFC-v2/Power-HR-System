@@ -11,6 +11,16 @@ const employeeSchema = mongoose.Schema({
     position: String,
     // employeeRole differentiate between executive and employee
     executiveRole: Boolean,
+    inactive: Boolean,
+    inactiveDate: {
+        type: Date,
+        default: null,
+        // validate: {
+        //     validator: function (v) {
+        //         return !this.active;
+        //     }
+        // }
+    },
 });
 
 const Employee = mongoose.model("Employee", employeeSchema);
