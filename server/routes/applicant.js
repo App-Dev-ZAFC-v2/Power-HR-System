@@ -1,12 +1,12 @@
 import express from 'express'; // import express
 
-import { AuthToken, AuthAdmin, AuthApplicant } from '../middleware/Auth.js';
+import { AuthToken, AuthAdmin, AuthApplicant, AuthExecutive } from '../middleware/Auth.js';
 
 import { getApplicants, createApplicant, getApplicantByID, updateApplicant, deleteApplicant, registerApplicant} from '../controllers/applicant.js'; // import the getApplicants and createApplicant functions from the applicant controller
 
 const router = express.Router(); // create a router
 
-router.get('/', AuthAdmin, getApplicants);
+router.get('/', AuthExecutive, getApplicants);
 
 router.get('/:id', getApplicantByID);
 
