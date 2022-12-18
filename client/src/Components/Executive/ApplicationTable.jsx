@@ -1,4 +1,3 @@
-/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Box from "@mui/material/Box";
@@ -14,18 +13,14 @@ import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
-// import { Button } from "react-bootstrap";
+import { Button } from "react-bootstrap";
 // import { Typography } from "@mui/material";
 // import Collapse from "@mui/material/Collapse";
-// import Dialog from "@mui/material/Dialog";
-// import DialogActions from "@mui/material/DialogActions";
-// import DialogContent from "@mui/material/DialogContent";
+import Dialog from "@mui/material/Dialog";
+import DialogActions from "@mui/material/DialogActions";
+import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from "@mui/material/DialogContentText";
-// import DialogTitle from "@mui/material/DialogTitle";
-import { Collapse, IconButton } from "@mui/material";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import ApplicationTable from "./ApplicationTable";
+import DialogTitle from "@mui/material/DialogTitle";
 // import { useParams } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
@@ -58,16 +53,39 @@ const headCells = [
   {
     id: "name",
     numeric: false,
-    disablePadding: true,
-    label: "Job Name",
+    disablePadding: false,
+    label: "Name",
   },
   {
-    id: "level",
+    id: "email",
     numeric: false,
     disablePadding: false,
-    label: "Job Level",
+    label: "Email",
   },
-  { id: "quota", numeric: false, disablePadding: false, label: "Quota" },
+  {
+    id: "contact",
+    numeric: false,
+    disablePadding: false,
+    label: "Contact",
+  },
+  {
+    id: "applicationDate",
+    numeric: false,
+    disablePadding: false,
+    label: "Application Date",
+  },
+  {
+    id: "status",
+    numeric: false,
+    disablePadding: false,
+    label: "Status",
+  },
+  {
+    id: "action",
+    numeric: false,
+    disablePadding: false,
+    label: "Action",
+  },
 ];
 
 function EnhancedTableHead(props) {
@@ -79,7 +97,6 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell />
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
@@ -105,17 +122,20 @@ function EnhancedTableHead(props) {
   );
 }
 
-export default function ShortlistTable() {
+export default function AppTable() {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [rows, setRows] = useState([]);
+  const [Applications, setApplications] = useState([]);
+  const [open, setOpen] = React.useState(false);
+  const [details, setDetails] = useState("");
 
-  //collapsible table
-  const [open, setOpen] = useState([]);
+  const [status, setStatus] = useState({
+    applicationStatus: "",
+  });
 
   const applicantId = JSON.parse(
     atob(localStorage.getItem("authToken").split(".")[1])
@@ -123,14 +143,10 @@ export default function ShortlistTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/jobs/all", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+      .get(`http://localhost:5000/applications`)
       .then((res) => {
+        setApplications(res.data);
         console.log(res.data);
-        setRows(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -145,14 +161,14 @@ export default function ShortlistTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = Applications.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleChangePage = (_event, newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -165,15 +181,39 @@ export default function ShortlistTable() {
     setDense(event.target.checked);
   };
 
+  const handleClickOpen = (id) => {
+    setDetails(id);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
+  const handleShortlist = async (status) => {
+    console.log(status);
+    // e.preventDefault();
+    axios
+      .patch(`http://localhost:5000/applications/${applicantId}`, { status })
+      .then((res) => {
+        console.log(res.data);
+        window.alert("Application is updated.");
+        window.location.href = `/executive/manage-applicant`;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Applications.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
-            sx={{ minWidth: 750, border: "float" }}
+            sx={{ minWidth: 750 }}
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
             padding="default"
@@ -184,58 +224,72 @@ export default function ShortlistTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={rows.length}
+              rowCount={Applications.length}
             />
             <TableBody>
-              {stableSort(rows, getComparator(order, orderBy))
+              {stableSort(Applications, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => {
+                .map((application, index) => {
+                  const date = new Date(application?.applicationDate);
+                  const today = date.toLocaleDateString("en-GB", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  });
+
                   return (
                     <>
-                      <TableRow hover>
+                      <TableRow hover key={application?._id}>
                         <TableCell align="center">
-                          <IconButton
-                            aria-label="expand row"
-                            size="small"
-                            onClick={() =>
-                              setOpen(
-                                open.includes(index)
-                                  ? open.filter((i) => i !== index)
-                                  : [...open, index]
-                              )
-                            }
-                          >
-                            {open.includes(index) ? (
-                              <KeyboardArrowUpIcon />
-                            ) : (
-                              <KeyboardArrowDownIcon />
-                            )}
-                          </IconButton>
+                          {application?.applicant?.name}
                         </TableCell>
-                        <TableCell align="center">{row.name}</TableCell>
-                        <TableCell align="center">{row.level}</TableCell>
-                        <TableCell align="center">{row.quota}</TableCell>
-                      </TableRow>
-                      <TableRow>
-                        <TableCell
-                          style={{
-                            paddingBottom: 0,
-                            paddingTop: 0,
-                            backgroundColor: "black",
-                            color: "white",
-                          }}
-                          colSpan={6}
-                        >
-                          <Collapse
-                            in={open.includes(index)}
-                            timeout="auto"
-                            unmountOnExit
+                        <TableCell align="center">
+                          {application?.applicant?.email}
+                        </TableCell>
+                        <TableCell align="center">
+                          {application?.applicant?.contact}
+                        </TableCell>
+                        <TableCell align="center">{today}</TableCell>
+                        <TableCell align="center">
+                          {application?.applicationStatus}
+                        </TableCell>
+                        <TableCell align="center">
+                          <Button
+                            key={application._id}
+                            color="primary"
+                            onClick={() => handleClickOpen(application._id)}
                           >
-                            <br></br>
-                            <h6 align="left">Applicant List</h6>
-                            <p>List of applicant who apply for {row.name}</p>
-                            <ApplicationTable />
-                          </Collapse>
+                            {" "}
+                            Details
+                          </Button>
+                          <Dialog
+                            open={open}
+                            onClose={handleClose}
+                            aria-labelledby="alert-dialog-title"
+                            aria-describedby="alert-dialog-description"
+                          >
+                            <DialogTitle id="alert-dialog-title">
+                              {"Candidate Details"}
+                            </DialogTitle>
+                            <DialogContent>
+                              <p>Please select your option</p>
+                            </DialogContent>
+                            <DialogActions>
+                              <Button
+                                onClick={() => handleShortlist("Shortlisted")}
+                                variant="success"
+                              >
+                                Shortlist
+                              </Button>
+                              <Button
+                                onClick={() => handleShortlist("Rejected")}
+                                variant="danger"
+                              >
+                                Not Shortlist
+                              </Button>
+                              <Button onClick={handleClose}>Close</Button>
+                            </DialogActions>
+                          </Dialog>
                         </TableCell>
                       </TableRow>
                     </>
@@ -256,7 +310,7 @@ export default function ShortlistTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={rows.length}
+          count={Applications.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

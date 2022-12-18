@@ -31,7 +31,7 @@ function ShortlistApplicant() {
       <br></br>
       <div className="container">
         <Typography align="center">
-          <h1>Manage Applicant</h1>
+          <h1>Manage application</h1>
         </Typography>
         <Typography align="center">
           <h6>
