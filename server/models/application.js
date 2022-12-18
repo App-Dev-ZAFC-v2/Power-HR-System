@@ -7,7 +7,7 @@ const applicationSchema = mongoose.Schema({
   },
   applicationStatus: {
     type: String,
-    default: "New",
+    default: "New", //New, Shortlisted, Rejected, Accepted
   },
   job: {
     type: mongoose.Schema.Types.ObjectId,
