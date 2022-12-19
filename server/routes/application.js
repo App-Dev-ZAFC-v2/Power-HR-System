@@ -10,11 +10,12 @@ import {
   deleteApplication,
   getApplicantAppliedJob,
   createApplicationByIDs,
+  getApplicationsWithPagination,
 } from "../controllers/application.js"; // import the functions from the controller
 
 const router = express.Router(); // create a router
 
-router.get("/", getApplications);
+// router.get("/", getApplications);
 
 router.get("/view/:id", getApplicationByID);
 
@@ -34,5 +35,7 @@ router.post("/:applicantID/apply/:jobID", createApplicationByIDs);
 router.patch("/:id", updateApplication);
 
 router.delete("/:id", deleteApplication);
+
+router.get("/", getApplicationsWithPagination)
 
 export default router; // export the router

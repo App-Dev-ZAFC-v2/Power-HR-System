@@ -147,43 +147,56 @@ export const deleteApplication = async (req, res) => {
   res.json({ message: "Application deleted successfully." });
 };
 
-//get requests
-export const getApplicationsPagination = async (req, res) => {
+// get all applications with pagination
+export const getApplicationsWithPagination = async (req, res) => {
+  const { page, limit } = req.query;
   try {
-    const page = req.query.page;
-    // const limit = req.query.limit;
-    const limit = req.query.limit;
-    const startIndex = (page - 1) * limit;
-    const endIndex = page * limit;
-    const count = await Application.countDocuments();
+    const startIndex = (Number(page) - 1) * Number(limit);
+    const endIndex = Number(page) * Number(limit);
     const results = {};
-    if (endIndex < count) {
+    if (endIndex < (await Application.countDocuments().exec())) {
       results.next = {
-        // return the next page number
-        page: page * 1 + 1,
-        limit: limit,
+        page: Number(page) + 1,
+        limit: Number(limit),
       };
     }
     if (startIndex > 0) {
       results.previous = {
-        page: page - 1,
-        limit: limit,
+        page: Number(page) - 1,
+        limit: Number(limit),
       };
     }
-    if (endIndex > count) {
-      results.end = count;
-    } else {
-      results.end = endIndex;
-    }
-    results.count = count;
-    results.maxPage = Math.ceil(count / limit);
-    results.start = startIndex + 1;
     results.results = await Application.find()
-      .limit(limit * 1)
+      .limit(Number(limit))
       .skip(startIndex)
       .exec();
+    // get all the job ids
+    const jobIDs = results.results.map((app) => app.job);
+    // now that we have the array of job ids,
+    // we can use the job id to get the job object with only name, level, and quota
+    const jobs = await Job.find({ _id: { $in: jobIDs } }).select({
+      name: 1,
+      level: 1,
+      quota: 1,
+    });
+    // get all the applicant ids
+    const applicantIDs = results.results.map((app) => app.applicant);
+    // now that we have the array of applicant ids,
+    // we can use the applicant id to get the applicant object
+    const applicants = await Applicant.find({ _id: { $in: applicantIDs } });
+    // combine the job object with the application object
+    const combined = results.results.map((app) => {
+      const job = jobs.find(
+        (job) => job._id.toString() === app.job.toString()
+      );
+      const applicant = applicants.find(
+        (applicant) => applicant._id.toString() === app.applicant.toString()
+      );
+      return { ...app._doc, job, applicant };
+    });
+    results.results = combined;
     res.status(200).json(results);
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
-};
+}
