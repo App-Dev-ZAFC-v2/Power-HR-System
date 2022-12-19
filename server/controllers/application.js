@@ -1,5 +1,6 @@
 import Application from "../models/application.js";
 import Job from "../models/job.js";
+import Applicant from "../models/applicant.js";
 import mongoose from "mongoose";
 
 export const getApplications = async (req, res) => {
@@ -35,6 +36,29 @@ export const getApplicationByApplicantID = async (req, res) => {
     const combined = application.map((app) => {
       const job = jobs.find((job) => job._id.toString() === app.job.toString());
       return { ...app._doc, job };
+    });
+    res.status(200).json(combined);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+
+//get application for a specific job
+export const getApplicationByJobID = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const application = await Application.find({ job: id });
+    // get all the job ids
+    const applicantIDs = application.map((app) => app.job);
+    // now that we have the array of applicant ids,
+    // we can use the applicant id to get the applicant object
+    const applicants = await Applicant.find({ _id: { $in: applicantIDs } });
+    // combine the applicant object with the application object
+    const combined = application.map((app) => {
+      const applicant = applicants.find(
+        (applicant) => applicant._id.toString() === app.applicant.toString()
+      );
+      return { ...app._doc, applicant };
     });
     res.status(200).json(combined);
   } catch (error) {
@@ -121,4 +145,45 @@ export const deleteApplication = async (req, res) => {
     return res.status(404).send(`No application with id: ${id}`);
   await Application.findByIdAndRemove(id);
   res.json({ message: "Application deleted successfully." });
+};
+
+//get requests
+export const getApplicationsPagination = async (req, res) => {
+  try {
+    const page = req.query.page;
+    // const limit = req.query.limit;
+    const limit = req.query.limit;
+    const startIndex = (page - 1) * limit;
+    const endIndex = page * limit;
+    const count = await Application.countDocuments();
+    const results = {};
+    if (endIndex < count) {
+      results.next = {
+        // return the next page number
+        page: page * 1 + 1,
+        limit: limit,
+      };
+    }
+    if (startIndex > 0) {
+      results.previous = {
+        page: page - 1,
+        limit: limit,
+      };
+    }
+    if (endIndex > count) {
+      results.end = count;
+    } else {
+      results.end = endIndex;
+    }
+    results.count = count;
+    results.maxPage = Math.ceil(count / limit);
+    results.start = startIndex + 1;
+    results.results = await Application.find()
+      .limit(limit * 1)
+      .skip(startIndex)
+      .exec();
+    res.status(200).json(results);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
 };

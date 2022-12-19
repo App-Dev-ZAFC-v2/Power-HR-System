@@ -132,26 +132,25 @@ export default function AppTable() {
   const [Applications, setApplications] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = useState("");
+  const [applicant, setApplicant] = useState({});
 
-  const [status, setStatus] = useState({
-    applicationStatus: "",
-  });
-
-  const applicantId = JSON.parse(
+  const jobId = JSON.parse(
     atob(localStorage.getItem("authToken").split(".")[1])
   ).detailId;
 
   useEffect(() => {
     axios
-      .get(`http://localhost:5000/applications`)
+    .get(`http://localhost:5000/applications/byjob/${jobId}`)
       .then((res) => {
         setApplications(res.data);
         console.log(res.data);
+        setApplicant(res.data.map((application) => application.applicant));
+
       })
       .catch((err) => {
         console.log(err);
       });
-  }, [applicantId]);
+  }, [jobId]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -194,7 +193,7 @@ export default function AppTable() {
     console.log(status);
     // e.preventDefault();
     axios
-      .patch(`http://localhost:5000/applications/${applicantId}`, { status })
+      .patch(`http://localhost:5000/applications/${jobId}`, { status })
       .then((res) => {
         console.log(res.data);
         window.alert("Application is updated.");
@@ -239,7 +238,7 @@ export default function AppTable() {
 
                   return (
                     <>
-                      <TableRow hover key={application?._id}>
+                      <TableRow hover key={applicant?._id}>
                         <TableCell align="center">
                           {application?.applicant?.name}
                         </TableCell>
@@ -255,7 +254,7 @@ export default function AppTable() {
                         </TableCell>
                         <TableCell align="center">
                           <Button
-                            key={application._id}
+                            key={applicant._id}
                             color="primary"
                             onClick={() => handleClickOpen(application._id)}
                           >

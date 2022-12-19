@@ -3,6 +3,7 @@ import {
   getApplicationByApplicantID,
   getApplications,
   getApplicationByID,
+  getApplicationByJobID,
   getApplicationsByAttrID,
   createApplication,
   updateApplication,
@@ -18,6 +19,9 @@ router.get("/", getApplications);
 router.get("/view/:id", getApplicationByID);
 
 router.get("/byapplicant/:id", getApplicationByApplicantID);
+
+router.get("/byjob/:jobid", getApplicationByJobID);
+getApplicationByJobID,
 
 // router.get('/:attr/:id', getApplicationsByAttrID);
 
