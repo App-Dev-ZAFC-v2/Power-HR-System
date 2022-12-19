@@ -5,7 +5,7 @@ const feedbackAPI = {
     async getFeedbacks(){
         const response = await axios.get(API_URL);
         return response.data;
-    },
+    }, 
 
     async getFeedbackByID(formID){
         const response = await axios.get(API_URL + feedbackID);
