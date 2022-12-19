@@ -27,17 +27,19 @@ import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
 import AddJob from "./Pages/Applicant/AddJob";
 import ViewApplication from "./Pages/Applicant/ViewApplication";
-
-
 import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 
+import ManageAnalytics from "./Pages/Executive/Analytics";
+
 
 function App() {
+  
   return (
     <div className="App">
+      
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<ApplicantRegister />} />
@@ -73,10 +75,11 @@ function App() {
         />
 
         <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
-
+        <Route path="/executive/analytics" element={<ManageAnalytics />} />
         
       </Routes>
     </div>
+    
   );
 }
 

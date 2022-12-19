@@ -27,7 +27,9 @@ function ExecutiveDashboard() {
         </Grid>
         <br></br>
         <Button variant="primary" onClick={() => window.location = '/executive/manage-applicant'}>Manage Applicant</Button>
-        </Container></>
+        <Button variant="primary" onClick={() => window.location = '/executive/analytics'}>Manage Analytics</Button>
+                
+                </Container></>
     )
     }
 
