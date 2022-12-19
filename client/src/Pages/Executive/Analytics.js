@@ -1,34 +1,10 @@
 import React from "react";
 import Navbar from "../../Components/Navbar";
 import { Typography } from "@mui/material";
+import BarChart from "../../Components/Charts/BarChart";
+import DoughnutChart from "../../Components/Charts/DoughnutChart";
+import PieChart from "../../Components/Charts/PieChart";
 
-
-import {
-    Chart as ChartJS,
-    BarElement,
-    CategoryScale,
-    LinearScale,
-    Tooltip,
-    Legend
-  } from "chart.js";
-  
-import {Bar} from "react-chartjs-2";
-import {Doughnut} from "react-chartjs-2";
-ChartJS.register(BarElement, CategoryScale, LinearScale, Tooltip, Legend);
-
-const data = {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-        label: '369',
-        data: [12, 19, 3, 5, 2, 3, 1],
-        backgroundColor: 'aqua',
-        borderColor: 'black',
-        borderWidth: 1,
-        }
-    ]
-}
-
-const options = {}
 
 function ManageAnalytics() {
     return (
@@ -47,11 +23,11 @@ function ManageAnalytics() {
           </Typography>
           <br></br>
           
-          <Bar
-                data={data}
-                options={options}
-                    >
-            </Bar>
+          <BarChart/>
+            <br></br>
+            <DoughnutChart/>
+            <br></br>
+            <PieChart/>
 
         </div>
       </>
