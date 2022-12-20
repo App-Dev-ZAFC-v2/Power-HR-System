@@ -23,17 +23,14 @@ import AddFeedback from "./Pages/Admin/AddFeedback";
 import UpdateUsername from "./Pages/User/Pages/updateusername";
 import UpdatePassword from "./Pages/User/Pages/updatepassword";
 
-import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
 import AddJob from "./Pages/Applicant/AddJob";
 import ViewApplication from "./Pages/Applicant/ViewApplication";
-
 
 import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
-
 
 function App() {
   return (
@@ -58,7 +55,6 @@ function App() {
         <Route path="/admin/manage-forms" element={<ManageForms />} />
         <Route path="/form/edit-form/:id" element={<EditForm />} />
 
-        <Route path="/employee/feedback" element={<Feedback />} />
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
         <Route path="/applicant/jobs" element={<JobPage />} />
@@ -72,9 +68,10 @@ function App() {
           element={<ViewApplication />}
         />
 
-        <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
-
-        
+        <Route
+          path="/executive/manage-applicant"
+          element={<ShortlistApplicant />}
+        />
       </Routes>
     </div>
   );
