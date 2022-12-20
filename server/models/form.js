@@ -20,6 +20,7 @@ const formSchema = mongoose.Schema({
             optionText: String,
             optionImage: {type: String, default: ""},
         }],
+        openView: {type: Boolean, default: false},
     }],
 
     once:{
