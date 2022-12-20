@@ -35,7 +35,11 @@ function EmployeeDashboard() {
             <Welcome />
             <Item variant="outlined">
               <Box component="img" sx={{ height: 200 }} src={feedback} />
-              {/* <Box variant="outlined" height={50}><Button variant="contained" href='feedback'>Feedback survey</Button></Box> */}
+              <Box variant="outlined" height={50}>
+                <Button variant="contained" href="/form">
+                  Feedback survey
+                </Button>
+              </Box>
             </Item>
           </Grid>
         </Grid>

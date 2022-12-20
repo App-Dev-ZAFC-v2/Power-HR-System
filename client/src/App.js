@@ -31,7 +31,8 @@ import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
-
+import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
+import FillForm from "./Pages/Survey/Feedback/FillForm";
 function App() {
   return (
     <div className="App">
@@ -53,7 +54,10 @@ function App() {
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
         <Route path="/admin/add-feedback" element={<AddFeedback />} />
         <Route path="/admin/manage-forms" element={<ManageForms />} />
+
         <Route path="/form/edit-form/:id" element={<EditForm />} />
+        <Route path="/form" element={<SurveyForm />} />
+        <Route path="/form/:id" element={<FillForm />} />
 
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
