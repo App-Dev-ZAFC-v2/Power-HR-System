@@ -123,11 +123,7 @@ export default function ShortlistTable() {
 
   useEffect(() => {
     axios
-      .get("http://localhost:5000/jobs/all", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
+      .get("http://localhost:5000/applications/jobs")
       .then((res) => {
         console.log(res.data);
         setRows(res.data);
@@ -212,9 +208,9 @@ export default function ShortlistTable() {
                             )}
                           </IconButton>
                         </TableCell>
-                        <TableCell align="center">{row.name}</TableCell>
-                        <TableCell align="center">{row.level}</TableCell>
-                        <TableCell align="center">{row.quota}</TableCell>
+                        <TableCell align="center">{row?.name}</TableCell>
+                        <TableCell align="center">{row?.level}</TableCell>
+                        <TableCell align="center">{row?.quota}</TableCell>
                       </TableRow>
                       <TableRow>
                         <TableCell
@@ -233,8 +229,8 @@ export default function ShortlistTable() {
                           >
                             <br></br>
                             <h6 align="left">Applicant List</h6>
-                            <p>List of applicant who apply for {row.name}</p>
-                            <ApplicationTable /> 
+                            <p>List of applicant who apply for {row?.name}</p>
+                            <ApplicationTable applicants={row?.application}/> 
                           </Collapse>
                         </TableCell>
                       </TableRow>

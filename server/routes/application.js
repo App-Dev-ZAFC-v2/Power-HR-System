@@ -11,6 +11,7 @@ import {
   getApplicantAppliedJob,
   createApplicationByIDs,
   getApplicationsWithPagination,
+  getJobsWithApplications,
 } from "../controllers/application.js"; // import the functions from the controller
 
 const router = express.Router(); // create a router
@@ -22,7 +23,6 @@ router.get("/view/:id", getApplicationByID);
 router.get("/byapplicant/:id", getApplicationByApplicantID);
 
 router.get("/byjob/:jobid", getApplicationByJobID);
-getApplicationByJobID,
 
 // router.get('/:attr/:id', getApplicationsByAttrID);
 
@@ -36,6 +36,8 @@ router.patch("/:id", updateApplication);
 
 router.delete("/:id", deleteApplication);
 
-router.get("/", getApplicationsWithPagination)
+router.get("/results", getApplicationsWithPagination)
+
+router.get("/jobs", getJobsWithApplications)
 
 export default router; // export the router

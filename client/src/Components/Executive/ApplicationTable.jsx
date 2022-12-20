@@ -122,35 +122,31 @@ function EnhancedTableHead(props) {
   );
 }
 
-export default function AppTable() {
+export default function AppTable(props) {
   const [order, setOrder] = React.useState("asc");
   const [orderBy, setOrderBy] = React.useState("calories");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [Applications, setApplications] = useState([]);
+  const [rows, setRows] = useState([]);
+  // const [Applications, setApplications] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = useState("");
-  const [applicant, setApplicant] = useState({});
+  // const [combined, setCombined] = useState({ props1, props2 });
 
   const jobId = JSON.parse(
     atob(localStorage.getItem("authToken").split(".")[1])
-  ).detailId;
+  ).jobId;
 
   useEffect(() => {
-    axios
-    .get(`http://localhost:5000/applications/byjob/${jobId}`)
-      .then((res) => {
-        setApplications(res.data);
-        console.log(res.data);
-        setApplicant(res.data.map((application) => application.applicant));
+    // set rows from props
+    // setRows(combined.props1.applicants, combined.props2.application);
+    // console.log("inside", combined.props1.applicants);
+    setRows(props.applicants);
+    console.log("inside", props.applicants);
 
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [jobId]);
+  }, [props.applicants]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -160,7 +156,7 @@ export default function AppTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = Applications.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -205,7 +201,7 @@ export default function AppTable() {
   };
 
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Applications.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -223,40 +219,39 @@ export default function AppTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={Applications.length}
+              rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(Applications, getComparator(order, orderBy))
+              {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((application, index) => {
-                  const date = new Date(application?.applicationDate);
+                .map((rows) => {
+                  const date = new Date(rows?.applicationDate);
                   const today = date.toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
                   });
-
                   return (
                     <>
-                      <TableRow hover key={applicant?._id}>
+                      <TableRow hover key={rows?._id}>
                         <TableCell align="center">
-                          {application?.applicant?.name}
+                          {rows?.applicant?.name}
                         </TableCell>
                         <TableCell align="center">
-                          {application?.applicant?.email}
+                          {rows?.applicant?.email}
                         </TableCell>
                         <TableCell align="center">
-                          {application?.applicant?.contact}
+                          {rows?.applicant?.contact}
                         </TableCell>
                         <TableCell align="center">{today}</TableCell>
                         <TableCell align="center">
-                          {application?.applicationStatus}
+                          {rows?.applicationStatus}
                         </TableCell>
                         <TableCell align="center">
                           <Button
-                            key={applicant._id}
+                            key={rows._id}
                             color="primary"
-                            onClick={() => handleClickOpen(application._id)}
+                            onClick={() => handleClickOpen(rows._id)}
                           >
                             {" "}
                             Details
@@ -309,7 +304,7 @@ export default function AppTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={Applications.length}
+          count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
