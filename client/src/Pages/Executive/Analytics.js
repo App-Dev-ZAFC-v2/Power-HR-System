@@ -5,6 +5,7 @@ import { Typography } from "@mui/material";
 import BarChart from "../../Components/Charts/BarChart";
 import DoughnutChart from "../../Components/Charts/DoughnutChart";
 import PieChart from "../../Components/Charts/PieChart";
+
 //import axios from 'axios';
 
 function ManageAnalytics() {
@@ -53,6 +54,7 @@ function ManageAnalytics() {
 
   return (
     <>
+
     <Navbar />
     <br></br>
     <div className="container">
@@ -67,10 +69,10 @@ function ManageAnalytics() {
       </Typography>
       <br></br>
       <BarChart />
+      <br></br>
       <DoughnutChart />
+      <br></br>
       <PieChart />
-
-
 
     </div>
 
