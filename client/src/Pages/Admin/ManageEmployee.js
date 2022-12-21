@@ -8,6 +8,9 @@ function ManageEmployee() {
 
     const [employees, setEmployees] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
+    const [isError, setIsError] = useState(false);
+    const [error, setError] = useState(null);
+    const [isViewInactive, setIsViewInactive] = useState(false);
 
     const blue = {
         backgroundColor: 'lightblue',
@@ -32,6 +35,8 @@ function ManageEmployee() {
         })
         .catch(err => {
             console.log(err);
+            setIsError(true);
+            setError(err.response.data);
         })
     }, [])
 
@@ -41,8 +46,17 @@ function ManageEmployee() {
         <Navbar/>
         <div className="container">
             <h1>Manage Employees</h1>
-            <EmployeesTable {...employees} />
             <Button variant="primary" href="/admin/update-employee">Add Employee</Button>
+            <br/>
+            {
+                isLoading && !isError ? <h1>Loading...</h1> :
+                <EmployeesTable {...employees} />
+            }
+            {
+                isError && <h1>{error}</h1>
+            }
+            <Button variant="outline-primary" onClick={() => setIsViewInactive(!isViewInactive)}>{isViewInactive ? "Hide Inactive Employees" : "View Inactive Employees"}</Button>
+            
         </div>
 
         
