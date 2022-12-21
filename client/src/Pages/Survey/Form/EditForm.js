@@ -7,7 +7,7 @@ import { Container } from '@mui/system';
 import { DragDropContext, Droppable} from "react-beautiful-dnd";
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
-import Multiple from '../../../Components/Survey/Question/MultipleChoice';
+import QuestionCard from '../../../Components/Survey/Question/QuestionCard';
 
 
 function EditForm(){
@@ -167,7 +167,7 @@ function EditForm(){
                             {(provided) => (
                                 <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
                                     {/* {question()} */}
-                                    <Multiple key={form._id} dataquestions={questions} onChangeSave={handleSave} delete={deleteQuestion}/>
+                                    <QuestionCard key={form._id} dataquestions={questions} onChangeSave={handleSave} delete={deleteQuestion}/>
                                     {provided.placeholder}
                                 </div>
                             )}
