@@ -130,9 +130,7 @@ function QuestionCard(props){
     function LinearScaleClose(option){
         return(
             <div>
-                <div>
-                    
-                </div>
+                
                 <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                     {option[0].optionText}
                     {option.map((op, j) => (
