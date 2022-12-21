@@ -63,7 +63,7 @@ function ManageAnalytics() {
       </Typography>
       <Typography align="center">
         <h6>
-         This page shows the active and inactive employees in this company.
+         This page shows the active and inactive employees in this company as well as.....
 
         </h6>
       </Typography>
