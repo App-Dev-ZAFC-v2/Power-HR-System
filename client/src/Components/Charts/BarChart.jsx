@@ -1,4 +1,5 @@
 import React from "react";
+
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -62,12 +63,12 @@ export const barData = {
     datasets: [
       {
         label: 'Active',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
         backgroundColor: 'rgb(255, 99, 132)',
       },
       {
         label: 'Inactive',
-        data: labels.map(() => faker.datatype.number({ min: 0, max: 1000 })),
+        data: labels.map(() => faker.datatype.number({ min: 0, max: 100 })),
         backgroundColor: 'rgb(75, 192, 192)',
       },
     ],

@@ -1,7 +1,5 @@
 import React from "react";
 import {Pie} from "react-chartjs-2";
-import { faker } from '@faker-js/faker';
-
 
 import {
     Chart as ChartJS,
@@ -48,16 +46,7 @@ function PieChart() {
     return (
         <div>
             <Pie data={data} options={options}/>
-            <div
-            style={
-                {
-                  padding : "10px",
-                  width: "10px",
 
-            }
-          }
-            >
-            </div>
         </div>
     
     );
