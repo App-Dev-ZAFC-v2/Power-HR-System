@@ -1,5 +1,5 @@
 import { useEffect,  useState} from 'react';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, Divider, Fab, FormControl, FormControlLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, Select, TextField, Typography  } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, Checkbox, Divider, Fab, FormControl, FormControlLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, Select, TextField, Typography  } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import CloseIcon from '@mui/icons-material/Close';
@@ -11,6 +11,7 @@ import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import SubjectIcon from '@mui/icons-material/Subject';
 import { func } from 'prop-types';
+import { Stack, textAlign, width } from '@mui/system';
 
 function QuestionCard(props){
     const [questions, setQuestions] = useState([]);
@@ -47,6 +48,13 @@ function QuestionCard(props){
     function handleQuestionType(qtype, i){
         var tempQuestion = [...questions];
         tempQuestion[i].questionType = qtype;
+        if(qtype === "Linear Scale"){
+            tempQuestion[i].options = [{optionText: "", optionImage: "", optionScale: 1}, {optionText: "", optionImage: "", optionScale: 5}];
+        }
+        else{
+            tempQuestion[i].options = [{optionText: "Option 1", optionImage: ""}];
+        }
+        
         setQuestions(tempQuestion)
         handleSave();
     }
@@ -54,6 +62,13 @@ function QuestionCard(props){
     function handleOptionValue(otext,i, j){
         var tempQuestion = [...questions];
         tempQuestion[i].options[j].optionText = otext;
+        setQuestions(tempQuestion)
+        handleSave();
+    }
+
+    function handleOptionScale(value, i, j){
+        var tempQuestion = [...questions];
+        tempQuestion[i].options[j].optionScale = value;
         setQuestions(tempQuestion)
         handleSave();
     }
@@ -106,6 +121,7 @@ function QuestionCard(props){
                         <TextField
                             fullWidth={true}
                             placeholder="Option text"
+                            sx={{ mr: 1}}
                             value={op.optionText}
                             onChange={(e) => { handleOptionValue(e.target.value, i, j); } } />
                         {(option.length > 1) ? (
@@ -128,23 +144,161 @@ function QuestionCard(props){
     }
 
     function LinearScaleClose(option){
+        const list = []
+
+        for (let i=option[0].optionScale; i <= option[1].optionScale; i++) {
+            list.push(<FormControlLabel
+                value={i}
+                disabled
+                control={<Radio/>}
+                label={i}
+                labelPlacement="top"
+                style={{margin: 0}}
+                sx={{
+                    "& .MuiFormControlLabel-label.Mui-disabled": {
+                      color: "#000000",
+                  }
+                }}
+              />)
+        }
+        return(
+            <Grid wrap="nowrap" container style={{ marginTop: '12px', justifyContent: "center"}}>
+                <Grid item xs={2} sx={{mt:"34px"}}>
+                    <Paper elevation={0}>
+                        <Typography align="right">
+                            {option[0].optionText}
+                        </Typography>
+                </Paper></Grid>
+                <Grid item xs="auto">
+                    {list}
+                </Grid>
+                <Grid item xs={2} sx={{mt:"34px"}}>
+                    <Paper elevation={0}>
+                        <Typography>
+                            {option[1].optionText}
+                        </Typography>
+                </Paper></Grid>
+            </Grid>
+        )
+    }
+
+    function LinearScaleOpen(option,i){
         return(
             <div>
-                
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    {option[0].optionText}
+                <div style={{display:"flex", flexWrap: 'wrap'}}>
+                    <FormControl sx={{ m: 1, minWidth: 50 }} size="small" nowrap="true">
+                        <Select
+                        value={option[0].optionScale}
+                        sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
+                        displayEmpty
+                        onChange={(e) => { handleOptionScale(e.target.value, i, 0); } }
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            <MenuItem value={0}>0</MenuItem>
+                            <MenuItem value={1}>1</MenuItem>
+                        </Select>
+                    </FormControl>
+                    <Paper elevation={0} component={Stack} nowrap="true" direction="column" justifyContent="center">
+                        <Typography>to</Typography>
+                    </Paper>
+                    <FormControl sx={{ m: 1, minWidth: 50 }} size="small" nowrap="true">
+                        <Select
+                        value={option[1].optionScale}
+                        sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
+                        displayEmpty
+                        onChange={(e) => { handleOptionScale(e.target.value, i, 1); } }
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        >
+                            <MenuItem value={2}>2</MenuItem>
+                            <MenuItem value={3}>3</MenuItem>
+                            <MenuItem value={4}>4</MenuItem>
+                            <MenuItem value={5}>5</MenuItem>
+                            <MenuItem value={6}>6</MenuItem>
+                            <MenuItem value={7}>7</MenuItem>
+                            <MenuItem value={8}>8</MenuItem>
+                            <MenuItem value={9}>9</MenuItem>
+                            <MenuItem value={10}>10</MenuItem>
+                        </Select>
+                    </FormControl>
+                </div>
+                <div>
                     {option.map((op, j) => (
-                        <Radio disabled/>
+                        <div style={{display:"flex", flexWrap: 'wrap'}}>
+                            <Paper elevation={0} sx={{ml:"12px", mt:"7px"}} component={Stack} nowrap="true" direction="column" justifyContent="center">
+                                <Typography width="10px">{op.optionScale}</Typography>
+                            </Paper>
+                            <TextField onChange={(e) => { handleOptionValue(e.target.value, i, j); } } placeholder="Label (optional)" defaultValue={op.optionText} nowrap="true" variant="standard" sx={{ml: "24px"}} inputProps={{style: {fontFamily: 'sans-serif Roboto'}}} margin="normal"/>
+                        </div>
                     ))}
-                    {option[option.length-1].optionText}
                 </div>
             </div>
         )
     }
 
-    function LinearScaleOpen(option,i){
-        
+    function CheckBoxClose(option){
+        return option.map((op, j) => (
+            <div key={j}>
+                <div style={{ display: 'flex' }}>
+                    <FormControlLabel disabled control={<Checkbox style={{ marginRight: '3px', }} />} label={<Typography style={{ color: '#555555' }}>
+                        {op.optionText}
+                    </Typography>} />
+                </div>
+
+                <div>
+                    {(op.optionImage !== "") ? (
+                        <img src={op.optionImage} width="160px" height="auto" />
+                    ) : ""}
+                </div>
+            </div>
+        ))
     }
+
+    function CheckBoxOpen(option, i){
+        return(
+        <div style={{ width: '100%' }}>
+            {option.map((op, j) => (
+                <div key={j}>
+                    <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '-12.5px', justifyContent: 'space-between', paddingTop: '5px', paddingBottom: '5px' }}>
+                        <Checkbox disabled />
+                        <TextField
+                            fullWidth={true}
+                            sx={{ mr: 1}}
+                            placeholder="Option text"
+                            value={op.optionText}
+                            onChange={(e) => { handleOptionValue(e.target.value, i, j); } } />
+                        {(option.length > 1) ? (
+                            <IconButton aria-label="delete" onClick={() => { removeOption(i, j); } } sx={{ ml: "12px" }}>
+                                <CloseIcon sx={{ m: "6px" }} />
+                            </IconButton>)
+                            : ""}
+                    </div>
+
+
+                </div>
+            ))}
+            <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '-12.5px', paddingTop: '5px', paddingBottom: '5px' }}>
+                <Checkbox disabled />
+                <Button size="small" onClick={() => { addOption(i); } } style={{ textTransform: 'none', marginLeft: "-5px" }}>
+                    Add Option
+                </Button>
+            </div>
+        </div>)
+    }
+
+    function ShortAnswerClose(option){
+    }
+
+    function ShortAnswerOpen(option, i){}
+
+    function ParagraphClose(option){
+    }
+
+    function ParagraphOpen(option, i){}
+
+    function DropdownClose(option){}
+    function DropdownOpen(option, i){}
+
+
 
     return(
         <div>
@@ -161,7 +315,7 @@ function QuestionCard(props){
                                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "12px" }}>
                                                 <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                             </div>
-                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '15px', paddingBottom: '15px' }}>
+                                            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '15px', paddingBottom: '15px', width: "100%"}}>
                                                 <Typography variant="subtitle1" style={{ marginLeft: '0px' }}>{q.questionText}</Typography>
                                                 {(q.questionImage !== "") ? (
                                                     <div>
@@ -171,6 +325,10 @@ function QuestionCard(props){
 
                                                 {(q.questionType === "Multiple Choice") ? MultipleClose(q.options) : ""}
                                                 {(q.questionType === "Linear Scale") ? LinearScaleClose(q.options) : ""}
+                                                {(q.questionType === "Checkboxes") ? CheckBoxClose(q.options) : ""}
+                                                {(q.questionType === "Short Answer") ? ShortAnswerClose(q.options) : ""}
+                                                {(q.questionType === "Paragraph") ? ParagraphClose(q.options) : ""}
+                                                {(q.questionType === "Drop-down") ? DropdownClose(q.options) : ""}
                                             </div></>
                                     ) : ""}
                                 </AccordionSummary>
@@ -206,7 +364,10 @@ function QuestionCard(props){
                                             </div>
                                             {(q.questionType === "Multiple Choice") ? MultipleOpen(q.options, i) : ""}
                                             {(q.questionType === "Linear Scale") ? LinearScaleOpen(q.options, i) : ""}
-                                            
+                                            {(q.questionType === "Checkboxes") ? CheckBoxOpen(q.options, i) : ""}
+                                            {(q.questionType === "Short Answer") ? ShortAnswerOpen(q.options, i) : ""}
+                                            {(q.questionType === "Paragraph") ? ParagraphOpen(q.options, i) : ""}
+                                            {(q.questionType === "Drop-down") ? DropdownOpen(q.options, i) : ""}
                                         </div>
                                     </div>
                                 </AccordionDetails>
