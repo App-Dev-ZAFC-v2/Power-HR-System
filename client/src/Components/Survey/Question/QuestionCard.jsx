@@ -47,12 +47,18 @@ function QuestionCard(props){
 
     function handleQuestionType(qtype, i){
         var tempQuestion = [...questions];
+        var prev = tempQuestion[i].questionType;
         tempQuestion[i].questionType = qtype;
         if(qtype === "Linear Scale"){
             tempQuestion[i].options = [{optionText: "", optionImage: "", optionScale: 1}, {optionText: "", optionImage: "", optionScale: 5}];
         }
+        else if(qtype === "Multiple Choice" || qtype === "Checkboxes" || qtype === "Drop-down"){
+            if(prev !== "Multiple Choice" && prev !== "Checkboxes" && prev !== "Drop-down")
+                tempQuestion[i].options = [{optionText: "Option 1", optionImage: ""}];
+        }
         else{
-            tempQuestion[i].options = [{optionText: "Option 1", optionImage: ""}];
+            if(prev !== "Paragraph" && prev !== "Short Answer")
+                tempQuestion[i].options = [];
         }
         
         setQuestions(tempQuestion)
@@ -163,7 +169,7 @@ function QuestionCard(props){
         }
         return(
             <Grid wrap="nowrap" container style={{ marginTop: '12px', justifyContent: "center"}}>
-                <Grid item xs={2} sx={{mt:"34px"}}>
+                <Grid item xs sx={{mt:"34px"}}>
                     <Paper elevation={0}>
                         <Typography align="right">
                             {option[0].optionText}
@@ -172,7 +178,7 @@ function QuestionCard(props){
                 <Grid item xs="auto">
                     {list}
                 </Grid>
-                <Grid item xs={2} sx={{mt:"34px"}}>
+                <Grid item xs sx={{mt:"34px"}}>
                     <Paper elevation={0}>
                         <Typography>
                             {option[1].optionText}
@@ -285,18 +291,77 @@ function QuestionCard(props){
         </div>)
     }
 
-    function ShortAnswerClose(option){
+    function DropdownClose(option){
+        return option.map((op, j) => (
+            <div key={j}>
+                <div style={{ display: 'flex', marginTop: 6 }}>
+                    <Typography style={{ color: '#555555' }}>
+                        {j+1}. {op.optionText}
+                    </Typography>
+                </div>
+
+                <div>
+                    {(op.optionImage !== "") ? (
+                        <img src={op.optionImage} width="160px" height="auto" />
+                    ) : ""}
+                </div>
+            </div>
+        ))
     }
 
-    function ShortAnswerOpen(option, i){}
+    function DropdownOpen(option, i){
+        return(
+        <div style={{ width: '100%' }}>
+            {option.map((op, j) => (
+                <div key={j}>
+                    <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '-12.5px', justifyContent: 'space-between', paddingTop: '5px', paddingBottom: '5px' }}>
+                        <Paper elevation={0} component={Stack} nowrap="true" direction="column" justifyContent="center">
+                            <Typography sx={{mr: 2, ml: "16px"}}>{j+1}.</Typography>
+                        </Paper>
+                        <TextField
+                            fullWidth={true}
+                            sx={{ mr: 1}}
+                            placeholder="Option text"
+                            value={op.optionText}
+                            onChange={(e) => { handleOptionValue(e.target.value, i, j); } } />
+                        {(option.length > 1) ? (
+                            <IconButton aria-label="delete" onClick={() => { removeOption(i, j); } } sx={{ ml: "12px" }}>
+                                <CloseIcon sx={{ m: "6px" }} />
+                            </IconButton>)
+                            : ""}
+                    </div>
 
-    function ParagraphClose(option){
+
+                </div>
+            ))}
+            <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '-12.5px', paddingTop: '5px', paddingBottom: '5px', marginTop: 6 }}>
+                <Paper elevation={0} component={Stack} nowrap="true" direction="column" justifyContent="center">
+                    <Typography sx={{mr: 2, ml: "16px"}}>{option.length+1}.</Typography>
+                </Paper>
+                <Button size="small" onClick={() => { addOption(i); } } style={{ textTransform: 'none', marginLeft: "-5px" }}>
+                    Add Option
+                </Button>
+            </div>
+        </div>)
     }
 
-    function ParagraphOpen(option, i){}
+    function ShortAnswer(){
+        return(
+            <div style={{marginTop: 6}}>
+                <TextField variant='standard' value='short answer text' style = {{width: 300}} disabled/>
+            </div>
+        ) 
+    }
 
-    function DropdownClose(option){}
-    function DropdownOpen(option, i){}
+    function Paragraph(){
+        return(
+            <div style={{width: "100%", paddingRight: 12, marginTop: 6}}>
+                <TextField variant='standard' value='Long answer text' fullWidth disabled/>
+            </div>
+        ) 
+    }
+
+    
 
 
 
@@ -326,8 +391,8 @@ function QuestionCard(props){
                                                 {(q.questionType === "Multiple Choice") ? MultipleClose(q.options) : ""}
                                                 {(q.questionType === "Linear Scale") ? LinearScaleClose(q.options) : ""}
                                                 {(q.questionType === "Checkboxes") ? CheckBoxClose(q.options) : ""}
-                                                {(q.questionType === "Short Answer") ? ShortAnswerClose(q.options) : ""}
-                                                {(q.questionType === "Paragraph") ? ParagraphClose(q.options) : ""}
+                                                {(q.questionType === "Short Answer") ? ShortAnswer() : ""}
+                                                {(q.questionType === "Paragraph") ? Paragraph() : ""}
                                                 {(q.questionType === "Drop-down") ? DropdownClose(q.options) : ""}
                                             </div></>
                                     ) : ""}
@@ -347,7 +412,7 @@ function QuestionCard(props){
                                                     multiline={true}
                                                     value={q.questionText}
                                                     variant="filled"
-                                                    sx={{ m: 1 }}
+                                                    sx={{ mt: 1, mb: 1, mr: 1}}
                                                     onChange={(e) => { handleQuestionValue(e.target.value, i); } } />
                                                 <FormControl sx={{ m: 1, minWidth: 230 }}>
                                                     <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => {handleQuestionType(e.target.value, i);}}>
@@ -365,8 +430,8 @@ function QuestionCard(props){
                                             {(q.questionType === "Multiple Choice") ? MultipleOpen(q.options, i) : ""}
                                             {(q.questionType === "Linear Scale") ? LinearScaleOpen(q.options, i) : ""}
                                             {(q.questionType === "Checkboxes") ? CheckBoxOpen(q.options, i) : ""}
-                                            {(q.questionType === "Short Answer") ? ShortAnswerOpen(q.options, i) : ""}
-                                            {(q.questionType === "Paragraph") ? ParagraphOpen(q.options, i) : ""}
+                                            {(q.questionType === "Short Answer") ? ShortAnswer() : ""}
+                                            {(q.questionType === "Paragraph") ? Paragraph() : ""}
                                             {(q.questionType === "Drop-down") ? DropdownOpen(q.options, i) : ""}
                                         </div>
                                     </div>
