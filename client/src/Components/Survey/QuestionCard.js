@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   Box,
   Card,
@@ -14,6 +14,8 @@ import {
   Paper,
   TextField,
   Checkbox,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { useEffect } from "react";
 //import LinearScale from "@mui/icons-material/LinearScale";
@@ -57,11 +59,58 @@ function LinearScaleFunction(option) {
         </Paper>
       </Grid>
     </Grid>
-    // <Typography>Linear Scale</Typography>
   );
 }
 
 function CheckBoxFunction(option) {
+  const [checkedState, setCheckedState] = useState(
+    new Array(option.question).fill(false)
+  );
+
+  const [total, setTotal] = useState(0);
+
+  const handleOnChange = (position) => {
+    const updatedCheckedState = checkedState.map((item, index) =>
+      index === position ? !item : item
+    );
+    setCheckedState(updatedCheckedState);
+
+    let total = 0;
+    updatedCheckedState.forEach((item, index) => {
+      if (item) {
+        total += option[index].optionScale;
+      }
+    });
+    setTotal(total);
+
+    return (
+      <div>
+        <ul className="list-group">
+          {option.map((op, j) => (
+            <li key={j} className="list-group-item">
+              <div style={{ display: "flex" }}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      style={{ marginRight: "3px" }}
+                      checked={checkedState[j]}
+                      onChange={() => handleOnChange(j)}
+                    />
+                  }
+                  label={
+                    <Typography style={{ color: "#555555" }}>
+                      {op.optionText}
+                    </Typography>
+                  }
+                />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
   return option.map((op, j) => (
     <div key={j}>
       <div style={{ display: "flex" }}>
@@ -73,14 +122,6 @@ function CheckBoxFunction(option) {
             </Typography>
           }
         />
-      </div>
-
-      <div>
-        {op.optionImage !== "" ? (
-          <img src={op.optionImage} width="160px" height="auto" />
-        ) : (
-          ""
-        )}
       </div>
     </div>
   ));
@@ -183,15 +224,56 @@ function QuestionCard({ dataquestion, index }) {
           <CardContent>
             <Box sx={{ position: "relative" }}>
               <FormControl fullWidth>
-                <RadioGroup
-                  aria-label="question"
-                  name="radio-buttons-group"
-                  onChange={handleChange}
-                  value={value}
-                >
-                  {CheckBoxFunction(question.options)}
-                </RadioGroup>
+                {/* checkbox  */}
+                {CheckBoxFunction(question.options)}
               </FormControl>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
+      {question.questionType === "Drop-down" ? (
+        <Card sx={{ boxShadow: 5, p: 2 }}>
+          <CardHeader title={question.questionText} />
+          <Divider />
+          <CardContent>
+            <Box sx={{ position: "relative" }}>
+              <FormControl fullWidth>
+                <Select
+                  labelId="demo-simple-select-label"
+                  id="demo-simple-select"
+                  value={value}
+                  onChange={handleChange}
+                >
+                  {question.options.map((option, index) => (
+                    <MenuItem key={index} value={option._id}>
+                      {option.optionText}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
+      {question.questionType === "Paragraph" ? (
+        <Card sx={{ boxShadow: 5, p: 2 }}>
+          <CardHeader title={question.questionText} />
+          <Divider />
+          <CardContent>
+            <Box sx={{ position: "relative" }}>
+              <div style={{ marginTop: 6, maxWidth: "50%", width: "100%" }}>
+                <TextField
+                  variant="standard"
+                  placeholder="Paragraph"
+                  fullWidth
+                  multiline
+                  rows={4}
+                />
+              </div>
             </Box>
           </CardContent>
         </Card>
