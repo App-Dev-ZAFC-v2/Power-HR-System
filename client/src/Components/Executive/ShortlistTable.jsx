@@ -232,6 +232,8 @@ export default function ShortlistTable() {
                             <p>List of applicant who apply for {row?.name}</p>
                             <ApplicationTable applicants={row?.application}/> 
                           </Collapse>
+
+                          
                         </TableCell>
                       </TableRow>
                     </>

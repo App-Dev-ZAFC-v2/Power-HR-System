@@ -22,6 +22,7 @@ import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
 // import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -135,9 +136,9 @@ export default function AppTable(props) {
   const [details, setDetails] = useState("");
   // const [combined, setCombined] = useState({ props1, props2 });
 
-  const jobId = JSON.parse(
-    atob(localStorage.getItem("authToken").split(".")[1])
-  ).jobId;
+  // const applicationId = JSON.parse(
+  //   atob(localStorage.getItem("authToken").split(".")[1])
+  // ).detailId;
 
   useEffect(() => {
     // set rows from props
@@ -145,7 +146,6 @@ export default function AppTable(props) {
     // console.log("inside", combined.props1.applicants);
     setRows(props.applicants);
     console.log("inside", props.applicants);
-
   }, [props.applicants]);
 
   const handleRequestSort = (event, property) => {
@@ -185,12 +185,15 @@ export default function AppTable(props) {
     setOpen(false);
   };
 
-  const handleShortlist = async (status) => {
-    console.log(status);
+  const handleShortlist = async (applicationId, status) => {
     // e.preventDefault();
     axios
-      .patch(`http://localhost:5000/applications/${jobId}`, { status })
+      .patch(`http://localhost:5000/applications/${applicationId}`, {
+        applicationStatus: status,
+      })
       .then((res) => {
+        // console.log(status);
+        // console.log(index);
         console.log(res.data);
         window.alert("Application is updated.");
         window.location.href = `/executive/manage-applicant`;
@@ -224,7 +227,7 @@ export default function AppTable(props) {
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((rows) => {
+                .map((rows, index) => {
                   const date = new Date(rows?.applicationDate);
                   const today = date.toLocaleDateString("en-GB", {
                     day: "numeric",
@@ -267,16 +270,17 @@ export default function AppTable(props) {
                             </DialogTitle>
                             <DialogContent>
                               <p>Please select your option</p>
+                              <Button>View Resume/CV</Button>
                             </DialogContent>
                             <DialogActions>
                               <Button
-                                onClick={() => handleShortlist("Shortlisted")}
+                                onClick={() => handleShortlist(details, "Shortlisted")}
                                 variant="success"
                               >
                                 Shortlist
                               </Button>
                               <Button
-                                onClick={() => handleShortlist("Rejected")}
+                                onClick={() => handleShortlist(details, "Rejected")}
                                 variant="danger"
                               >
                                 Not Shortlist
