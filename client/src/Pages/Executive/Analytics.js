@@ -1,10 +1,11 @@
 // import React, { useState, useEffect } from 'react';
 import React from 'react';
 import Navbar from "../../Components/Navbar";
-import { Typography } from "@mui/material";
+import { Grid, Paper, Typography } from "@mui/material";
 import BarChart from "../../Components/Charts/BarChart";
 import DoughnutChart from "../../Components/Charts/DoughnutChart";
 import PieChart from "../../Components/Charts/PieChart";
+import { Container } from '@mui/system';
 
 //import axios from 'axios';
 
@@ -56,7 +57,27 @@ function ManageAnalytics() {
     <>
 
     <Navbar />
-    <br></br>
+    <Container maxWidth="lg">
+      <Grid container spacing={2} mt={3}>
+        <Grid item md={6} xs={12}>
+          <Paper>
+            <BarChart />
+          </Paper>
+        </Grid>
+
+        <Grid item md={6}  xs={12}>
+          <Paper>
+            <DoughnutChart />
+          </Paper>
+
+          <Paper>
+            <PieChart />
+          </Paper>
+        </Grid>
+      </Grid>
+    </Container>
+
+    {/* <br></br>
     <div className="container">
       <Typography align="center">
         <h1>Employee Analytics</h1>
@@ -74,7 +95,7 @@ function ManageAnalytics() {
       <br></br>
       <PieChart />
 
-    </div>
+    </div> */}
 
     {/* <div>
       <Line
