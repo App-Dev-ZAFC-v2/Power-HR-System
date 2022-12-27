@@ -81,12 +81,6 @@ function FillForm() {
                 </Button>
               </form>
             </Grid>
-
-            {/* <Grid spacing={4} sx={{ mt: 0 }}>
-              {questions.map((q, index) => (
-                <QuestionCard key={q._id} dataquestion={q} index={index} />
-              ))}
-            </Grid> */}
           </Container>
         </>
       )}

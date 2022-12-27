@@ -11,8 +11,80 @@ import {
   RadioGroup,
   FormControl,
   FormControlLabel,
+  Paper,
+  TextField,
+  Checkbox,
 } from "@mui/material";
 import { useEffect } from "react";
+//import LinearScale from "@mui/icons-material/LinearScale";
+
+function LinearScaleFunction(option) {
+  const list = [];
+
+  for (let i = option[0].optionScale; i <= option[1].optionScale; i++) {
+    list.push(
+      <FormControlLabel
+        value={i}
+        control={<Radio />}
+        label={i}
+        labelPlacement="top"
+        style={{ margin: 0 }}
+        sx={{
+          "& .MuiFormControlLabel-label.Mui-disabled": {
+            color: "#000000",
+          },
+        }}
+      />
+    );
+  }
+  return (
+    <Grid
+      wrap="nowrap"
+      container
+      style={{ marginTop: "12px", justifyContent: "center" }}
+    >
+      <Grid item xs sx={{ mt: "34px" }}>
+        <Paper elevation={0}>
+          <Typography align="right">{option[0].optionText}</Typography>
+        </Paper>
+      </Grid>
+      <Grid item xs="auto">
+        {list}
+      </Grid>
+      <Grid item xs sx={{ mt: "34px" }}>
+        <Paper elevation={0}>
+          <Typography>{option[1].optionText}</Typography>
+        </Paper>
+      </Grid>
+    </Grid>
+    // <Typography>Linear Scale</Typography>
+  );
+}
+
+function CheckBoxFunction(option) {
+  return option.map((op, j) => (
+    <div key={j}>
+      <div style={{ display: "flex" }}>
+        <FormControlLabel
+          control={<Checkbox style={{ marginRight: "3px" }} />}
+          label={
+            <Typography style={{ color: "#555555" }}>
+              {op.optionText}
+            </Typography>
+          }
+        />
+      </div>
+
+      <div>
+        {op.optionImage !== "" ? (
+          <img src={op.optionImage} width="160px" height="auto" />
+        ) : (
+          ""
+        )}
+      </div>
+    </div>
+  ));
+}
 
 function QuestionCard({ dataquestion, index }) {
   const [question, setQuestion] = React.useState(dataquestion);
@@ -61,9 +133,70 @@ function QuestionCard({ dataquestion, index }) {
           </CardContent>
         </Card>
       ) : (
-        <Typography variant="h5" component="div">
-          Selain Multiple Choice belum dibuat
-        </Typography>
+        ""
+      )}
+      {question.questionType === "Linear Scale" ? (
+        <Card sx={{ boxShadow: 5, p: 2 }}>
+          <CardHeader title={question.questionText} />
+          <Divider />
+          <CardContent>
+            <Box sx={{ position: "relative" }}>
+              <FormControl fullWidth>
+                <RadioGroup
+                  aria-label="question"
+                  name="radio-buttons-group"
+                  onChange={handleChange}
+                  value={value}
+                >
+                  {LinearScaleFunction(question.options)}
+                </RadioGroup>
+              </FormControl>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
+      {question.questionType === "Short Answer" ? (
+        <Card sx={{ boxShadow: 5, p: 2 }}>
+          <CardHeader title={question.questionText} />
+          <Divider />
+          <CardContent>
+            <Box sx={{ position: "relative" }}>
+              <div style={{ marginTop: 6, maxWidth: "50%", width: "100%" }}>
+                <TextField
+                  variant="standard"
+                  placeholder="Short Answer"
+                  fullWidth
+                />
+              </div>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
+      )}
+      {question.questionType === "Checkboxes" ? (
+        <Card sx={{ boxShadow: 5, p: 2 }}>
+          <CardHeader title={question.questionText} />
+          <Divider />
+          <CardContent>
+            <Box sx={{ position: "relative" }}>
+              <FormControl fullWidth>
+                <RadioGroup
+                  aria-label="question"
+                  name="radio-buttons-group"
+                  onChange={handleChange}
+                  value={value}
+                >
+                  {CheckBoxFunction(question.options)}
+                </RadioGroup>
+              </FormControl>
+            </Box>
+          </CardContent>
+        </Card>
+      ) : (
+        ""
       )}
     </Grid>
   );
