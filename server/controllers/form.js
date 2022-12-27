@@ -27,7 +27,9 @@ export const createForm = async (req, res) => {
         const data = {
             createdBy : req.body.createdBy,
             name: req.body.name,
-            description: req.body.description
+            description: req.body.description,
+            questions: req.body.questions,
+            once: req.body.once,
         }
 
         const newForm = new FormModel(data);
