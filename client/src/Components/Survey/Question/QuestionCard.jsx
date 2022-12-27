@@ -347,8 +347,8 @@ function QuestionCard(props){
 
     function ShortAnswer(){
         return(
-            <div style={{marginTop: 6}}>
-                <TextField variant='standard' value='short answer text' style = {{width: 300}} disabled/>
+            <div style={{marginTop: 6, maxWidth: "50%", width: "100%"}}>
+                <TextField variant='standard' value='short answer text' fullWidth disabled/>
             </div>
         ) 
     }
