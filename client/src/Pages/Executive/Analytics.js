@@ -57,7 +57,17 @@ function ManageAnalytics() {
     <>
 
     <Navbar />
-    <Container maxWidth="lg">
+    <Container maxWidth="lg">]
+      <br></br>
+    <Typography align="center">
+        <h1>Employee Analytics</h1>
+      </Typography>
+      <Typography align="center">
+        <h6>
+         This page shows the active and inactive employees in this company as well as.....
+
+        </h6>
+      </Typography>
       <Grid container spacing={2} mt={3}>
         <Grid item md={6} xs={12}>
           <Paper>
