@@ -11,7 +11,7 @@ import AdminDashboard from "./Pages/Admin/Dashboard";
 //profileupdate
 // import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import ManageJob from "./Pages/Admin/ManageJob";
-import UpdateJob from "./Pages/Admin/UpdateJob";
+// import UpdateJob from "./Pages/Admin/UpdateJob";
 //profile update
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
@@ -25,7 +25,7 @@ import UpdatePassword from "./Pages/User/Pages/updatepassword";
 
 import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
-import AddJob from "./Pages/Applicant/AddJob";
+import AddJob from "./Pages/Admin/AddJob";
 import ViewApplication from "./Pages/Applicant/ViewApplication";
 
 
@@ -47,8 +47,8 @@ function App() {
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
         {/* <Route path="/admin/manage-employee" element={<ManageEmployee />} /> */}
         <Route path="/admin/manage-job" element={<ManageJob />} />
-        <Route path="/admin/update-job" element={<UpdateJob />} />
-        <Route path="/admin/update-job/:id" element={<UpdateJob />} />
+        {/* <Route path="/admin/update-job" element={<UpdateJob />} /> */}
+        {/* <Route path="/admin/update-job/:id" element={<UpdateJob />} /> */}
         <Route path="/admin/manage-employee" element={<ManageEmployee />} />
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
         <Route path="/admin/update-employee/:id" element={<UpdateEmployee />} />
@@ -66,7 +66,8 @@ function App() {
           path="/applicant/jobs/:search/:specialization"
           element={<JobPage />}
         />
-        <Route path="/applicant/add-job" element={<AddJob />} />
+        <Route path="/admin/update-job" element={<AddJob />} />
+        <Route path="/admin/update-job/:id" element={<AddJob />} />
         <Route
           path="/applicant/view-application"
           element={<ViewApplication />}
