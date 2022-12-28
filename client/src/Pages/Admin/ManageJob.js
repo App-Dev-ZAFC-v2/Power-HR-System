@@ -7,10 +7,10 @@ import { Typography } from '@mui/material';
 
 function ManageJob() {
     const [jobs, setJobs] = useState([]);
-    const [setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        axios.get('http://localhost:5000/jobs', {
+        axios.get('http://localhost:5000/jobs/all', {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
