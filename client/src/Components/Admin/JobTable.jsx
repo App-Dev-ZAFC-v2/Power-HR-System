@@ -26,6 +26,7 @@ import FilterListIcon from '@mui/icons-material/FilterList';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import Collapse from '@mui/material/Collapse';
+import Moment from 'react-moment';
 import { visuallyHidden } from '@mui/utils';
 
 // function createData(name, calories, fat, carbs, protein) {
@@ -426,8 +427,12 @@ export default function EmployeesTable() {
                       <TableCell align="left">{row?.location}</TableCell>
                       <TableCell align="left">{row?.specializations}</TableCell>
                       <TableCell align="left">{row?.quota}</TableCell>
-                      <TableCell align="left">{row?.dateStart}</TableCell>
-                      <TableCell align="left">{row?.dateEnd}</TableCell>
+                      <TableCell align="left">
+                        <Moment format="DD/MM/YYYY">{row?.dateEnd}</Moment>
+                      </TableCell>
+                      <TableCell align="left">
+                        <Moment format="DD/MM/YYYY">{row?.dateEnd}</Moment>
+                      </TableCell>
                       <TableCell align="left">
                         <Button variant="primary" href={`/admin/update-employee/${row?._id}`} >Edit</Button>
                         <Button variant='danger' onClick={() => handleDelete(row?._id)}>Delete</Button>
