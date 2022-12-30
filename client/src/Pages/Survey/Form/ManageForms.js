@@ -5,7 +5,7 @@ import icon from "../../../Assets/addIcon.png";
 import Navbar from "../../../Components/Navbar";
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getForms, deleteForm, createForm } from "../../../slices/form";
+import { getForms, deleteForm, createForm } from "../../../Redux/slices/form";
 
 const ManageForms = () => {
     //Media Query

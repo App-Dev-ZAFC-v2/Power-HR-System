@@ -27,7 +27,19 @@ const formSchema = mongoose.Schema({
     once:{
         type: Boolean,
         default: false,
-    }
+    },
+
+    published: {
+        type: Boolean,
+        default: false,
+    },
+
+    dueDate: {
+        type: Date,
+        default: "",
+    },
+
+    
 });
 
 const Form = mongoose.model("Form", formSchema);
