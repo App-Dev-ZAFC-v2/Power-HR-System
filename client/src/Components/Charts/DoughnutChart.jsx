@@ -28,7 +28,7 @@ import {
 export const data = {
   labels: ['Active', 'Inactive'],  datasets: [
     {
-      label: '# of Votes',
+      label: 'Employee Status',
       data: [12, 19],
       backgroundColor: [
         'rgba(255, 99, 132, 0.2)',

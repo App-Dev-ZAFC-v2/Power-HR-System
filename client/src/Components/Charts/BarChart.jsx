@@ -27,7 +27,7 @@ ChartJS.register(
     plugins: {
       title: {
         display: true,
-        text: 'Chart.js Bar Chart - Stacked',
+        text: 'Employee Status by Month',
       },
       legend: {
         position: 'top' ,
