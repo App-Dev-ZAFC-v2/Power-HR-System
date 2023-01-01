@@ -27,7 +27,7 @@ function ExecutiveDashboard() {
         </Grid>
         <br></br>
         <Button variant="primary" onClick={() => window.location = '/executive/manage-applicant'}>Manage Application Status</Button>{' '}
-        <Button variant="primary" onClick={() => window.location = '/executive/manage-applicant'}>Review Employee Feedback</Button>
+        <Button variant="primary" onClick={() => window.location = '/executive/review-feedback'}>Review Employee Feedback</Button>
         </Container></>
     )
     }
