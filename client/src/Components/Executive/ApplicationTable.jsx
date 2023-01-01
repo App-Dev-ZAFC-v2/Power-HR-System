@@ -21,8 +21,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Link from "@mui/material/Link";
 // import { useParams } from "react-router-dom";
 // import { useParams } from "react-router-dom";
+
+// const useStyles = makeStyles({
+//   link: {
+//     '&:hover': {
+//       color: 'white',
+//     },
+//   },
+// });
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -134,6 +143,15 @@ export default function AppTable(props) {
   // const [Applications, setApplications] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = useState("");
+  const [stat, setStat] = useState("");
+  const [mail, setMail] = useState("");
+
+  //email subject
+  const subject = "Application Status";
+  const body = "Congratulations! You have been shortlisted. Please prepare for the interview.";
+
+  const fail = "Sorry! You have not been shortlisted. Please try again next time.";
+
   // const [combined, setCombined] = useState({ props1, props2 });
 
   // const applicationId = JSON.parse(
@@ -146,6 +164,8 @@ export default function AppTable(props) {
     // console.log("inside", combined.props1.applicants);
     setRows(props.applicants);
     console.log("inside", props.applicants);
+
+    
   }, [props.applicants]);
 
   const handleRequestSort = (event, property) => {
@@ -176,8 +196,10 @@ export default function AppTable(props) {
     setDense(event.target.checked);
   };
 
-  const handleClickOpen = (id) => {
+  const handleClickOpen = (id, appStatus, email) => {
     setDetails(id);
+    setStat(appStatus);
+    setMail(email);
     setOpen(true);
   };
 
@@ -202,6 +224,23 @@ export default function AppTable(props) {
         console.log(err);
       });
   };
+
+  const deleteApplication = async (applicationId) => {
+    // e.preventDefault();
+    axios
+      .delete(`http://localhost:5000/applications/${applicationId}`)
+      .then((res) => {
+        // console.log(status);
+        // console.log(index);
+        console.log(res.data);
+        window.alert("Application is deleted.");
+        window.location.href = `/executive/manage-applicant`;
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -254,7 +293,7 @@ export default function AppTable(props) {
                           <Button
                             key={rows._id}
                             color="primary"
-                            onClick={() => handleClickOpen(rows._id)}
+                            onClick={() => handleClickOpen(rows._id, rows?.applicationStatus, rows?.applicant?.email)}
                           >
                             {" "}
                             Details
@@ -281,10 +320,19 @@ export default function AppTable(props) {
                               </Button>
                               <Button
                                 onClick={() => handleShortlist(details, "Rejected")}
-                                variant="danger"
+                                variant="warning"
                               >
                                 Not Shortlist
                               </Button>
+                              {stat === "Rejected" && (
+                                <Button onClick={() => deleteApplication(details)} variant="danger"> Delete </Button>
+                              )}
+                              {stat === "Rejected" && (
+                                <Button  variant="success"><Link href={`mailto:${mail}?subject=${subject}&body=${fail}`} underline="none" color="#FFFFFF">Email applicant</Link>  </Button>
+                              )}
+                              {stat === "Shortlisted" && (
+                                <Button  variant="success"><Link href={`mailto:${mail}?subject=${subject}&body=${body}`} underline="none" color="#FFFFFF">Email applicant</Link>  </Button>
+                              )}
                               <Button onClick={handleClose}>Close</Button>
                             </DialogActions>
                           </Dialog>
