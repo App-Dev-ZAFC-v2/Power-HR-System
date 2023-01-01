@@ -68,61 +68,25 @@ function ManageAnalytics() {
 
         </h6>
       </Typography>
-      <Grid container spacing={2} mt={3}>
+      <Grid container spacing={2} mt={5}>
         <Grid item md={6} xs={12}>
           <Paper>
-            <BarChart />
+            <BarChart chartData  />
           </Paper>
         </Grid>
 
-        <Grid item md={6}  xs={12}>
+        <Grid item md={4}  xs={12}>
           <Paper>
             <DoughnutChart />
           </Paper>
-
+        <Grid item md={9}  xs={12}>
           <Paper>
             <PieChart />
           </Paper>
         </Grid>
+        </Grid>
       </Grid>
     </Container>
-
-    {/* <br></br>
-    <div className="container">
-      <Typography align="center">
-        <h1>Employee Analytics</h1>
-      </Typography>
-      <Typography align="center">
-        <h6>
-         This page shows the active and inactive employees in this company as well as.....
-
-        </h6>
-      </Typography>
-      <br></br>
-      <BarChart />
-      <br></br>
-      <DoughnutChart />
-      <br></br>
-      <PieChart />
-
-    </div> */}
-
-    {/* <div>
-      <Line
-        data={chartData}
-        options={{
-          title: {
-            display: true,
-            text: 'Data from API',
-            fontSize: 20
-          },
-          legend: {
-            display: true,
-            position: 'right'
-          }
-        }}
-      />
-    </div> */}
     </>
   );
 }
