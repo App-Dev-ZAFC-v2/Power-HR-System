@@ -26,6 +26,7 @@ export const createForm = async (req, res) => {
     try{
         const data = {
             createdBy : req.body.createdBy,
+            collaborator: req.body.createdBy,
             name: req.body.name,
             description: req.body.description,
             questions: req.body.questions,

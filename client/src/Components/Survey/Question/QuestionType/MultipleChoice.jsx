@@ -1,12 +1,29 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Button, FormControl, FormControlLabel, IconButton, Radio, RadioGroup, TextField, Typography } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
+import { addOption, deleteOption, editOptionText } from "../../../../Redux/slices/form";
 
 
 export function MultipleChoiceEdit(props){
     const {index} = props;
     const option = useSelector(state => state.forms.form.questions[index].options);
     const dispatch = useDispatch();
+
+    function handleOptionText(value, j){
+        let i = index;
+        dispatch(editOptionText({value, i, j}));
+    }
+
+    function handleOptionDelete(j){
+        let i = index;
+        dispatch(deleteOption({i, j}));
+    }
+
+    function handleOptionAdd(){
+        let i = index;
+        let j = option.length - 1;
+        dispatch(addOption({i, j}));
+    }
     
     return(
         <div style={{ width: '100%' }}>
@@ -19,9 +36,10 @@ export function MultipleChoiceEdit(props){
                             placeholder="Option text"
                             sx={{ mr: 1}}
                             value={op.optionText}
+                            onChange={(e) => {handleOptionText(e.target.value, j)}}
                         />
                         {(option.length > 1) ? (
-                            <IconButton aria-label="delete" sx={{ ml: "12px" }}>
+                            <IconButton aria-label="delete" sx={{ ml: "12px" }} onClick={() => {handleOptionDelete(j)}}>
                                 <CloseIcon sx={{ m: "6px" }} />
                             </IconButton>)
                             : ""}
@@ -30,7 +48,7 @@ export function MultipleChoiceEdit(props){
             ))}
             <div style={{ display: 'flex', flexDirection: 'row', marginLeft: '-12.5px', paddingTop: '5px', paddingBottom: '5px' }}>
                 <Radio disabled />
-                <Button size="small" style={{ textTransform: 'none', marginLeft: "-5px" }}>
+                <Button size="small" style={{ textTransform: 'none', marginLeft: "-5px" }} onClick={() => {handleOptionAdd()}}>
                     Add Option
                 </Button>
             </div>
@@ -52,7 +70,7 @@ export function MultipleChoice(props){
             ) : ""}
             <FormControl sx={{mt: "6px"}}>
                 <RadioGroup>
-                    {option.map((op, i) => (
+                    {option?.map((op, i) => (
                         <FormControlLabel disabled={disable} value={op._id} control={<Radio style={{ marginRight: '3px', }} />} label={<Typography style={{ color: '#000000' }}>
                             {op.optionText}
                         </Typography>} />
