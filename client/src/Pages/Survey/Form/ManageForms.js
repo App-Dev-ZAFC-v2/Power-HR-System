@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme, Container, TextField } from "@mui/material";
+import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme, Container, TextField, LinearProgress } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import photo from "../../../Assets/BackgroundProfile/Cloudy.png";
 import icon from "../../../Assets/addIcon.png";
@@ -38,7 +38,8 @@ const ManageForms = () => {
     const adminId = JSON.parse(atob(token.split(".")[1])).detailId;
 
     //Redux
-    const forms = useSelector(state => state.form);
+    const forms = useSelector(state => state.forms.form);
+    const loading = useSelector(state => state.forms.loading);
     const dispatch = useDispatch();
 
     const retrieveForms = useCallback(() => {
@@ -101,7 +102,9 @@ const ManageForms = () => {
     
 
     return (
-        <><Navbar /><Container maxWidth="lg" sx={{ mt: 4 }}>
+        <><Navbar />
+            {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
+            <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Typography variant="h2">Manage Forms</Typography>
             <Grid container spacing={6} sx={{ mt: 0 }}>
                 {forms.map((form, index) => (
