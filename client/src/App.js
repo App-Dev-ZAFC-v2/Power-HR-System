@@ -34,7 +34,6 @@ import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 
-
 function App() {
   return (
     <div className="App">
@@ -74,7 +73,6 @@ function App() {
 
         <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
 
-        
       </Routes>
     </div>
   );

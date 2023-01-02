@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Button, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Grid, useMediaQuery, useTheme } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import photo from "../../Assets/BackgroundProfile/Cloudy.png";
-import formAPI from "../../API/form";
+import formAPI from "../../../API/form";
 
 
 function FormCard(props) {
