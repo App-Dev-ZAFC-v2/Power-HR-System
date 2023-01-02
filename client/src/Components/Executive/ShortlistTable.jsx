@@ -230,7 +230,7 @@ export default function ShortlistTable() {
                             <br></br>
                             <h6 align="left">Applicant List</h6>
                             <p>List of applicant who apply for {row?.name}</p>
-                            <ApplicationTable applicants={row?.application}/> 
+                            <ApplicationTable applicants={row?.application} quota={row?.quota} job_id={row?._id}/> 
                           </Collapse>
 
                           

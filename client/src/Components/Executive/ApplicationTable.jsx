@@ -134,7 +134,7 @@ function EnhancedTableHead(props) {
 
 export default function AppTable(props) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
@@ -146,13 +146,15 @@ export default function AppTable(props) {
   const [stat, setStat] = useState("");
   const [mail, setMail] = useState("");
 
+  const {applicants, quota, job_id} = props;
+
   //email subject
   const subject = "Application Status";
   const body = "Congratulations! You have been shortlisted. Please prepare for the interview.";
 
   const fail = "Sorry! You have not been shortlisted. Please try again next time.";
 
-  // const [combined, setCombined] = useState({ props1, props2 });
+  // const [combined, setCombined] = useState({ props, quota });
 
   // const applicationId = JSON.parse(
   //   atob(localStorage.getItem("authToken").split(".")[1])
@@ -160,13 +162,16 @@ export default function AppTable(props) {
 
   useEffect(() => {
     // set rows from props
-    // setRows(combined.props1.applicants, combined.props2.application);
+    // setRows(combined.props1.applicants, combined.quota.quota);
     // console.log("inside", combined.props1.applicants);
-    setRows(props.applicants);
-    console.log("inside", props.applicants);
 
-    
-  }, [props.applicants]);
+    setRows(applicants, quota, job_id);
+    // console.log("quota", quota.quota);
+    console.log("inside", applicants);
+    console.log("quota", quota);
+    console.log("job_id", job_id);
+
+  }, [applicants, job_id, quota]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -207,23 +212,45 @@ export default function AppTable(props) {
     setOpen(false);
   };
 
-  const handleShortlist = async (applicationId, status) => {
+  const handleShortlist = async (applicationId, status, currentQuota, id) => {
     // e.preventDefault();
     axios
       .patch(`http://localhost:5000/applications/${applicationId}`, {
         applicationStatus: status,
       })
       .then((res) => {
-        // console.log(status);
+        
         // console.log(index);
-        console.log(res.data);
+        console.log(res.data); 
+        
+        if(status === "Shortlisted"){
+          handleQuota(currentQuota - 1, id);
+        }else if(status === "Rejected"){
+          handleQuota(currentQuota + 1, id);
+        }
+
         window.alert("Application is updated.");
         window.location.href = `/executive/manage-applicant`;
+
+        console.log("status",status);
       })
       .catch((err) => {
         console.log(err);
       });
   };
+
+  const handleQuota = async (latestQuota, id) =>{
+    axios
+      .patch(`http://localhost:5000/jobs/${id}`, {
+        quota: latestQuota,
+      })
+      .then((res) => {
+        console.log(res.data);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   const deleteApplication = async (applicationId) => {
     // e.preventDefault();
@@ -313,16 +340,22 @@ export default function AppTable(props) {
                             </DialogContent>
                             <DialogActions>
                               <Button
-                                onClick={() => handleShortlist(details, "Shortlisted")}
+                                onClick={() => handleShortlist(details, "Shortlisted", quota, job_id)}
                                 variant="success"
                               >
                                 Shortlist
                               </Button>
                               <Button
-                                onClick={() => handleShortlist(details, "Rejected")}
+                                onClick={() => handleShortlist(details, "Rejected", quota, job_id)}
                                 variant="warning"
                               >
                                 Not Shortlist
+                              </Button>
+                              <Button
+                                onClick={() => handleShortlist(details, "Idle")}
+                                variant="secondary"
+                              >
+                                Idle
                               </Button>
                               {stat === "Rejected" && (
                                 <Button onClick={() => deleteApplication(details)} variant="danger"> Delete </Button>
