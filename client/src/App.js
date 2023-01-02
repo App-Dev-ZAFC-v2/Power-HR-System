@@ -33,6 +33,7 @@ import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
 import FillForm from "./Pages/Survey/Feedback/FillForm";
+
 function App() {
   return (
     <div className="App">
@@ -71,11 +72,8 @@ function App() {
           path="/applicant/view-application"
           element={<ViewApplication />}
         />
+        <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
 
-        <Route
-          path="/executive/manage-applicant"
-          element={<ShortlistApplicant />}
-        />
       </Routes>
     </div>
   );
