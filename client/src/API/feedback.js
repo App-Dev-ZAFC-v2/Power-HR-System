@@ -1,32 +1,32 @@
-import axios from 'axios';
+import axios from "axios";
 const API_URL = "http://localhost:5000/feedbacks/";
 
 const feedbackAPI = {
-    async getFeedbacks(){
-        const response = await axios.get(API_URL);
-        return response.data;
-    },
+  async getFeedbacks() {
+    const response = await axios.get(API_URL);
+    return response.data;
+  },
 
-    async getFeedbackByID(formID){
-        const response = await axios.get(API_URL + feedbackID);
-        return response.data;
-    },
+  async getFeedbackByID(feedbackID) {
+    const response = await axios.get(API_URL + feedbackID);
+    return response.data;
+  },
 
-    async createFeedback(data){
-        const response = await axios.post(API_URL, data);
-        return response.data;
-    },
+  async createFeedback(data) {
+    const response = await axios.post(API_URL, data);
+    return response.data;
+  },
 
-    async updateFeedback(feedbackID){
-        const response = await axios.patch(API_URL + feedbackID, data);
-        return response.data;
-    },
+  async updateFeedback(feedbackID, data) {
+    const response = await axios.patch(API_URL + feedbackID, data);
+    return response.data;
+  },
 
-    async deleteFeedback(feedbackID){
-        const response = await axios.delete(API_URL + feedbackID);
-        return response.data;
-    }
-}
+  async deleteFeedback(feedbackID) {
+    const response = await axios.delete(API_URL + feedbackID);
+    return response.data;
+  },
+};
 
 export default feedbackAPI;
 

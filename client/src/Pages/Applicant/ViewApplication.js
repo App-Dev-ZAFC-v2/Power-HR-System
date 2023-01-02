@@ -29,11 +29,11 @@ const style = {
 };
 
 //function where it calculate the number of days between the application date and today's date
-function Duration(applicationDate) {
+function durationInDays(applicationDate) {
   var today = new Date();
   var date = new Date(applicationDate);
   var diff = Math.abs(today - date);
-  var days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  var days = Math.floor(diff / (1000 * 60 * 60 * 24));
   return days;
 }
 
@@ -103,7 +103,7 @@ function ViewApplication() {
                     color="textSecondary"
                     component="p"
                   >
-                    {Duration(application?.applicationDate)} days ago
+                    {durationInDays(application?.applicationDate)} days ago
                   </Typography>
                   <Typography
                     variant="body2"

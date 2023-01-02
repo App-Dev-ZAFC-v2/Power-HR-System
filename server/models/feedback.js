@@ -1,21 +1,26 @@
 import mongoose from "mongoose";
 
 const feedbackSchema = mongoose.Schema({
-    
-    formID:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'form'
-    },
+  formID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "form",
+  },
 
-    employeeID:{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'employee'
-    },
+  employeeID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "employee",
+  },
 
-    response : [{
-        questionID: String,
-        answer: String
-    }],
+  response: [
+    {
+      questionID: String,
+      answer: [
+        {
+          text: String,
+        },
+      ],
+    },
+  ],
 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
