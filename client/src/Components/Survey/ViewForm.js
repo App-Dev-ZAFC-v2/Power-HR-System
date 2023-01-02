@@ -1,26 +1,20 @@
-import { useEffect, useState } from "react";
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
+import React from "react";
+import { Card, Grid, Typography, CardActionArea } from "@mui/material";
 
-import Typography from "@mui/material/Typography";
-import { CardActionArea, Grid } from "@mui/material";
-
-function FormCard(props) {
-  const [form, setForm] = useState({});
-
-  useEffect(() => {
-    setForm(props.dataform);
-  }, [props.dataform]);
+export default function ViewForm(props) {
+  const form = props.dataform;
 
   return (
-    <Grid item xs={12} sm={6} md={3}>
-      <Card
-        sx={{
-          boxShadow: 10,
-        }}
-      >
-        <CardActionArea onClick={() => (window.location = "/form/" + form._id)}>
-          <CardContent>
+    <>
+      <Grid item xs={12} sm={6} md={3}>
+        <Card
+          sx={{
+            boxShadow: 10,
+          }}
+        >
+          <CardActionArea
+            onClick={() => (window.location = "/form/" + form._id)}
+          >
             <Typography
               sx={{
                 display: "-webkit-box",
@@ -29,10 +23,12 @@ function FormCard(props) {
                 WebkitLineClamp: 1,
               }}
               gutterBottom
-              variant="body1"
+              variant="h4"
               component="div"
+              ml={2}
+              mt={2}
             >
-              Survery Name : {form.name}
+              {form.name}
             </Typography>
             <Typography
               sx={{
@@ -44,14 +40,13 @@ function FormCard(props) {
               variant="body2"
               color="text.secondary"
               height={60}
+              ml={3}
             >
-              Description : {form.description}
+              {form.description}
             </Typography>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Grid>
+          </CardActionArea>
+        </Card>
+      </Grid>
+    </>
   );
 }
-
-export default FormCard;
