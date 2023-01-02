@@ -7,6 +7,11 @@ const formSchema = mongoose.Schema({
         ref: 'Admin'
     },
 
+    collaborator: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
+    }],
+
     name: String,
 
     description:{type: String, default: "No description"},
@@ -34,12 +39,16 @@ const formSchema = mongoose.Schema({
         default: false,
     },
 
-    dueDate: {
-        type: Date,
-        default: "",
+    dueDate: [{
+        active: {type: Boolean, default: false},
+        date: {type: String, default: ""},
+    }],
+
+    requiredAll: {
+        type: Boolean,
+        default: false,
     },
 
-    
 });
 
 const Form = mongoose.model("Form", formSchema);
