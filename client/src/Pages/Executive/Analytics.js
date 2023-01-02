@@ -6,6 +6,7 @@ import BarChart from "../../Components/Charts/BarChart";
 import DoughnutChart from "../../Components/Charts/DoughnutChart";
 import PieChart from "../../Components/Charts/PieChart";
 import { Container } from '@mui/system';
+import LineChart from '../../Components/Charts/LineChart';
 
 //import axios from 'axios';
 
@@ -69,23 +70,28 @@ function ManageAnalytics() {
         </h6>
       </Typography>
       <Grid container spacing={2} mt={5}>
+        
         <Grid item md={6} xs={12}>
           <Paper>
             <BarChart chartData  />
           </Paper>
         </Grid>
 
-        <Grid item md={4}  xs={12}>
+        <Grid item md={6}  xs={12}>
+          <Paper>
+            <LineChart />
+          </Paper>
+        </Grid>
+        </Grid>
+
+        <br></br>
+
+        <Grid item md={6}  xs={12}>
           <Paper>
             <DoughnutChart />
           </Paper>
-        <Grid item md={9}  xs={12}>
-          <Paper>
-            <PieChart />
-          </Paper>
+          
         </Grid>
-        </Grid>
-      </Grid>
     </Container>
     </>
   );

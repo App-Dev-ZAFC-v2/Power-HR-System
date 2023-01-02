@@ -45,7 +45,20 @@ export const data = {
   ],
 };
 
-const options = {}
+export const options = {
+  responsive: true,
+  plugins: {
+    legend: {
+      position: 'top',
+    },
+    title: {
+      display: true,
+      text: 'Employee Status Doughnut Chart',
+    },
+  },
+
+  
+}
 
 function DoughnutChart() {
     return (
