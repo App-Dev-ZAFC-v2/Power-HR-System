@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { reorderQuestion } from '../../../Redux/slices/form';
+import { deleteQuestion, editQuestionText, editQuestionType, editView, reorderQuestion } from '../../../Redux/slices/form';
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, Typography, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -11,6 +11,11 @@ import LinearScaleIcon from '@mui/icons-material/LinearScale';
 import ShortTextIcon from '@mui/icons-material/ShortText';
 import SubjectIcon from '@mui/icons-material/Subject';
 import { MultipleChoice, MultipleChoiceEdit } from './QuestionType/MultipleChoice';
+import ShortAnswer from './QuestionType/ShortAnswer';
+import Paragraph from './QuestionType/Paragraph';
+import { CheckBox, CheckBoxEdit } from './QuestionType/Checkboxes';
+import { DropDownEdit, DropDownList } from './QuestionType/DropDown';
+import { LinearScale, LinearScaleEdit } from './QuestionType/LinearScale';
 
 function QuestionList(){
     const questions = useSelector(state => state.forms.form.questions);
@@ -28,15 +33,19 @@ function QuestionList(){
     }
 
     function handleExpand(i){
+        dispatch(editView(i));
     }
 
-    function handleQuestionValue(value, i){
+    function handleQuestionText(value, i){
+        dispatch(editQuestionText({value, i}));
     }
 
     function handleQuestionType(value, i){
+        dispatch(editQuestionType({value, i}));
     }
 
     function handleDeleteQuestion(i){
+        dispatch(deleteQuestion(i));
     }
 
     return(
@@ -57,6 +66,11 @@ function QuestionList(){
                                                                 <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                                             </div>
                                                             {(q.questionType === "Multiple Choice") ? <MultipleChoice index={i} disable={true}/> : ""}
+                                                            {(q.questionType === "Short Answer") ? <ShortAnswer index={i} disable={true}/> : ""}
+                                                            {(q.questionType === "Paragraph") ? <Paragraph index={i} disable={true}/> : ""}
+                                                            {(q.questionType === "Checkboxes") ? <CheckBox index={i} disable={true}/> : ""}
+                                                            {(q.questionType === "Drop-down") ? <DropDownList index={i}/> : ""}
+                                                            {(q.questionType === "Linear Scale") ? <LinearScale index={i} disable={true}/> : ""}
                                                             
                                                             </>
                                                     ) : ""}
@@ -77,7 +91,7 @@ function QuestionList(){
                                                                     value={q.questionText}
                                                                     variant="filled"
                                                                     sx={{ mt: 1, mb: 1, mr: 1}}
-                                                                    onChange={(e) => { handleQuestionValue(e.target.value, i); } } />
+                                                                    onChange={(e) => { handleQuestionText(e.target.value, i); } } />
                                                                 <FormControl sx={{ m: 1, minWidth: 230 }}>
                                                                     <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => {handleQuestionType(e.target.value, i);}}>
                                                                         <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{ mr: "6px" }} /> Short answer</MenuItem>
@@ -93,11 +107,10 @@ function QuestionList(){
                                                             </div>
 
                                                             {(q.questionType === "Multiple Choice") ? <MultipleChoiceEdit index={i}/> : ""}
-                                                            {/* {(q.questionType === "Linear Scale") ? LinearScaleOpen(q.options, i) : ""}
-                                                            {(q.questionType === "Checkboxes") ? CheckBoxOpen(q.options, i) : ""}
-                                                            {(q.questionType === "Short Answer") ? ShortAnswer() : ""}
-                                                            {(q.questionType === "Paragraph") ? Paragraph() : ""}
-                                                            {(q.questionType === "Drop-down") ? DropdownOpen(q.options, i) : ""} */}
+                                                            {(q.questionType === "Checkboxes") ? <CheckBoxEdit index={i}/> : ""}
+                                                            {(q.questionType === "Linear Scale") ? <LinearScaleEdit index={i}/> : ""}
+                                                            {(q.questionType === "Drop-down") ? <DropDownEdit index={i}/> : ""}
+                                                            
                                                         </div>
                                                     </div>
                                                 </AccordionDetails>
