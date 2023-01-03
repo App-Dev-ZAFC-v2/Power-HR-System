@@ -39,10 +39,10 @@ const formSchema = mongoose.Schema({
         default: false,
     },
 
-    dueDate: [{
+    dueDate: {
         active: {type: Boolean, default: false},
         date: {type: String, default: ""},
-    }],
+    },
 
     requiredAll: {
         type: Boolean,

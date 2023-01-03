@@ -22,7 +22,7 @@ export function LinearScaleEdit(props){
         <div style={{display:"flex", flexWrap: 'wrap'}}>
             <FormControl sx={{ m: 1, minWidth: 50 }} size="small" nowrap="true">
                 <Select
-                value={option[0].optionScale}
+                value={option[0]?.optionScale}
                 sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
                 displayEmpty
                 onChange={(e) => { handleOptionScale(e.target.value, 0); } }
@@ -37,7 +37,7 @@ export function LinearScaleEdit(props){
             </Paper>
             <FormControl sx={{ m: 1, minWidth: 50 }} size="small" nowrap="true">
                 <Select
-                value={option[1].optionScale}
+                value={option[1]?.optionScale}
                 sx={{ boxShadow: 'none', '.MuiOutlinedInput-notchedOutline': { border: 0 } }}
                 displayEmpty
                 onChange={(e) => { handleOptionScale(e.target.value, 1); } }
