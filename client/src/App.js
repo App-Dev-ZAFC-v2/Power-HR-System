@@ -32,7 +32,7 @@ import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
-import FillForm from "./Pages/Survey/Feedback/FillForm";
+import QuestionPage from "./Pages/Survey/Feedback/QuestionPage";
 
 function App() {
   return (
@@ -58,7 +58,7 @@ function App() {
 
         <Route path="/form/edit-form/:id" element={<EditForm />} />
         <Route path="/form" element={<SurveyForm />} />
-        <Route path="/form/:id" element={<FillForm />} />
+        <Route path="/form/:id" element={<QuestionPage />} />
 
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
@@ -72,8 +72,10 @@ function App() {
           path="/applicant/view-application"
           element={<ViewApplication />}
         />
-        <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
-
+        <Route
+          path="/executive/manage-applicant"
+          element={<ShortlistApplicant />}
+        />
       </Routes>
     </div>
   );
