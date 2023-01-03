@@ -4,8 +4,9 @@ const API_URL = "http://localhost:5000/forms/";
 
 const initialState = {
     form: [],
+    formsCollab: [],
     loading: false,
-    saved: true,
+    saved: "SAVED",
 }
 
 //form
@@ -35,6 +36,30 @@ export const getFormByID = createAsyncThunk(
     }
 );
 
+export const getFormsByUser = createAsyncThunk(
+    'forms/form/User/fetch',
+    async (userID) => {
+        const res = await axios.get(API_URL + userID + "/u");
+        return res.data;
+    }
+);
+
+export const getFormsByCollaborator = createAsyncThunk(
+    'forms/form/Collaborator/fetch',
+    async (userID) => {
+        const res = await axios.get(API_URL + userID + "/c");
+        return res.data;
+    }
+);
+
+export const getFormsByPublished = createAsyncThunk(
+    'forms/form/Published/fetch',
+    async () => {
+        const res = await axios.get(API_URL + "published");
+        return res.data;
+    }
+);
+
 
 //Update
 export const updateForm = createAsyncThunk(
@@ -55,29 +80,7 @@ export const deleteForm = createAsyncThunk(
     }
 );
 
-//Limit
-export const setOnceForm = createAsyncThunk(
-    'forms/form/setLimit',
-    async (data) => {
-        return data;
-    }
-);
 
-//RequiredAll
-export const setRequiredAll = createAsyncThunk(
-    'forms/form/setRequiredAll',
-    async (data) => {
-        return data;
-    }
-);
-
-//published
-export const setPublished = createAsyncThunk(
-    'forms/form/setPublished',
-    async (data) => {
-        return data;
-    }
-);
 
 //Question
 //add
@@ -104,28 +107,6 @@ export const deleteQuestion = createAsyncThunk(
     }
 );
 
-//reorder
-export const reorderQuestion = createAsyncThunk(
-    'form/reorderQuestion',
-    async (result) => {
-        return result;
-    }
-);
-
-//edit value
-export const editName = createAsyncThunk(
-    'form/editName',
-    async (name) => {
-        return name;
-    }
-);
-
-export const editDescription = createAsyncThunk(
-    'form/editDescription',
-    async (description) => {
-        return description;
-    }
-);
 
 export const editView = createAsyncThunk(
     'form/editView',
@@ -148,9 +129,21 @@ export const editQuestionType = createAsyncThunk(
     }
 );
 
+//set save state
+export const setSaved = createAsyncThunk(
+    'form/setSaved',
+    async (data) => {
+        return data;
+    }
+);
 
-
-
+//reorder
+export const reorderQuestion = createAsyncThunk(
+    'form/reorderQuestion',
+    async (result) => {
+        return result;
+    }
+);
 
 //option
 //add
@@ -197,6 +190,9 @@ const formSlice = createSlice({
     initialState,
     extraReducers: (builder) => {
         builder
+            .addCase(updateForm.rejected, (state, action) => {
+                state.saved = "FAILED";
+            })
             .addCase(createForm.pending, (state) => {
                 state.loading = true;
             })
@@ -208,19 +204,15 @@ const formSlice = createSlice({
             })
             .addCase(updateForm.pending, (state) => {
                 state.loading = true;
+                state.saved = "SAVING";
             })
             .addCase(deleteForm.pending, (state) => {
-                state.loading = true;
+                state.saved = "SAVING";
             })
-            .addCase(setOnceForm.pending, (state) => {
-                state.loading = true;
+            .addCase(addQuestion.pending, (state) => {
+                state.saved = "SAVING";
             })
-            .addCase(setRequiredAll.pending, (state) => {
-                state.loading = true;
-            })
-            .addCase(setPublished.pending, (state) => {
-                state.loading = true;
-            })
+
 
             .addCase(createForm.fulfilled, (state, action) => {
                 state.form.push(action.payload);
@@ -238,41 +230,36 @@ const formSlice = createSlice({
                 state.form = action.payload;
                 state.loading = false;
             })
-            .addCase(updateForm.fulfilled, (state, action) => {
+            .addCase(getFormsByUser.fulfilled, (state, action) => {
+                state.form = [...action.payload];
                 state.loading = false;
-                state.saved = true;
+            })
+            .addCase(getFormsByCollaborator.fulfilled, (state, action) => {
+                state.formCollaborate = [...action.payload];
+                state.loading = false;
+            })
+            .addCase(getFormsByPublished.fulfilled, (state, action) => {
+                state.form = [...action.payload];
+                state.loading = false;
+            })
+            .addCase(updateForm.fulfilled, (state, action) => {
+                state.form = action.payload;
+                state.loading = false;
+                state.saved = "SAVED";
             })
             .addCase(deleteForm.fulfilled, (state, action) => {
                 const index = state.form.findIndex((form) => form._id === action.payload);
                 state.form.splice(index, 1);
                 state.loading = false;
             })
-            .addCase(setOnceForm.fulfilled, (state, action) => {
-                state.form.once = action.payload;
-                state.loading = false;
-                state.saved = false;
-            })
-            .addCase(setRequiredAll.fulfilled, (state, action) => {
-                state.form.requiredAll = action.payload;
-                for(let i = 0; i < state.form.questions.length; i++){
-                    state.form.questions[i].required = action.payload;
-                }
-                state.loading = false;
-                state.saved = false;
-            })
-            .addCase(setPublished.fulfilled, (state, action) => {
-                state.form.published = action.payload;
-                state.loading = false;
-                state.saved = false;
-            })
+
 
             
             .addCase(addQuestion.fulfilled, (state, action) => {
-                for(let i = 1; i < state.form.questions.length; i++){
+                for(let i = 0; i < state.form.questions.length; i++){
                     state.form.questions[i].openView = false;
                 }
                 state.form.questions.push(action.payload);
-                state.saved = false;
             })
             .addCase(deleteQuestion.fulfilled, (state, action) => {
                 state.form.questions.splice(action.payload, 1);
@@ -282,22 +269,9 @@ const formSlice = createSlice({
                 else{
                     state.form.questions[action.payload - 1].openView = true;
                 }
-                state.saved = false;
             })
-            .addCase(reorderQuestion.fulfilled, (state, action) => {
-                const {source, destination} = action.payload;
-                const [removed] = state.form.questions.splice(source.index, 1);
-                state.form.questions.splice(destination.index, 0, removed);
-                state.saved = false;
-            })
-            .addCase(editName.fulfilled, (state, action) => {
-                state.form.name = action.payload;
-                state.saved = false;
-            })
-            .addCase(editDescription.fulfilled, (state, action) => {
-                state.form.description = action.payload;
-                state.saved = false;
-            })
+            
+
             .addCase(editView.fulfilled, (state, action) => {
                 for(let i = 0; i < state.form.questions.length; i++){
                     state.form.questions[i].openView = false;
@@ -309,7 +283,24 @@ const formSlice = createSlice({
                 state.saved = false;
             })
             .addCase(editQuestionType.fulfilled, (state, action) => {
+                var prev = state.form.questions[action.payload.i].questionType;
                 state.form.questions[action.payload.i].questionType = action.payload.value;
+                if(action.payload.value === "Linear Scale"){
+                    state.form.questions[action.payload.i].options = [
+                        { optionText: "", optionImage: "", optionScale: 1 },
+                        { optionText: "", optionImage: "", optionScale: 5 }];
+                }
+                else if(action.payload.value === "Multiple Choice" || action.payload.value === "Checkboxes" || action.payload.value === "Drop-down"){
+                    if(prev !== "Multiple Choice" && prev !== "Checkboxes" && prev !== "Drop-down"){
+                        state.form.questions[action.payload.i].options = [{ optionText: "Option 1", optionImage: "" }];
+                    }
+                }
+                else{
+                    if(prev !== "Paragraph" && prev !== "Short Answer"){
+                        state.form.questions[action.payload.i].options = [];
+                    }
+                }
+                
                 state.saved = false;
             })
 
@@ -328,6 +319,10 @@ const formSlice = createSlice({
             .addCase(editOptionScale.fulfilled, (state, action) => {
                 state.form.questions[action.payload.i].options[action.payload.j].optionScale = action.payload.value;
                 state.saved = false;
+            })
+
+            .addCase(setSaved.fulfilled, (state, action) => {
+                state.saved = action.payload;
             })
 
     }

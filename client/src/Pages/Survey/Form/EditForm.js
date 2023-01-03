@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { addQuestion, editDescription, editName, getFormByID, setOnceForm, setPublished, setRequiredAll, updateForm } from '../../../Redux/slices/form';
+import { addQuestion, getFormByID, setSaved, updateForm } from '../../../Redux/slices/form';
 import { useCallback, useEffect, useState } from 'react';
 import Navbar from '../../../Components/Navbar';
-import { Box, Container, LinearProgress, Grid, Accordion, AccordionSummary, AccordionDetails, TextField, Tabs, Tab, Paper, Fab, Typography, Switch} from '@mui/material';
+import { Box, Container, LinearProgress, Grid, Accordion, AccordionSummary, AccordionDetails, TextField, Tabs, Tab, Paper, Fab, Typography, Switch, Icon, IconButton, AvatarGroup, Avatar, Tooltip} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import QuestionList from '../../../Components/Survey/Question/QuestionList';
@@ -11,79 +11,163 @@ import dayjs from 'dayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
-
+import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
+import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
+import ErrorIcon from '@mui/icons-material/Error';
 
 
 function EditForm(){
     const { id } = useParams();
-    const [tab, setTab] = useState(0);
-
     //Redux
-    const form = useSelector(state => state.forms.form);
-    const loading = useSelector(state => state.forms.loading);
-    const saved = useSelector(state => state.forms.saved);
+    const rform = useSelector(state => state.forms.form);
+    // const loading = useSelector(state => state.forms.loading);
+    const rsaved = useSelector(state => state.forms.saved);
 
     const dispatch = useDispatch();
 
     const retrieveForm = useCallback(() => {
         dispatch(getFormByID(id));
-    }, []);
+    }, [dispatch]);
 
     useEffect(() => {
         retrieveForm();
     }, [retrieveForm]);
+    
+    const [tab, setTab] = useState(0);
+    const [form, setForm] = useState(rform);
+    const [saved, setSaved] = useState(rsaved);
+    const [user, setUser] = useState([]);
+
+
+    useEffect(() => {
+        if(form !== "" && form !== rform)
+            setForm(rform);
+    }, [rform]);
+
+    useEffect(() => {
+        if(saved !== "" && saved !== rsaved)
+            setSaved(rsaved);
+    }, [rsaved]);
 
     const handleTab = (event, newValue) => {
         setTab(newValue);
     };
 
     const handleName = (value) => {
-        dispatch(editName(value));
+        setSaved("SAVING");
+        setForm({...form, name: value});
     }
 
     const handleDescription = (value) => {
-        dispatch(editDescription(value));
+        setSaved("SAVING");
+        setForm({...form, description: value});
     }
 
-    const handleSave = () => {
-        dispatch(updateForm(form));
-    }
+    useEffect(() => {
+        if((form !== "" && form !== rform) || saved === "SAVING"){
+            const getData = setTimeout(() => {
+            dispatch(updateForm(form));
+            }, 2000)
+            return () => clearTimeout(getData)
+        }
+      }, [form, dispatch, rform, saved]);
 
     const handleAddQuestion = () => {
+        setSaved("SAVING");
         var length = form.questions.length;
         var required = form.requiredAll;
         dispatch(addQuestion({length, required}));
     }
 
     const handleLimit = () => {
-        dispatch(setOnceForm(!form.once));
+        setSaved("SAVING");
+        setForm({...form, once: !form.once});
     }
 
     const handleAllRequired = () => {
-        dispatch(setRequiredAll(!form.requiredAll));
+        setSaved("SAVING");
+        
+        if(!form.requiredAll === true){
+            var formTemp = form;
+            formTemp = {...form, requiredAll: !form.requiredAll};
+            formTemp.questions.forEach(question => {
+                formTemp = {...formTemp, questions: {...question, required: true}};
+            });
+            setForm(formTemp);
+        }
+        else{
+            setForm({...form, requiredAll: !form.requiredAll});
+        }
     }
 
     const handlePublished = () => {
-        dispatch(setPublished(!form.published));
+        setSaved("SAVING");
+        if(!form.published === false){
+            var date = {
+                active: false,
+                date: "",
+            }
+            setForm({...form, published: !form.published, dueDate: date});
+        }
+        else
+            setForm({...form, published: !form.published});
     }
 
     const handleDueDateActive = () => {
+        setSaved("SAVING");
+        var date ={
+            active: !form.dueDate.active,
+            date: dayjs(),
+        }
+        setForm({...form, dueDate: date});
     }
 
     const handleDueDate = (e) => {
+        setSaved("SAVING");
+        setForm({...form, dueDate: e});
+    }
+
+    function HandleAvatar(){
+        return user.map((u) => (
+            <Tooltip title={u.name}>
+                <Avatar key={u.name} alt={u.name} src={u.avatar} />
+            </Tooltip>
+        ));
+    }   
+
+    const handleSave = () => {
+        setSaved("SAVING");
+        dispatch(updateForm(rform));
     }
 
 
     return(
-        <><Navbar />
-        <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: 2 }}>
+        <>
+        <Navbar />
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                {(saved === "SAVING")? 
+                (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
+                {(saved === "SAVED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
+                {(saved === "ERROR")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Error</Typography></Box>) : ""}
+            </Box>
+            <Box>
+                <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
+                    <HandleAvatar/>
+                </AvatarGroup>
+            </Box>
+        </Box>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 0px 0px rgb(0 0 0 / 12%)" }}>
             <Tabs value={tab} onChange={handleTab} centered>
                 <Tab label="Questions" />
                 <Tab label="Settings" />
                 <Tab label="Responses" disabled />
             </Tabs>
         </Box>
-        {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
+        {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
         <Container>
             {tab === 0?(
                 <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'128px' }}>
@@ -104,7 +188,7 @@ function EditForm(){
                         <QuestionList/>
                     </Grid>
                     <Paper elevation={2} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0}} >
-                        {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
+                        {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
                         <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
                             <Fab variant="extended" onClick={() => {handleAddQuestion()}}>
                                 <AddIcon sx={{ mr: 1 }} />
@@ -112,7 +196,7 @@ function EditForm(){
                             </Fab>
                             <Fab variant="extended" onClick={() => {handleSave()}} disabled={saved && true}>
                                 <SaveIcon sx={{ mr: 1 }} />
-                                {(loading && !saved)? "Saving..." : (saved? "Saved" : "Save")}
+                                {(!saved)? "Saving..." : (saved? "Saved" : "Save")}
                             </Fab>
                         </Box>
                     </Paper>
@@ -176,7 +260,7 @@ function EditForm(){
                                             <LocalizationProvider dateAdapter={AdapterDayjs}>
                                                 <DateTimePicker
                                                     value={form.dueDate.date}
-                                                    onChange={(e) => {handleDueDate(e)}}
+                                                    onChange={(e) => {handleDueDate(e.target.value)}}
                                                     renderInput={(params) => <TextField {...params} />}
                                                     />
                                             </LocalizationProvider>
