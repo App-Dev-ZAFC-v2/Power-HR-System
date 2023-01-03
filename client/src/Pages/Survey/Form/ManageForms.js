@@ -5,7 +5,7 @@ import icon from "../../../Assets/addIcon.png";
 import Navbar from "../../../Components/Navbar";
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { getForms, deleteForm, createForm } from "../../../Redux/slices/form";
+import { deleteForm, createForm, getFormsByUser } from "../../../Redux/slices/form";
 
 const ManageForms = () => {
     //Media Query
@@ -39,16 +39,25 @@ const ManageForms = () => {
 
     //Redux
     const forms = useSelector(state => state.forms.form);
+    const formsCollab = useSelector(state => state.forms.formsCollab);
     const loading = useSelector(state => state.forms.loading);
     const dispatch = useDispatch();
 
-    const retrieveForms = useCallback(() => {
-        dispatch(getForms());
-    }, []);
+    const retrieveUserForms = useCallback(() => {
+        dispatch(getFormsByUser(adminId));
+    }, [dispatch]);
 
     useEffect(() => {
-        retrieveForms();
-    }, [retrieveForms]);
+        retrieveUserForms();
+    }, [retrieveUserForms]);
+
+    const retrieveFormsCollab = useCallback(() => {
+        dispatch(getFormsByUser(adminId));
+    }, [dispatch]);
+
+    useEffect(() => {
+        retrieveFormsCollab();
+    }, [retrieveFormsCollab]);
 
     const deleteSingleForm = (formid) => {
         dispatch(deleteForm(formid))
@@ -107,7 +116,39 @@ const ManageForms = () => {
             <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Typography variant="h2">Manage Forms</Typography>
             <Grid container spacing={6} sx={{ mt: 0 }}>
-                {forms.map((form, index) => (
+                <Grid item  xs={12} sm={6} md={3} >
+                    <Card sx={{ height: 308.34}}>
+                        <CardActionArea sx={{p:0, m:0, height: 308.34}} onClick={() => handleClickOpen("create")}>
+                            <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
+                                <Box component="img" src={icon} height={64}/>
+                            </Box>
+                        </CardActionArea>
+                    </Card>
+                    <Dialog fullScreen={fullScreen} open={openCreate} onClose={() => handleClose("create")} aria-labelledby="responsive-dialog-title" fullWidth>
+                            <DialogTitle id="responsive-dialog-title">
+                                Create new form
+                            </DialogTitle>
+                            <DialogContent>
+                                <DialogContentText>
+                                    <TextField id="name" name="name" label="name" variant="outlined" margin="normal" fullWidth required
+                                    value={cform.name || ""} onChange={handleInputChange}/>
+                                </DialogContentText>
+                                <DialogContentText>
+                                    <TextField id="description" name="description" label="description" variant="outlined" margin="normal" fullWidth
+                                    value={cform.description || ""} onChange={handleInputChange}/>
+                                </DialogContentText>
+                            </DialogContent>
+                            <DialogActions>
+                                <Button autoFocus onClick={() => handleClose("create")}>
+                                    Cancel
+                                </Button>
+                                <Button onClick={newForm} autoFocus>
+                                    Create
+                                </Button>
+                            </DialogActions>
+                    </Dialog>
+                </Grid>
+                {forms?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
                         <Card>
                             <CardActionArea onClick={() => window.location = '/form/edit-form/' + form._id}>
@@ -163,38 +204,47 @@ const ManageForms = () => {
                     </Grid>
                     </>
                 ))}
-                <Grid item  xs={12} sm={6} md={3} >
-                        <Card sx={{ height: 308.34}}>
-                            <CardActionArea sx={{p:0, m:0, height: 308.34}} onClick={() => handleClickOpen("create")}>
-                                <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
-                                    <Box component="img" src={icon} height={64}/>
-                                </Box>
+
+                {formsCollab?.map((form, index) => (
+                    <><Grid item xs={12} sm={6} md={3} key={index}>
+                        <Card>
+                            <CardActionArea onClick={() => window.location = '/form/edit-form/' + form._id}>
+                                <CardMedia
+                                    component="img"
+                                    height="140"
+                                    image={photo}
+                                    alt={form.name} />
+                                <CardContent>
+                                    <Typography sx={{
+                                        display: '-webkit-box',
+                                        overflow: 'hidden',
+                                        WebkitBoxOrient: 'vertical',
+                                        WebkitLineClamp: 1,
+                                    }} gutterBottom variant="body1" component="div">
+                                        {form.name}
+                                    </Typography>
+                                    <Typography sx={{
+                                        display: '-webkit-box',
+                                        overflow: 'hidden',
+                                        WebkitBoxOrient: 'vertical',
+                                        WebkitLineClamp: 3,
+                                    }} variant="body2" color="text.secondary" height={60}>
+                                        {form.description}
+                                    </Typography>
+                                </CardContent>
                             </CardActionArea>
+                            <CardActions>
+                                <Box sx={{p:"5px"}}>
+                                    <Typography variant="body2" color="text.secondary">
+                                        Collaborator
+                                    </Typography>
+                                </Box>
+                            </CardActions>
                         </Card>
-                        <Dialog fullScreen={fullScreen} open={openCreate} onClose={() => handleClose("create")} aria-labelledby="responsive-dialog-title" fullWidth>
-                                <DialogTitle id="responsive-dialog-title">
-                                    Create new form
-                                </DialogTitle>
-                                <DialogContent>
-                                    <DialogContentText>
-                                        <TextField id="name" name="name" label="name" variant="outlined" margin="normal" fullWidth required
-                                        value={cform.name || ""} onChange={handleInputChange}/>
-                                    </DialogContentText>
-                                    <DialogContentText>
-                                        <TextField id="description" name="description" label="description" variant="outlined" margin="normal" fullWidth
-                                        value={cform.description || ""} onChange={handleInputChange}/>
-                                    </DialogContentText>
-                                </DialogContent>
-                                <DialogActions>
-                                    <Button autoFocus onClick={() => handleClose("create")}>
-                                        Cancel
-                                    </Button>
-                                    <Button onClick={newForm} autoFocus>
-                                        Create
-                                    </Button>
-                                </DialogActions>
-                        </Dialog>
+
                     </Grid>
+                    </>
+                ))}
             </Grid>
         </Container></>
     )
