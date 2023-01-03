@@ -17,10 +17,13 @@ const feedbackSchema = mongoose.Schema({
       answer: [
         {
           text: String,
+          optionID: String,
         },
       ],
     },
   ],
+
+  draft: { type: Boolean, default: true },
 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
