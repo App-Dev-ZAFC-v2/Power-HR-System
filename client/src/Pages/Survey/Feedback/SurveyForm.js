@@ -1,6 +1,6 @@
 import React, { useEffect, useCallback } from "react";
 import Navbar from "../../../Components/Navbar";
-import ViewForm from "../../../Components/Survey/ViewForm";
+import ViewFormCard from "../../../Components/Survey/ViewFormCard";
 //import API from "../../../API/form";
 import { Container, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
@@ -75,7 +75,7 @@ export default function SurveyForm() {
         <Typography variant="h2">Survey Form</Typography>
         <Grid container spacing={4} sx={{ mt: 0 }}>
           {forms?.map((f) => (
-            <ViewForm dataform={f} />
+            <ViewFormCard dataform={f} />
           ))}
         </Grid>
       </Container>
