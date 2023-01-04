@@ -187,9 +187,7 @@ export const getApplicationsWithPagination = async (req, res) => {
 
     // combine the job object with the application object
     const combined = results.results.map((app) => {
-      const job = jobs.find(
-        (job) => job._id.toString() === app.job.toString()
-      );
+      const job = jobs.find((job) => job._id.toString() === app.job.toString());
       const applicant = applicants.find(
         (applicant) => applicant._id.toString() === app.applicant.toString()
       );
@@ -200,7 +198,7 @@ export const getApplicationsWithPagination = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
-}
+};
 
 // get all jobs that have applications
 export const getJobsWithApplications = async (req, res) => {
@@ -232,13 +230,13 @@ export const getJobsWithApplications = async (req, res) => {
         (applicant) =>
           application.find(
             (app) => app.applicant.toString() === applicant._id.toString()
-          ) !== undefined);
+          ) !== undefined
+      );
 
       // combine the application object with the applicant object by using the applicant id
       const combinedApplicant = application.map((app) => {
         const applicant = applicants.find(
-          (applicant) =>
-            applicant._id.toString() === app.applicant.toString()
+          (applicant) => applicant._id.toString() === app.applicant.toString()
         );
         return { ...app._doc, applicant };
       });
@@ -253,4 +251,4 @@ export const getJobsWithApplications = async (req, res) => {
   } catch (error) {
     res.status(404).json({ message: error.message });
   }
-}
+};

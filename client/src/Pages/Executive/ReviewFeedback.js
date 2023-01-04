@@ -11,14 +11,10 @@ function ReviewEmployee() {
       <br></br>
       <div className="container">
         <Typography align="center">
-          <h1>Review Employee Feedback</h1>
+          <h1>Review Employee Survey Response</h1>
         </Typography>
         <Typography align="center">
-          <h6>
-            Employee will try to review the feedback and display it in the chart
-            form.
-          </h6>
-          <p>Basically display form list - employee select, then pop up the questions</p>
+          <p>Basically display employee list - when select, pop up questions answered</p>
         </Typography>
         <br></br>
         {/* <ShortlistTable {...applicants} /> */}
