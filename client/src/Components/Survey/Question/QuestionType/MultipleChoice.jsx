@@ -116,6 +116,11 @@ export function MultipleChoice(props) {
     setAnswer([{ text: value, optionId: value }]);
   }
 
+  //handle answer
+  // const handleAnswerChange = (e) => {
+  //   setAnswer([{ text: e.target.value, optionId: e.target.value }]);
+  // };
+
   return (
     <div
       style={{
