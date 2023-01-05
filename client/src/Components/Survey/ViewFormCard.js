@@ -9,7 +9,8 @@ export default function ViewForm(props) {
       <Grid item xs={12} sm={6} md={3}>
         <Card
           sx={{
-            boxShadow: 10,
+            boxShadow: 5,
+            borderRadius: 2,
           }}
         >
           <CardActionArea
@@ -39,7 +40,7 @@ export default function ViewForm(props) {
               }}
               variant="body2"
               color="text.secondary"
-              height={60}
+              height={50}
               ml={3}
             >
               {form.description}
