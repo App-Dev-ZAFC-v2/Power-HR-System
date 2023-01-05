@@ -24,7 +24,6 @@ const ManageForms = () => {
             questionImage: "",
             required: false,
             options: [{optionText: "Option 1", optionImage: ""}],
-            openView: false,
         }],
         once: false,
     };

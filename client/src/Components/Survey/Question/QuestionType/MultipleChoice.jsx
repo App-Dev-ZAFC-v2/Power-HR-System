@@ -13,31 +13,86 @@ import CloseIcon from "@mui/icons-material/Close";
 import {
   addOption,
   deleteOption,
-  editOptionText,
+  setSaving,
+  updateForm,
 } from "../../../../Redux/slices/form";
 import { useState } from "react";
+import { useEffect } from "react";
 
 export function MultipleChoiceEdit(props) {
   const { index } = props;
-  const option = useSelector(
-    (state) => state.forms.form.questions[index].options
-  );
+  const rform = useSelector(state => state.forms.form);
+  const saved = useSelector(state => state.forms.saved);
+
+  const [option, setOption] = useState([]);
+  const [localSave, setLocalSave] = useState(true);
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if(rform.questions[index].options !== undefined){
+      if(option !== rform.questions[index].options && localSave === true) {
+        setOption(rform.questions[index].options);
+      }
+    }
+  }, [rform]);
+
+  //auto save
+  useEffect(() => {
+    if(saved === "SAVING" && localSave === false  || saved === "FAILED" && localSave === false){
+      const getData = setTimeout(() => {
+        var tempForm = JSON.parse(JSON.stringify(rform));
+        tempForm.questions[index].options = option;
+        dispatch(updateForm(tempForm));
+        if(saved !== "FAILED")
+          setLocalSave(true);
+      }, 1000);
+      return () => clearTimeout(getData);
+    }
+  }, [option, saved]);
+
   function handleOptionText(value, j) {
-    let i = index;
-    dispatch(editOptionText({ value, i, j }));
+    if(saved === "SAVED"){
+        dispatch(setSaving());
+    }
+    var temp = JSON.parse(JSON.stringify(option));
+    temp[j].optionText = value;
+    setOption(temp);
+    setLocalSave(false);
   }
 
   function handleOptionDelete(j) {
-    let i = index;
-    dispatch(deleteOption({ i, j }));
+    if(saved === "SAVED"){
+      dispatch(setSaving());
+    }
+
+    var temp = JSON.parse(JSON.stringify(option));
+    temp.splice(j, 1);
+    setOption(temp);
+
+    setLocalSave(false);
+    // let i = index;
+    // dispatch(deleteOption({ i, j }));
   }
 
   function handleOptionAdd() {
-    let i = index;
-    let j = option.length - 1;
-    dispatch(addOption({ i, j }));
+    if(saved === "SAVED"){
+      dispatch(setSaving());
+    }
+
+    var temp = JSON.parse(JSON.stringify(option));
+    temp.push({
+      optionText: "Option " + (option.length + 1),
+      optionImage: "",
+    });
+
+    setOption(temp);
+
+    setLocalSave(false);
+
+
+    // let i = index;
+    // let j = option.length - 1;
+    // dispatch(addOption({ i, j }));
   }
 
   return (

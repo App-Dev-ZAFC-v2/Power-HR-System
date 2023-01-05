@@ -99,35 +99,7 @@ export const addQuestion = createAsyncThunk(
     }
 );
 
-//delete
-export const deleteQuestion = createAsyncThunk(
-    'form/deleteQuestion',
-    async (index) => {
-        return index;
-    }
-);
 
-
-export const editView = createAsyncThunk(
-    'form/editView',
-    async (index) => {
-        return index;
-    }
-);
-
-export const editQuestionText = createAsyncThunk(
-    'form/editQuestionText',
-    async (data) => {
-        return data;
-    }
-);
-
-export const editQuestionType = createAsyncThunk(
-    'form/editQuestionType',
-    async (data) => {
-        return data;
-    }
-);
 
 //set save state
 export const setSaving = createAsyncThunk(
@@ -137,51 +109,8 @@ export const setSaving = createAsyncThunk(
     }
 );
 
-//reorder
-export const reorderQuestion = createAsyncThunk(
-    'form/reorderQuestion',
-    async (result) => {
-        return result;
-    }
-);
 
-//option
-//add
-export const addOption = createAsyncThunk(
-    'form/addOption',
-    async (data) => {
-        var option = {
-            optionText: "Option " + (data.j+2),
-            optionImage: "",
-            optionScale: 0,
-        }
-        return {data, option};
-    }
-);
 
-//delete
-export const deleteOption = createAsyncThunk(
-    'form/deleteOption',
-    async (index) => {
-        return index;
-    }
-);
-
-//edit optionText
-export const editOptionText = createAsyncThunk(
-    'form/editOptionText',
-    async (data) => {
-        return data;
-    }
-);
-
-//edit optionScale
-export const editOptionScale = createAsyncThunk(
-    'form/editOptionScale',
-    async (data) => {
-        return data;
-    }
-);
 
 
 //Slice
@@ -193,6 +122,15 @@ const formSlice = createSlice({
             .addCase(updateForm.rejected, (state, action) => {
                 state.saved = "FAILED";
             })
+            .addCase(deleteForm.rejected, (state, action) => {
+                state.saved = "FAILED";
+            })
+            .addCase(addQuestion.rejected, (state, action) => {
+                state.saved = "FAILED";
+            })
+
+
+
             .addCase(createForm.pending, (state) => {
                 state.loading = true;
             })
@@ -200,6 +138,15 @@ const formSlice = createSlice({
                 state.loading = true;
             })
             .addCase(getFormByID.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getFormsByUser.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getFormsByCollaborator.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getFormsByPublished.pending, (state) => {
                 state.loading = true;
             })
             .addCase(updateForm.pending, (state) => {
@@ -223,10 +170,6 @@ const formSlice = createSlice({
                 state.loading = false;
             })
             .addCase(getFormByID.fulfilled, (state, action) => {
-                action.payload.questions[0].openView = true;
-                for(let i = 1; i < action.payload.questions.length; i++){
-                    action.payload.questions[i].openView = false;
-                }
                 state.form = action.payload;
                 state.loading = false;
             })
@@ -252,75 +195,12 @@ const formSlice = createSlice({
                 state.form.splice(index, 1);
                 state.loading = false;
             })
-
-
-            
             .addCase(addQuestion.fulfilled, (state, action) => {
                 for(let i = 0; i < state.form.questions.length; i++){
                     state.form.questions[i].openView = false;
                 }
                 state.form.questions.push(action.payload);
             })
-            .addCase(deleteQuestion.fulfilled, (state, action) => {
-                state.form.questions.splice(action.payload, 1);
-                if(action.payload === 0){
-                    state.form.questions[0].openView = true;
-                }
-                else{
-                    state.form.questions[action.payload - 1].openView = true;
-                }
-            })
-            
-
-            .addCase(editView.fulfilled, (state, action) => {
-                for(let i = 0; i < state.form.questions.length; i++){
-                    state.form.questions[i].openView = false;
-                }
-                state.form.questions[action.payload].openView = true;
-            })
-            .addCase(editQuestionText.fulfilled, (state, action) => {
-                state.form.questions[action.payload.i].questionText = action.payload.value;
-                state.saved = false;
-            })
-            .addCase(editQuestionType.fulfilled, (state, action) => {
-                var prev = state.form.questions[action.payload.i].questionType;
-                state.form.questions[action.payload.i].questionType = action.payload.value;
-                if(action.payload.value === "Linear Scale"){
-                    state.form.questions[action.payload.i].options = [
-                        { optionText: "", optionImage: "", optionScale: 1 },
-                        { optionText: "", optionImage: "", optionScale: 5 }];
-                }
-                else if(action.payload.value === "Multiple Choice" || action.payload.value === "Checkboxes" || action.payload.value === "Drop-down"){
-                    if(prev !== "Multiple Choice" && prev !== "Checkboxes" && prev !== "Drop-down"){
-                        state.form.questions[action.payload.i].options = [{ optionText: "Option 1", optionImage: "" }];
-                    }
-                }
-                else{
-                    if(prev !== "Paragraph" && prev !== "Short Answer"){
-                        state.form.questions[action.payload.i].options = [];
-                    }
-                }
-                
-                state.saved = false;
-            })
-
-            .addCase(addOption.fulfilled, (state, action) => {
-                state.form.questions[action.payload.data.i].options.push(action.payload.option);
-                state.saved = false;
-            })
-            .addCase(deleteOption.fulfilled, (state, action) => {
-                state.form.questions[action.payload.i].options.splice(action.payload.j, 1);
-                state.saved = false;
-            })
-            .addCase(editOptionText.fulfilled, (state, action) => {
-                state.form.questions[action.payload.i].options[action.payload.j].optionText = action.payload.value;
-                state.saved = false;
-            })
-            .addCase(editOptionScale.fulfilled, (state, action) => {
-                state.form.questions[action.payload.i].options[action.payload.j].optionScale = action.payload.value;
-                state.saved = false;
-            })
-
             .addCase(setSaving.fulfilled, (state, action) => {
                 state.saved = action.payload;
             })
