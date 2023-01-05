@@ -1,9 +1,9 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import { addQuestion, getFormByID, setSaved, updateForm } from '../../../Redux/slices/form';
+import { addQuestion, getFormByID, setSaving, updateForm } from '../../../Redux/slices/form';
 import { useCallback, useEffect, useState } from 'react';
 import Navbar from '../../../Components/Navbar';
-import { Box, Container, LinearProgress, Grid, Accordion, AccordionSummary, AccordionDetails, TextField, Tabs, Tab, Paper, Fab, Typography, Switch, Icon, IconButton, AvatarGroup, Avatar, Tooltip} from '@mui/material';
+import { Box, Container, Grid, Accordion, AccordionSummary, AccordionDetails, TextField, Tabs, Tab, Paper, Fab, Typography, Switch, Icon, IconButton, AvatarGroup, Avatar, Tooltip} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import SaveIcon from '@mui/icons-material/Save';
 import QuestionList from '../../../Components/Survey/Question/QuestionList';
@@ -15,14 +15,18 @@ import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
 import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
 import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
 import ErrorIcon from '@mui/icons-material/Error';
+import Collab from '../../../Components/Survey/Question/Collab';
+import Response from '../../../Components/Survey/Response/Response';
 
 
 function EditForm(){
     const { id } = useParams();
+    const token = localStorage.getItem("authToken");
+    const adminId = JSON.parse(atob(token.split(".")[1])).detailId;
     //Redux
     const rform = useSelector(state => state.forms.form);
     // const loading = useSelector(state => state.forms.loading);
-    const rsaved = useSelector(state => state.forms.saved);
+    const saved = useSelector(state => state.forms.saved);
 
     const dispatch = useDispatch();
 
@@ -36,8 +40,11 @@ function EditForm(){
     
     const [tab, setTab] = useState(0);
     const [form, setForm] = useState(rform);
-    const [saved, setSaved] = useState(rsaved);
     const [user, setUser] = useState([]);
+    const [permission, setPermission] = useState(false);
+    const [localSave, setLocalSave] = useState(true);
+
+    
 
 
     useEffect(() => {
@@ -45,48 +52,82 @@ function EditForm(){
             setForm(rform);
     }, [rform]);
 
+    // useEffect(() => {
+    //     if(saved !== "" && saved !== rsaved)
+    //         setSaved(rsaved);
+    // }, [rsaved]);
+
+    //set permission if user is owner or collaborator
     useEffect(() => {
-        if(saved !== "" && saved !== rsaved)
-            setSaved(rsaved);
-    }, [rsaved]);
+        if(rform.length !== 0){
+            if(rform.createdBy === adminId){
+                setPermission(true);
+            }
+            else{
+                rform?.collaborator.forEach(collab => {
+                    if(collab === adminId){
+                        setPermission(true);
+                    }
+                });
+            }
+        }
+    }, [rform]);
 
     const handleTab = (event, newValue) => {
+        // window.history.replaceState(null, null, `/form/edit-form/${id}/${newValue}`);
         setTab(newValue);
     };
 
     const handleName = (value) => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
+
         setForm({...form, name: value});
     }
 
     const handleDescription = (value) => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         setForm({...form, description: value});
     }
 
     useEffect(() => {
-        if((form !== "" && form !== rform) || saved === "SAVING"){
+        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false)){
             const getData = setTimeout(() => {
             dispatch(updateForm(form));
+            setLocalSave(true);
             }, 2000)
             return () => clearTimeout(getData)
         }
       }, [form, dispatch, rform, saved]);
 
     const handleAddQuestion = () => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         var length = form.questions.length;
         var required = form.requiredAll;
         dispatch(addQuestion({length, required}));
     }
 
     const handleLimit = () => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         setForm({...form, once: !form.once});
     }
 
     const handleAllRequired = () => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         
         if(!form.requiredAll === true){
             var formTemp = form;
@@ -102,7 +143,10 @@ function EditForm(){
     }
 
     const handlePublished = () => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         if(!form.published === false){
             var date = {
                 active: false,
@@ -115,7 +159,10 @@ function EditForm(){
     }
 
     const handleDueDateActive = () => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         var date ={
             active: !form.dueDate.active,
             date: dayjs(),
@@ -124,7 +171,10 @@ function EditForm(){
     }
 
     const handleDueDate = (e) => {
-        setSaved("SAVING");
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            setLocalSave(false);
+        }
         setForm({...form, dueDate: e});
     }
 
@@ -136,15 +186,33 @@ function EditForm(){
         ));
     }   
 
-    const handleSave = () => {
-        setSaved("SAVING");
-        dispatch(updateForm(rform));
-    }
+    // const handleSave = () => {
+    //     if(saved === "SAVED"){
+    //         dispatch(setSaving());
+    //         setLocalSave(false);
+    //     }
+    //     dispatch(updateForm(rform));
+    // }
 
 
     return(
         <>
         <Navbar />
+        {(permission === false && rform.length !== 0) ?
+        (<>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                <ErrorIcon sx={{mr: 1}} />
+                <Typography variant="subtitle1">You don't have permission to edit this form</Typography>
+            </Box>
+        </Box>
+        </>) : ""}
+
+
+
+        {(permission === true)?
+        (<>
+
         <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
                 {(saved === "SAVING")? 
@@ -163,8 +231,9 @@ function EditForm(){
         <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 0px 0px rgb(0 0 0 / 12%)" }}>
             <Tabs value={tab} onChange={handleTab} centered>
                 <Tab label="Questions" />
+                <Tab label="Preview" />
                 <Tab label="Settings" />
-                <Tab label="Responses" disabled />
+                <Tab label="Responses"/>
             </Tabs>
         </Box>
         {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
@@ -194,15 +263,16 @@ function EditForm(){
                                 <AddIcon sx={{ mr: 1 }} />
                                 Add Question
                             </Fab>
-                            <Fab variant="extended" onClick={() => {handleSave()}} disabled={saved && true}>
+                            {/* <Fab variant="extended" onClick={() => {handleSave()}} disabled={saved && true}>
                                 <SaveIcon sx={{ mr: 1 }} />
                                 {(!saved)? "Saving..." : (saved? "Saved" : "Save")}
-                            </Fab>
+                            </Fab> */}
                         </Box>
                     </Paper>
                 </Grid>
             ): ""}
-            {tab === 1?(
+            {tab === 1? "": ""}
+            {tab === 2?(
                 <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
                     <Grid item xs={12} sm={5} sx={{ width: '75%' }}>
                         <Paper sx={{p:4}}>
@@ -219,6 +289,7 @@ function EditForm(){
                                         <Typography variant='h7'>Add others people to edit this form</Typography>
                                     </Box>
                                     <Box>
+                                        <Collab/>
                                     </Box>
                                 </Box>
                                 <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
@@ -290,7 +361,13 @@ function EditForm(){
                     </Grid>
                 </Grid>
             ): ""}
-        </Container></>
+            {tab === 3?(
+                <Response/>
+            ): ""}
+        </Container>
+        
+        </>) : ""}
+        </>
     )
 }
 
