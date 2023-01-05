@@ -34,16 +34,17 @@ export function MultipleChoiceEdit(props) {
         setOption(rform.questions[index].options);
       }
     }
-  }, [rform.questions]);
+  }, [rform]);
 
   //auto save
   useEffect(() => {
-    if(saved === "SAVING" && localSave === false){
+    if(saved === "SAVING" && localSave === false  || saved === "FAILED" && localSave === false){
       const getData = setTimeout(() => {
         var tempForm = JSON.parse(JSON.stringify(rform));
         tempForm.questions[index].options = option;
         dispatch(updateForm(tempForm));
-        setLocalSave(true);
+        if(saved !== "FAILED")
+          setLocalSave(true);
       }, 1000);
       return () => clearTimeout(getData);
     }

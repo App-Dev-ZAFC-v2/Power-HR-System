@@ -96,10 +96,11 @@ function EditForm(){
     }
 
     useEffect(() => {
-        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false)){
+        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false || saved === "FAILED" && localSave === false)){
             const getData = setTimeout(() => {
             dispatch(updateForm(form));
-            setLocalSave(true);
+            if(saved !== "FAILED")
+                setLocalSave(true);
             }, 2000)
             return () => clearTimeout(getData)
         }
@@ -229,15 +230,15 @@ function EditForm(){
 
         {(permission === true)?
         (<>
-
+        <div style={{position: "-webkit-sticky", position: "sticky", top: 0, zIndex: 1}}>
         <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
                 {(saved === "SAVING")? 
                 (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
                 {(saved === "SAVED")?
                 (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
-                {(saved === "ERROR")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Error</Typography></Box>) : ""}
+                {(saved === "FAILED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
             </Box>
             <Box>
                 <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
@@ -253,6 +254,7 @@ function EditForm(){
                 <Tab label="Responses"/>
             </Tabs>
         </Box>
+        </div>
         {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
         <Container>
             {tab === 0?(

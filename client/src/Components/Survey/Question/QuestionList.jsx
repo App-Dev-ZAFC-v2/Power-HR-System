@@ -47,11 +47,12 @@ function QuestionList(){
 
     //auto save
     useEffect(() => {
-        if(saved === "SAVING" && localSave === false){
+        if(saved === "SAVING" && localSave === false || saved === "FAILED" && localSave === false){
             const getData = setTimeout(() => {
                 var tempForm = {...rform, questions: questions};
                 dispatch(updateForm(tempForm));
-                setLocalSave(true);
+                if( saved !== "FAILED")
+                    setLocalSave(true);
                 }, 2000)
                 return () => clearTimeout(getData)
         }
@@ -136,9 +137,9 @@ function QuestionList(){
     }
 
     function handleQuestionType(value, i){
-        if(saved === "SAVED"){
-            dispatch(setSaving());
-        }
+        // if(saved === "SAVED"){
+        //     dispatch(setSaving());
+        // }
         var tempQuestion = JSON.parse(JSON.stringify(questions));
         var prev = tempQuestion[i].questionType;
         tempQuestion[i].questionType = value;
@@ -157,8 +158,9 @@ function QuestionList(){
                 tempQuestion[i].options = [];
             }
         }
-        setQuestions(tempQuestion);
-        setLocalSave(false);
+        dispatch(updateForm({...rform, questions: tempQuestion}));
+        // setQuestions(tempQuestion);
+        // setLocalSave(false);
     }
 
     function handleDeleteQuestion(i){
