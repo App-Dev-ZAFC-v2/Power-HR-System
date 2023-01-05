@@ -39,7 +39,7 @@ function EditForm(){
     }, [retrieveForm]);
     
     const [tab, setTab] = useState(0);
-    const [form, setForm] = useState(rform);
+    const [form, setForm] = useState([]);
     const [user, setUser] = useState([]);
     const [permission, setPermission] = useState(false);
     const [localSave, setLocalSave] = useState(true);
@@ -81,25 +81,26 @@ function EditForm(){
     const handleName = (value) => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
 
         setForm({...form, name: value});
+        setLocalSave(false);
     }
 
     const handleDescription = (value) => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         setForm({...form, description: value});
+        setLocalSave(false);
     }
 
     useEffect(() => {
-        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false)){
+        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false || saved === "FAILED" && localSave === false)){
             const getData = setTimeout(() => {
             dispatch(updateForm(form));
-            setLocalSave(true);
+            if(saved !== "FAILED")
+                setLocalSave(true);
             }, 2000)
             return () => clearTimeout(getData)
         }
@@ -108,25 +109,38 @@ function EditForm(){
     const handleAddQuestion = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
+
+        // var tempQuestions = JSON.parse(JSON.stringify(form.questions));
+        // tempQuestions.push({
+        //     questionText: "Untitled Question " + (tempQuestions.length + 1),
+        //     questionType: "Multiple Choice",
+        //     questionImage: "",
+        //     required: false,
+        //     options: [{optionText: "Option 1", optionImage: ""}],
+        //     openView: true,
+        // })
+
+        // setForm({...form, questions: tempQuestions});
+        
         var length = form.questions.length;
         var required = form.requiredAll;
         dispatch(addQuestion({length, required}));
+        setLocalSave(false);
     }
 
     const handleLimit = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         setForm({...form, once: !form.once});
+        setLocalSave(false);
     }
 
     const handleAllRequired = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
+            
         }
         
         if(!form.requiredAll === true){
@@ -140,12 +154,13 @@ function EditForm(){
         else{
             setForm({...form, requiredAll: !form.requiredAll});
         }
+        setLocalSave(false);
     }
 
     const handlePublished = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
+            
         }
         if(!form.published === false){
             var date = {
@@ -156,26 +171,29 @@ function EditForm(){
         }
         else
             setForm({...form, published: !form.published});
+
+        setLocalSave(false);
     }
 
     const handleDueDateActive = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         var date ={
             active: !form.dueDate.active,
             date: dayjs(),
         }
         setForm({...form, dueDate: date});
+
+        setLocalSave(false);
     }
 
     const handleDueDate = (e) => {
         if(saved === "SAVED"){
-            dispatch(setSaving());
             setLocalSave(false);
         }
         setForm({...form, dueDate: e});
+        setLocalSave(false);
     }
 
     function HandleAvatar(){
@@ -212,15 +230,15 @@ function EditForm(){
 
         {(permission === true)?
         (<>
-
+        <div style={{position: "-webkit-sticky", position: "sticky", top: 0, zIndex: 1}}>
         <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
                 {(saved === "SAVING")? 
                 (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
                 {(saved === "SAVED")?
                 (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
-                {(saved === "ERROR")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Error</Typography></Box>) : ""}
+                {(saved === "FAILED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
             </Box>
             <Box>
                 <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
@@ -236,6 +254,7 @@ function EditForm(){
                 <Tab label="Responses"/>
             </Tabs>
         </Box>
+        </div>
         {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
         <Container>
             {tab === 0?(
