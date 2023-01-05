@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { deleteQuestion, editQuestionText, editQuestionType, editView, reorderQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, Typography, IconButton } from '@mui/material';
+import { deleteQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -35,6 +35,8 @@ function QuestionList(){
     //local state
     const [questions, setQuestions] = useState([]);
     const [localSave, setLocalSave] = useState(true);
+    const [load, setLoad] = useState(false);
+    const [expanded, setExpanded] = useState([]);
 
     useEffect(() => {
         if( questions !== rform.questions && localSave === true){
@@ -55,8 +57,29 @@ function QuestionList(){
         }
     }, [questions, saved, dispatch]);
 
+    useEffect(() => {
+        if(expanded.length === 0){
+            var handleOpen = [];
+            for(var i = 0; i < rform.questions.length; i++){
+                handleOpen.push(false);
+            }
+            handleOpen[0] = true;
+            setExpanded(handleOpen);
+        }
 
-    function onDragEnd(result){
+        if(questions.length > expanded.length){
+            var handleOpen = [];
+            for(var i = 0; i < questions.length; i++){
+                handleOpen.push(false);
+            }
+            handleOpen[questions.length - 1] = true;
+            setExpanded(handleOpen);
+        }
+    }, [questions]);
+
+
+    async function onDragEnd(result){
+
         if (!result.destination) {
             return;
         }
@@ -64,20 +87,41 @@ function QuestionList(){
         if(result.destination.index === result.source.index){
             return;
         }
-        dispatch(reorderQuestion(result));
+        
+        var temp = JSON.parse(JSON.stringify(questions));
+        temp = await reorder(
+            temp,
+            result.source.index,
+            result.destination.index
+        );
+
+        var tempExpanded = expanded;
+        tempExpanded = await reorder(
+            tempExpanded,
+            result.source.index,
+            result.destination.index
+        );
+        
+        dispatch(updateForm({...rform, questions: temp}));
+        setExpanded(tempExpanded);
     }
 
+    const reorder = async (list, startIndex, endIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(startIndex, 1);
+        result.splice(endIndex, 0, removed);
+        return result;
+    };
+
     function handleExpand(i){
-        if(questions[i].openView === false){
-            let handleOpen = JSON.parse(JSON.stringify(questions));
-            for (let j = 0; j < handleOpen.length; j++) {
-                if (i === j) {
-                    handleOpen[j].openView = true;
-                } else {
-                    handleOpen[j].openView = false;
-                }
+
+        if(expanded[i] === false){
+            let handleOpen = [];
+            for(var j = 0; j < expanded.length; j++){
+                handleOpen.push(false);
             }
-            setQuestions(handleOpen);
+            handleOpen[i] = true;
+            setExpanded(handleOpen);
         }
     }
 
@@ -118,7 +162,24 @@ function QuestionList(){
     }
 
     function handleDeleteQuestion(i){
-        dispatch(deleteQuestion(i));
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        var tempQuestion = JSON.parse(JSON.stringify(questions));
+        var tempExpanded = expanded;
+        if(questions.length > 1){
+            tempQuestion.splice(i, 1);
+            tempExpanded.splice(i, 1);
+        }
+        if(i === 0){
+            tempExpanded[i] = true;
+        }
+        else{
+            tempExpanded[i-1] = true;
+        }
+        setQuestions(tempQuestion);
+        setExpanded(tempExpanded);
+        setLocalSave(false);
     }
 
     return(
@@ -131,9 +192,9 @@ function QuestionList(){
                                 {(provided) => (
                                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                         <div style={{ marginTop: "15px" }}>
-                                            <Accordion onChange={() => { handleExpand(i); } } expanded={questions[i].openView || false}>
+                                            <Accordion onChange={() => { handleExpand(i); } } expanded={expanded[i] || false}>
                                                 <AccordionSummary aria-controls="panel1a-content" id="panel1a-header" elevation={1} style={{ width: '100%' }}>
-                                                    {!questions[i].openView ? (
+                                                    {!expanded[i] ? (
                                                         <>
                                                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "12px" }}>
                                                                 <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />

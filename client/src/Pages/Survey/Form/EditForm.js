@@ -39,7 +39,7 @@ function EditForm(){
     }, [retrieveForm]);
     
     const [tab, setTab] = useState(0);
-    const [form, setForm] = useState(rform);
+    const [form, setForm] = useState([]);
     const [user, setUser] = useState([]);
     const [permission, setPermission] = useState(false);
     const [localSave, setLocalSave] = useState(true);
@@ -81,18 +81,18 @@ function EditForm(){
     const handleName = (value) => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
 
         setForm({...form, name: value});
+        setLocalSave(false);
     }
 
     const handleDescription = (value) => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         setForm({...form, description: value});
+        setLocalSave(false);
     }
 
     useEffect(() => {
@@ -108,25 +108,38 @@ function EditForm(){
     const handleAddQuestion = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
+
+        // var tempQuestions = JSON.parse(JSON.stringify(form.questions));
+        // tempQuestions.push({
+        //     questionText: "Untitled Question " + (tempQuestions.length + 1),
+        //     questionType: "Multiple Choice",
+        //     questionImage: "",
+        //     required: false,
+        //     options: [{optionText: "Option 1", optionImage: ""}],
+        //     openView: true,
+        // })
+
+        // setForm({...form, questions: tempQuestions});
+        
         var length = form.questions.length;
         var required = form.requiredAll;
         dispatch(addQuestion({length, required}));
+        setLocalSave(false);
     }
 
     const handleLimit = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         setForm({...form, once: !form.once});
+        setLocalSave(false);
     }
 
     const handleAllRequired = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
+            
         }
         
         if(!form.requiredAll === true){
@@ -140,12 +153,13 @@ function EditForm(){
         else{
             setForm({...form, requiredAll: !form.requiredAll});
         }
+        setLocalSave(false);
     }
 
     const handlePublished = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
+            
         }
         if(!form.published === false){
             var date = {
@@ -156,26 +170,29 @@ function EditForm(){
         }
         else
             setForm({...form, published: !form.published});
+
+        setLocalSave(false);
     }
 
     const handleDueDateActive = () => {
         if(saved === "SAVED"){
             dispatch(setSaving());
-            setLocalSave(false);
         }
         var date ={
             active: !form.dueDate.active,
             date: dayjs(),
         }
         setForm({...form, dueDate: date});
+
+        setLocalSave(false);
     }
 
     const handleDueDate = (e) => {
         if(saved === "SAVED"){
-            dispatch(setSaving());
             setLocalSave(false);
         }
         setForm({...form, dueDate: e});
+        setLocalSave(false);
     }
 
     function HandleAvatar(){
