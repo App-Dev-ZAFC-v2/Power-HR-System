@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
-import { deleteQuestion, editQuestionText, editQuestionType, editView, reorderQuestion } from '../../../Redux/slices/form';
+import { deleteQuestion, editQuestionText, editQuestionType, editView, reorderQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
 import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, Typography, IconButton } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
@@ -16,10 +16,45 @@ import Paragraph from './QuestionType/Paragraph';
 import { CheckBox, CheckBoxEdit } from './QuestionType/Checkboxes';
 import { DropDownEdit, DropDownList } from './QuestionType/DropDown';
 import { LinearScale, LinearScaleEdit } from './QuestionType/LinearScale';
+import { useEffect, useState } from 'react';
 
 function QuestionList(){
-    const questions = useSelector(state => state.forms.form.questions);
+    const rform = useSelector(state => state.forms.form);
+    const saved = useSelector(state => state.forms.saved);
     const dispatch = useDispatch();
+
+    // //Retrieve form from database
+    // const retrieveForm = useCallback(() => {
+    //     dispatch(getFormByID(id));
+    // }, [dispatch]);
+
+    // useEffect(() => {
+    //     retrieveForm();
+    // }, [retrieveForm]);
+
+    //local state
+    const [questions, setQuestions] = useState([]);
+    const [localSave, setLocalSave] = useState(true);
+
+    useEffect(() => {
+        if( questions !== rform.questions && localSave === true){
+            setQuestions(rform.questions);
+        }
+            
+    }, [rform]);
+
+    //auto save
+    useEffect(() => {
+        if(saved === "SAVING" && localSave === false){
+            const getData = setTimeout(() => {
+                var tempForm = {...rform, questions: questions};
+                dispatch(updateForm(tempForm));
+                setLocalSave(true);
+                }, 2000)
+                return () => clearTimeout(getData)
+        }
+    }, [questions, saved, dispatch]);
+
 
     function onDragEnd(result){
         if (!result.destination) {
@@ -33,15 +68,53 @@ function QuestionList(){
     }
 
     function handleExpand(i){
-        dispatch(editView(i));
+        if(questions[i].openView === false){
+            let handleOpen = JSON.parse(JSON.stringify(questions));
+            for (let j = 0; j < handleOpen.length; j++) {
+                if (i === j) {
+                    handleOpen[j].openView = true;
+                } else {
+                    handleOpen[j].openView = false;
+                }
+            }
+            setQuestions(handleOpen);
+        }
     }
 
     function handleQuestionText(value, i){
-        dispatch(editQuestionText({value, i}));
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        var tempQuestion = JSON.parse(JSON.stringify(questions));
+        tempQuestion[i].questionText = value;
+        setQuestions(tempQuestion);
+        setLocalSave(false);
     }
 
     function handleQuestionType(value, i){
-        dispatch(editQuestionType({value, i}));
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        var tempQuestion = JSON.parse(JSON.stringify(questions));
+        var prev = tempQuestion[i].questionType;
+        tempQuestion[i].questionType = value;
+        if(value === "Linear Scale"){
+            tempQuestion[i].options = [
+                { optionText: "", optionImage: "", optionScale: 1 },
+                { optionText: "", optionImage: "", optionScale: 5 }];
+        }
+        else if(value === "Multiple Choice" || value === "Checkboxes" || value === "Drop-down"){
+            if(prev !== "Multiple Choice" && prev !== "Checkboxes" && prev !== "Drop-down"){
+                tempQuestion[i].options = [{ optionText: "Option 1", optionImage: "" }];
+            }
+        }
+        else{
+            if(prev !== "Paragraph" && prev !== "Short Answer"){
+                tempQuestion[i].options = [];
+            }
+        }
+        setQuestions(tempQuestion);
+        setLocalSave(false);
     }
 
     function handleDeleteQuestion(i){
