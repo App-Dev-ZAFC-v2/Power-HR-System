@@ -15,7 +15,7 @@ import { CheckBox } from "../../../Components/Survey/Question/QuestionType/Check
 import { DropDown } from "../../../Components/Survey/Question/QuestionType/DropDown";
 import { LinearScale } from "../../../Components/Survey/Question/QuestionType/LinearScale";
 
-import { Typography, Container, Grid } from "@mui/material";
+import { Typography, Container, Grid, Button } from "@mui/material";
 
 function QuestionPage(props) {
   const [feedback, setFeedback] = useState({
@@ -24,6 +24,8 @@ function QuestionPage(props) {
     response: [],
     draft: true,
   });
+
+  const [clear, setClear] = useState(false);
 
   //redux
   const form = useSelector((state) => state.forms.form);
@@ -68,6 +70,17 @@ function QuestionPage(props) {
     setFeedback(temp);
   }, [response]);
 
+  // const handleSubmit = () => {
+  //   var temp = feedback;
+  //   temp.draft = false;
+  //   setFeedback(temp);
+  //   console.log(feedback);
+  // };
+
+  // const handleClear = () => {
+  //   setClear(!clear);
+  // };
+
   return (
     <>
       <Navbar />
@@ -104,28 +117,20 @@ function QuestionPage(props) {
                   }}
                 ></div>
                 {q.questionType === "Multiple Choice" ? (
-                  <MultipleChoice index={i} disable={false} />
+                  <MultipleChoice index={i} />
                 ) : (
                   ""
                 )}
                 {q.questionType === "Short Answer" ? (
-                  <ShortAnswer index={i} disable={false} />
+                  <ShortAnswer index={i} />
                 ) : (
                   ""
                 )}
-                {q.questionType === "Paragraph" ? (
-                  <Paragraph index={i} disable={false} />
-                ) : (
-                  ""
-                )}
-                {q.questionType === "Checkboxes" ? (
-                  <CheckBox index={i} disable={false} />
-                ) : (
-                  ""
-                )}
+                {q.questionType === "Paragraph" ? <Paragraph index={i} /> : ""}
+                {q.questionType === "Checkboxes" ? <CheckBox index={i} /> : ""}
                 {q.questionType === "Drop-down" ? <DropDown index={i} /> : ""}
                 {q.questionType === "Linear Scale" ? (
-                  <LinearScale index={i} disable={false} />
+                  <LinearScale index={i} />
                 ) : (
                   ""
                 )}
@@ -133,6 +138,17 @@ function QuestionPage(props) {
             </Grid>
           );
         })}
+        <Grid m={2} p={2}>
+          <Button variant="contained" color="success" sx={{ mt: 2 }}>
+            Submit
+          </Button>
+          <Button variant="contained" sx={{ mt: 2, ml: 2 }}>
+            Save as Draft
+          </Button>
+          <Button variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
+            Clear
+          </Button>
+        </Grid>
       </Container>
     </>
   );

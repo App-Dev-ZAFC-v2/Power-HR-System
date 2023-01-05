@@ -4,7 +4,7 @@ import ViewFormCard from "../../../Components/Survey/ViewFormCard";
 //import API from "../../../API/form";
 import { Container, Grid, Typography } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getForms } from "../../../Redux/slices/form";
+import { getForms, getFormsByPublished } from "../../../Redux/slices/form";
 
 // function SurveyForm() {
 //   const [form, setForm] = useState([]);
@@ -61,7 +61,7 @@ export default function SurveyForm() {
   const forms = useSelector((state) => state.forms.form);
 
   const retrieveForms = useCallback(() => {
-    dispatch(getForms());
+    dispatch(getFormsByPublished());
   }, [dispatch]);
 
   useEffect(() => {

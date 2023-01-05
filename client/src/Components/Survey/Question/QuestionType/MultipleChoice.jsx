@@ -112,10 +112,6 @@ export function MultipleChoice(props) {
     (state) => state.forms.form.questions[index].options
   );
 
-  // const response = useSelector(
-  //   (state) => state.responses.feedback.response[index]
-  // );
-
   function handleAnswer(value) {
     setAnswer([{ text: value, optionId: value }]);
   }
