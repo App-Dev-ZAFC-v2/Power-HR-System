@@ -88,7 +88,7 @@ export const addQuestion = createAsyncThunk(
     'form/addQuestion',
     async (data) => {
         var question = {
-            questionText: "Untitled Question " + data.length,
+            questionText: "Untitled Question " +( data.length + 1),
             questionType: "Multiple Choice",
             questionImage: "",
             required: data.required,
@@ -130,10 +130,10 @@ export const editQuestionType = createAsyncThunk(
 );
 
 //set save state
-export const setSaved = createAsyncThunk(
-    'form/setSaved',
-    async (data) => {
-        return data;
+export const setSaving = createAsyncThunk(
+    'form/setSaving',
+    async () => {
+        return "SAVING";
     }
 );
 
@@ -235,7 +235,7 @@ const formSlice = createSlice({
                 state.loading = false;
             })
             .addCase(getFormsByCollaborator.fulfilled, (state, action) => {
-                state.formCollaborate = [...action.payload];
+                state.formsCollab = [...action.payload];
                 state.loading = false;
             })
             .addCase(getFormsByPublished.fulfilled, (state, action) => {
@@ -321,7 +321,7 @@ const formSlice = createSlice({
                 state.saved = false;
             })
 
-            .addCase(setSaved.fulfilled, (state, action) => {
+            .addCase(setSaving.fulfilled, (state, action) => {
                 state.saved = action.payload;
             })
 

@@ -54,13 +54,13 @@ export const deleteAdmin = async (req, res) => {
 }
 //register for admin
 export const registerAdmin = async (req, res) => {
-    const { username, password } = req.body;
+    const { username, password, name } = req.body;
     try{
         const newUser = await registerUser(username, password, password, 1, res);
         if (newUser == null) {
             return;
         }
-        const result = await Admin.create({ user: newUser._id });
+        const result = await Admin.create({ user: newUser._id, name: name });
         res.status(200).json({ result });
     }
     catch(error){

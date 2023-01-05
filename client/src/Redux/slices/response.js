@@ -27,6 +27,14 @@ export const getAllResponse = createAsyncThunk("response/fetch", async () => {
   return res.data;
 });
 
+export const getResponseByFormID = createAsyncThunk(
+  "response/fetchByFormID",
+  async (formID) => {
+    const res = await axios.get(API_URL + formID);
+    return res.data;
+  }
+);
+
 const responseSlice = createSlice({
   name: "response",
   initialState,
@@ -51,7 +59,11 @@ const responseSlice = createSlice({
       .addCase(getResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
         state.loading = false;
-      });
+      })
+      .addCase(getResponseByFormID.fulfilled, (state, action) => {
+        state.feedback = action.payload;
+        state.loading = false;
+      })
   },
 });
 

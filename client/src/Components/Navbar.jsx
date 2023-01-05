@@ -33,7 +33,11 @@ function GetDashboard(){
   useEffect(() => {
     (userType === 0
       ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-      : axios.get(`http://localhost:5000/employees/${detailId}/`)
+      : axios.get(`http://localhost:5000/employees/${detailId}/`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+    })
     )
       .then((res) => {
         setUser(res.data);
@@ -57,7 +61,11 @@ function GetPages() {
   useEffect(() => {
     (userType === 0
       ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-      : axios.get(`http://localhost:5000/employees/${detailId}/`)
+      : axios.get(`http://localhost:5000/employees/${detailId}/`, {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem('authToken')}`
+        }
+    })
     )
       .then((res) => {
         setUser(res.data);
@@ -163,7 +171,7 @@ function ResponsiveAppBar() {
               }}
             >
               {GetPages().map((page) => (
-                <Link href={page.link} underline="none">
+                <Link key={page.name} href={page.link} underline="none">
                   <MenuItem key={page.name} onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{page.name}</Typography>
                   </MenuItem>
@@ -201,7 +209,7 @@ function ResponsiveAppBar() {
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
             {GetPages().map((page) => (
-              <Link href={page.link} underline="none">
+              <Link key={page.name} href={page.link} underline="none">
                 <Button
                   key={page.name}
                   onClick={handleCloseNavMenu}
@@ -242,9 +250,9 @@ function ResponsiveAppBar() {
               onClose={handleCloseUserMenu}
             >
               {settings.map((setting) => (
-                <Link href={setting.link} underline="none">
+                <Link key={setting.name} href={setting.link} underline="none">
                   <MenuItem key={setting.name} onClick={handleCloseUserMenu}>
-                    <Typography textAlign="center">{setting.name}</Typography>
+                    <Typography key={setting.name} textAlign="center">{setting.name}</Typography>
                   </MenuItem>
                 </Link>
               ))}

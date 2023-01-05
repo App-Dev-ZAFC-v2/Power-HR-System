@@ -5,7 +5,8 @@ import icon from "../../../Assets/addIcon.png";
 import Navbar from "../../../Components/Navbar";
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteForm, createForm, getFormsByUser } from "../../../Redux/slices/form";
+import { deleteForm, createForm, getFormsByUser, getFormsByCollaborator } from "../../../Redux/slices/form";
+import { getAdmins } from "../../../Redux/slices/admin";
 
 const ManageForms = () => {
     //Media Query
@@ -18,7 +19,7 @@ const ManageForms = () => {
         name: "",
         description: "",
         questions: [{
-            questionText: "Untitled Question",
+            questionText: "Untitled Question 1",
             questionType: "Multiple Choice",
             questionImage: "",
             required: false,
@@ -32,6 +33,7 @@ const ManageForms = () => {
     const [openDelete, setOpenDelete] = useState(false);
     const [openCreate, setOpenCreate] = useState(false);
     const [cform, setForm] = useState(initalFormState);
+    const [indexDelete, setIndexDelete] = useState(0);
 
     //Get Admin ID
     const token = localStorage.getItem("authToken");
@@ -41,23 +43,33 @@ const ManageForms = () => {
     const forms = useSelector(state => state.forms.form);
     const formsCollab = useSelector(state => state.forms.formsCollab);
     const loading = useSelector(state => state.forms.loading);
+    const admins = useSelector((state) => state.admins);
     const dispatch = useDispatch();
+    
 
     const retrieveUserForms = useCallback(() => {
         dispatch(getFormsByUser(adminId));
-    }, [dispatch]);
+    }, [dispatch, adminId]);
 
     useEffect(() => {
         retrieveUserForms();
     }, [retrieveUserForms]);
 
     const retrieveFormsCollab = useCallback(() => {
-        dispatch(getFormsByUser(adminId));
-    }, [dispatch]);
+        dispatch(getFormsByCollaborator(adminId));
+    }, [dispatch, adminId]);
 
     useEffect(() => {
         retrieveFormsCollab();
     }, [retrieveFormsCollab]);
+
+    const retrieveAdmins = useCallback(() => {
+        dispatch(getAdmins());
+      }, [dispatch]);
+    
+      useEffect(() => {
+        retrieveAdmins();
+      }, [retrieveAdmins]);
 
     const deleteSingleForm = (formid) => {
         dispatch(deleteForm(formid))
@@ -70,10 +82,15 @@ const ManageForms = () => {
         })
     }
 
+    useEffect(() => {
+        setForm(cform => ({...cform, createdBy: adminId}));
+    }, [adminId]);
+    
+
     const newForm = () => {
         const { createdBy, name, description, questions, once } = cform;
         if(name !==""){
-            dispatch(createForm({ adminId, name, description, questions, once }))
+            dispatch(createForm({ createdBy, name, description, questions, once }))
             .unwrap()
             .then(data => {
                 window.open('/form/edit-form/' + data._id);
@@ -81,7 +98,6 @@ const ManageForms = () => {
             .catch(err => {
                 console.log(err);
             });
-            setForm(initalFormState);
             handleClose("create");
         }
     };
@@ -92,9 +108,11 @@ const ManageForms = () => {
         setForm({ ...cform, [name]: value });
     };
 
-    const handleClickOpen = (value) => {
-        if(value === "delete")
+    const handleClickOpen = (value, index) => {
+        if(value === "delete"){
+            setIndexDelete(index);
             setOpenDelete(true);
+        }
         else
             setOpenCreate(true);
     };
@@ -104,7 +122,7 @@ const ManageForms = () => {
             setOpenDelete(false);
         else{
             setOpenCreate(false);
-            setForm(initalFormState);
+            setForm({...initalFormState, createdBy: adminId});
         }
     };
 
@@ -129,14 +147,14 @@ const ManageForms = () => {
                                 Create new form
                             </DialogTitle>
                             <DialogContent>
-                                <DialogContentText>
+                                <div>
                                     <TextField id="name" name="name" label="name" variant="outlined" margin="normal" fullWidth required
                                     value={cform.name || ""} onChange={handleInputChange}/>
-                                </DialogContentText>
-                                <DialogContentText>
+                                </div>
+                                <div>
                                     <TextField id="description" name="description" label="description" variant="outlined" margin="normal" fullWidth
                                     value={cform.description || ""} onChange={handleInputChange}/>
-                                </DialogContentText>
+                                </div>
                             </DialogContent>
                             <DialogActions>
                                 <Button autoFocus onClick={() => handleClose("create")}>
@@ -151,7 +169,7 @@ const ManageForms = () => {
                 {forms?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
                         <Card>
-                            <CardActionArea onClick={() => window.location = '/form/edit-form/' + form._id}>
+                            <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
                                 <CardMedia
                                     component="img"
                                     height="140"
@@ -177,30 +195,11 @@ const ManageForms = () => {
                                 </CardContent>
                             </CardActionArea>
                             <CardActions>
-                                <Button size="small" color="primary" startIcon={<DeleteIcon />} onClick={() => handleClickOpen("delete")}>
+                                <Button size="small" color="primary" startIcon={<DeleteIcon />} onClick={() => handleClickOpen("delete", index)}>
                                     Delete
                                 </Button>
-                                <Dialog fullScreen={fullScreen} open={openDelete} onClose={() => handleClose("delete")} aria-labelledby="responsive-dialog-title">
-                                    <DialogTitle id="responsive-dialog-title">
-                                        Delete {form.name}?
-                                    </DialogTitle>
-                                    <DialogContent>
-                                        <DialogContentText>
-                                            Do you really want to delete these form? This process cannot be undone
-                                        </DialogContentText>
-                                    </DialogContent>
-                                    <DialogActions>
-                                        <Button autoFocus onClick={() => handleClose("delete")}>
-                                            Cancel
-                                        </Button>
-                                        <Button onClick={() => deleteSingleForm(form._id)} autoFocus>
-                                            Delete {form.name}
-                                        </Button>
-                                    </DialogActions>
-                                </Dialog>
                             </CardActions>
                         </Card>
-
                     </Grid>
                     </>
                 ))}
@@ -236,7 +235,7 @@ const ManageForms = () => {
                             <CardActions>
                                 <Box sx={{p:"5px"}}>
                                     <Typography variant="body2" color="text.secondary">
-                                        Collaborator
+                                        Collaboration with {admins.admin.find(admin => admin._id === form.createdBy)?.name}
                                     </Typography>
                                 </Box>
                             </CardActions>
@@ -246,6 +245,24 @@ const ManageForms = () => {
                     </>
                 ))}
             </Grid>
+            <Dialog fullScreen={fullScreen} open={openDelete} onClose={() => handleClose("delete")} aria-labelledby="responsive-dialog-title">
+                <DialogTitle id="responsive-dialog-title">
+                    Delete {forms[indexDelete]?.name}?
+                </DialogTitle>
+                <DialogContent>
+                    <DialogContentText>
+                        Do you really want to delete these form? This process cannot be undone
+                    </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                    <Button autoFocus onClick={() => handleClose("delete")}>
+                        Cancel
+                    </Button>
+                    <Button onClick={() => deleteSingleForm(forms[indexDelete]?._id)} autoFocus>
+                        Delete {forms[indexDelete]?.name}
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </Container></>
     )
 
