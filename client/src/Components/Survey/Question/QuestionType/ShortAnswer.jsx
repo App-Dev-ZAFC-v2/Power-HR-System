@@ -1,9 +1,15 @@
 import { TextField, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 function ShortAnswer(props) {
   const { index, disable } = props;
   const question = useSelector((state) => state.forms.form.questions[index]);
+  const [answer, setAnswer] = useState("");
+
+  const handleAnswer = () => {
+    setAnswer("");
+  };
 
   return (
     <div

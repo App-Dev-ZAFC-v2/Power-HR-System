@@ -70,17 +70,6 @@ function QuestionPage(props) {
     setFeedback(temp);
   }, [response]);
 
-  // const handleSubmit = () => {
-  //   var temp = feedback;
-  //   temp.draft = false;
-  //   setFeedback(temp);
-  //   console.log(feedback);
-  // };
-
-  // const handleClear = () => {
-  //   setClear(!clear);
-  // };
-
   return (
     <>
       <Navbar />
