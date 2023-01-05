@@ -18,6 +18,7 @@ import {
 } from "../../../../Redux/slices/form";
 import { useState } from "react";
 import { useEffect } from "react";
+import { updateResponse } from "../../../../Redux/slices/response";
 
 export function MultipleChoiceEdit(props) {
   const { index } = props;
@@ -160,21 +161,43 @@ export function MultipleChoiceEdit(props) {
 }
 
 export function MultipleChoice(props) {
-  const [answer, setAnswer] = useState([{ text: "", optionId: "" }]);
+  const [answer, setAnswer] = useState({ text: "", optionID: "" });
   const { index, disable } = props;
   const question = useSelector((state) => state.forms.form.questions[index]);
   const option = useSelector(
     (state) => state.forms.form.questions[index].options
   );
 
-  function handleAnswer(value) {
-    setAnswer([{ text: value, optionId: value }]);
-  }
+  const reduxResponse = useSelector((state) => state.responses.feedback.response);
+  const reduxFeedback = useSelector((state) => state.responses.feedback);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (reduxResponse !== undefined) {
+      setAnswer({ text: reduxResponse[index].answer[0]?.text, optionID: reduxResponse[index].answer[0]?.optionID});
+    }
+  }, [reduxResponse]);
+
+  // function handleAnswer(value) {
+  //   setAnswer([{ text: value, optionId: value }]);
+  // }
 
   //handle answer
-  // const handleAnswerChange = (e) => {
-  //   setAnswer([{ text: e.target.value, optionId: e.target.value }]);
-  // };
+  const handleAnswer = (value) => {
+    var select = option.find((op) => op._id === value)
+    var temp = {
+      text: select.optionText,
+      optionID: select._id,
+    }
+
+    var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
+    tempFeedback.response[index].answer = [temp];
+
+
+    dispatch(updateResponse(tempFeedback));
+    // setAnswer(temp);
+    // // console.log(value);
+  };
 
   return (
     <div
@@ -200,7 +223,7 @@ export function MultipleChoice(props) {
         ""
       )}
       <FormControl sx={{ mt: "6px" }}>
-        <RadioGroup onChange={(e) => handleAnswer(e.target.value)}>
+        <RadioGroup value={answer.optionID? answer.optionID : ""} onChange={(e) => handleAnswer(e.target.value)}>
           {option?.map((op, i) => (
             <FormControlLabel
               disabled={disable}

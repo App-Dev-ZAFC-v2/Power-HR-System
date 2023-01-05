@@ -35,6 +35,14 @@ export const getResponseByFormID = createAsyncThunk(
   }
 );
 
+export const updateResponse = createAsyncThunk(
+  "response/update",
+  async (data) => {
+      const res = await axios.patch(API_URL + data._id, data);
+      return res.data;
+  }
+);
+
 const responseSlice = createSlice({
   name: "response",
   initialState,
@@ -48,7 +56,7 @@ const responseSlice = createSlice({
       })
 
       .addCase(createResponse.fulfilled, (state, action) => {
-        state.feedback.push(action.payload);
+        state.feedback = action.payload;
         state.loading = false;
         state.saved = true;
       })
@@ -57,13 +65,27 @@ const responseSlice = createSlice({
         state.loading = false;
       })
       .addCase(getResponse.fulfilled, (state, action) => {
-        state.feedback = action.payload;
+
+        var temp = new Date(action.payload[0].date);
+        var index = 0;
+        //get latest date and draft is false
+        for(let i = 1; i < action.payload.length; i++){
+          if(temp < new Date(action.payload[i].date) && action.payload[i].draft === false){
+            temp = new Date(action.payload[i].date);
+            index = i;
+          }
+        }
+        state.feedback = action.payload[index];
         state.loading = false;
       })
       .addCase(getResponseByFormID.fulfilled, (state, action) => {
         state.feedback = action.payload;
         state.loading = false;
       })
+      .addCase(updateResponse.fulfilled, (state, action) => {
+        state.feedback = action.payload;
+        state.saved = false;
+      });
   },
 });
 
