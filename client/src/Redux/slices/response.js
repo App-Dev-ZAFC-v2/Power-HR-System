@@ -68,14 +68,18 @@ const responseSlice = createSlice({
 
         var temp = new Date(action.payload[0].date);
         var index = 0;
-        //get latest date and draft is false
+        //get latest date and draft is true
         for(let i = 1; i < action.payload.length; i++){
-          if(temp < new Date(action.payload[i].date) && action.payload[i].draft === false){
+          if(temp < new Date(action.payload[i].date) && action.payload[i].draft === true){
             temp = new Date(action.payload[i].date);
             index = i;
           }
         }
-        state.feedback = action.payload[index];
+
+        if(action.payload[index].draft === true){
+          state.feedback = action.payload[index];
+        }
+
         state.loading = false;
       })
       .addCase(getResponseByFormID.fulfilled, (state, action) => {
