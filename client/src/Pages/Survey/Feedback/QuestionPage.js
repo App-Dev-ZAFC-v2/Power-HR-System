@@ -5,7 +5,7 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../../Components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getFormByID } from "../../../Redux/slices/form";
-import { getResponse } from "../../../Redux/slices/response";
+import { createResponse, getResponse, updateResponse } from "../../../Redux/slices/response";
 
 //question type
 import { MultipleChoice } from "../../../Components/Survey/Question/QuestionType/MultipleChoice";
@@ -15,22 +15,22 @@ import { CheckBox } from "../../../Components/Survey/Question/QuestionType/Check
 import { DropDown } from "../../../Components/Survey/Question/QuestionType/DropDown";
 import { LinearScale } from "../../../Components/Survey/Question/QuestionType/LinearScale";
 
-import { Typography, Container, Grid, Button } from "@mui/material";
+import { Typography, Container, Grid, Button, Box } from "@mui/material";
+
+import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
+import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
+import ErrorIcon from '@mui/icons-material/Error';
 
 function QuestionPage(props) {
-  const [feedback, setFeedback] = useState({
-    formID: "",
-    employeeID: "",
-    response: [],
-    draft: true,
-  });
-
-  const [clear, setClear] = useState(false);
+  const [canAnswer, setCanAnswer] = useState(true);
 
   //redux
   const form = useSelector((state) => state.forms.form);
-  const response = useSelector((state) => state.responses.feedback);
+  const formload = useSelector((state) => state.forms.loading);
+  const rfeedback = useSelector((state) => state.responses.feedback);
   const questions = useSelector((state) => state.forms.form.questions);
+  const count = useSelector((state) => state.responses.count);
+  const saved = useSelector((state) => state.responses.saved);
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -44,36 +44,101 @@ function QuestionPage(props) {
     dispatch(getResponse({ formID, employeeID }));
   }, []);
 
-  useEffect(() => {
-    if (form?.questions?.length > 0) {
-      var temp = feedback;
-      for (var i = 0; i < form?.questions?.length; i++) {
-        temp.response.push({
-          questionID: form.questions[i]._id,
-          answer: [],
-        });
-      }
-      setFeedback(temp);
-    }
-  }, [form]);
+  // //auto save
+  // useEffect(() => {
+  //   if (feedback.length > 0 && saved === false) {
+  //     const getData = setTimeout(() => {
+  //       dispatch(updateResponse({ feedback, employeeID, formID: id }));
+  //     }, 1000);
+  //     return () => clearTimeout(getData);
+  //   }
+  // }, [feedback]);
+
 
   useEffect(() => {
-    var temp = feedback;
-    for (var i = 0; i < response?.length; i++) {
-      for (var j = 0; j < temp.response.length; j++) {
-        if (temp.response[j].questionID === response[i].questionID) {
-          temp.response[j].answer = response[i].answer;
-          break;
+    if(form?.questions?.length > rfeedback?.response?.length){
+      if (form?.questions?.length > 0) {
+        var temp = [];
+        for (var i = 0; i < form?.questions?.length; i++) {
+          temp.push({
+            questionID: form.questions[i]._id,
+            answer: [{text: "",
+            optionID: ""}],
+          });
         }
+
+        for (var i = 0; i < form.questions.length; i++) {
+          for (var j = 0; j < temp.length; j++) {
+            if (rfeedback?.response[i]?.questionID === temp[j]?.questionID) {
+              temp[j].answer = rfeedback.response[i].answer;
+              break;
+            }
+          }
+        }
+        // console.log(response)
+        if(rfeedback._id === undefined){
+          if(count > 1 && form.once === true){
+            setCanAnswer(false);
+          }
+          else{
+            console.log("create");
+            //dispatch(createResponse({ feedback: temp, employeeID, formID: id }));
+          }
+        }
+        else{
+          var tempFeedback ={
+            response: temp,
+            employeeID: employeeID,
+            formID: id,
+            _id: rfeedback._id
+          }
+          dispatch(updateResponse(tempFeedback));
+        }
+        
       }
     }
-    setFeedback(temp);
-  }, [response]);
+  }, [rfeedback]);
+
+  const handleClear = () => {
+    var temp = [];
+    for (var i = 0; i < form?.questions?.length; i++) {
+      temp.push({
+        questionID: form.questions[i]._id,
+        answer: [{
+          text: "",
+          optionID: ""
+        }],
+      });
+    }
+    // setFeedback(temp);
+    console.log(temp);
+    var tempFeedback ={
+      response: temp,
+      employeeID: employeeID,
+      formID: id,
+      _id: rfeedback._id
+    }
+    dispatch(updateResponse(tempFeedback));
+
+  }
+
+
 
   return (
     <>
       <Navbar />
-
+      {form?.published ? (<>
+      {!canAnswer? "You have already answered this form" : (<>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                {(saved === "SAVING")? 
+                (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
+                {(saved === "SAVED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved as a draft</Typography></Box>) : ""}
+                {(saved === "FAILED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
+            </Box>
+        </Box>
       <Container maxWidth="md" sx={{ my: 4 }}>
         <Grid
           m={2}
@@ -131,14 +196,12 @@ function QuestionPage(props) {
           <Button variant="contained" color="success" sx={{ mt: 2 }}>
             Submit
           </Button>
-          <Button variant="contained" sx={{ mt: 2, ml: 2 }}>
-            Save as Draft
-          </Button>
-          <Button variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
+          <Button onClick={handleClear} variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
             Clear
           </Button>
         </Grid>
       </Container>
+      </>)}</>) : formload? "Loading..." : "This form is closed"}
     </>
   );
 }

@@ -46,7 +46,7 @@ export const getFormsByPublished = async (req, res) =>{
     try{
         const form = await FormModel
             .find({published: true})
-            .where('dueDate').gt(new Date());
+            // .where('dueDate').gt(new Date());
         res.status(200).json(form);
     } catch (error) {
         res.status(404).json({ message: error.message });

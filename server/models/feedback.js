@@ -24,6 +24,8 @@ const feedbackSchema = mongoose.Schema({
   ],
 
   draft: { type: Boolean, default: true },
+
+  date: { type: Date, default: Date.now },
 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);
