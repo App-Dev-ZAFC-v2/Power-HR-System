@@ -6,6 +6,7 @@ const initialState = {
   feedback: [],
   loading: false,
   saved: true,
+  count: 0,
 };
 
 export const createResponse = createAsyncThunk(
@@ -75,6 +76,8 @@ const responseSlice = createSlice({
             index = i;
           }
         }
+
+        state.count = action.payload.length;
 
         if(action.payload[index].draft === true){
           state.feedback = action.payload[index];
