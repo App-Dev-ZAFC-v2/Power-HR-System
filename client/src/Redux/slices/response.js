@@ -49,16 +49,12 @@ const responseSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(createResponse.pending, (state, action) => {
-        state.loading = true;
-      })
       .addCase(getAllResponse.pending, (state, action) => {
         state.loading = true;
       })
 
       .addCase(createResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
-        state.loading = false;
         state.saved = true;
       })
       .addCase(getAllResponse.fulfilled, (state, action) => {

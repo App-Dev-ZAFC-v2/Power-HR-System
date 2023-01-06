@@ -21,11 +21,14 @@ function QuestionPage(props) {
   const [feedback, setFeedback] = useState([]);
   const [saved, setSaved] = useState(true);
   const [clear, setClear] = useState(false);
+  const [canAnswer, setCanAnswer] = useState(true);
 
   //redux
   const form = useSelector((state) => state.forms.form);
+  const formload = useSelector((state) => state.forms.loading);
   const rfeedback = useSelector((state) => state.responses.feedback);
   const questions = useSelector((state) => state.forms.form.questions);
+  const count = useSelector((state) => state.responses.count);
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -64,7 +67,7 @@ function QuestionPage(props) {
 
         for (var i = 0; i < form.questions.length; i++) {
           for (var j = 0; j < temp.length; j++) {
-            if (rfeedback.response[i].questionID === temp[j].questionID) {
+            if (rfeedback?.response[i]?.questionID === temp[j]?.questionID) {
               temp[j].answer = rfeedback.response[i].answer;
               break;
             }
@@ -72,8 +75,13 @@ function QuestionPage(props) {
         }
         // console.log(response)
         if(rfeedback._id === undefined){
-          console.log("create");
-          //dispatch(createResponse({ feedback: temp, employeeID, formID: id }));
+          if(count > 1 && form.once === true){
+            setCanAnswer(false);
+          }
+          else{
+            console.log("create");
+            //dispatch(createResponse({ feedback: temp, employeeID, formID: id }));
+          }
         }
         else{
           var tempFeedback ={
@@ -118,7 +126,8 @@ function QuestionPage(props) {
   return (
     <>
       <Navbar />
-
+      {form?.published ? (<>
+      {!canAnswer? "You have already answered this form" : (<>
       <Container maxWidth="md" sx={{ my: 4 }}>
         <Grid
           m={2}
@@ -176,14 +185,12 @@ function QuestionPage(props) {
           <Button variant="contained" color="success" sx={{ mt: 2 }}>
             Submit
           </Button>
-          <Button variant="contained" sx={{ mt: 2, ml: 2 }}>
-            Save as Draft
-          </Button>
           <Button onClick={handleClear} variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
             Clear
           </Button>
         </Grid>
       </Container>
+      </>)}</>) : formload? "Loading..." : "This form is closed"}
     </>
   );
 }
