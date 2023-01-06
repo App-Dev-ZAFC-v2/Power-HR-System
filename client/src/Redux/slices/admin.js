@@ -18,6 +18,18 @@ export const getAdmins = createAsyncThunk(
     }
 );
 
+export const getAdminByID = createAsyncThunk(
+    'admin/getAdminByID',
+    async (id) => {
+        const res = await axios.get(API_URL + id, {
+            headers: {
+                Authorization: `Bearer ${localStorage.getItem('authToken')}`
+            }
+        });
+        return res.data;
+    }
+);
+
 export const updateAdmin = createAsyncThunk(
     'admin/updateAdmin',
     async (data) => {
@@ -39,6 +51,9 @@ const adminSlice = createSlice({
                 state.admin = action.payload;
             })
             .addCase(updateAdmin.fulfilled, (state, action) => {
+                state.admin = action.payload;
+            })
+            .addCase(getAdminByID.fulfilled, (state, action) => {
                 state.admin = action.payload;
             });
 

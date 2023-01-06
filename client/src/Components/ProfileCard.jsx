@@ -19,8 +19,8 @@ export default function ProfileCard() {
     const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
 
     useEffect(() => {
-      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}/`) :
-        axios.get(`http://localhost:5000/employees/${detailId}/`))
+      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}`) :
+        axios.get(`http://localhost:5000/employees/f/${detailId}`))
         .then(res => {
             setUser(res.data);
         })
