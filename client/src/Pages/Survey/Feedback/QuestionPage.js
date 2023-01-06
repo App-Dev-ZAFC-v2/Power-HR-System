@@ -134,7 +134,7 @@ function QuestionPage(props) {
                 {(saved === "SAVING")? 
                 (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
                 {(saved === "SAVED")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
+                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved as a draft</Typography></Box>) : ""}
                 {(saved === "FAILED")?
                 (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
             </Box>
