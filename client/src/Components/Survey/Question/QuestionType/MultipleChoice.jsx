@@ -168,7 +168,7 @@ export function MultipleChoice(props) {
     (state) => state.forms.form.questions[index].options
   );
 
-  const reduxResponse = useSelector((state) => state.responses.feedback.response);
+  const reduxResponse = useSelector((state) => state.responses.feedback?.response);
   const reduxFeedback = useSelector((state) => state.responses.feedback);
   const dispatch = useDispatch();
 
