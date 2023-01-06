@@ -5,7 +5,7 @@ const API_URL = "http://localhost:5000/feedbacks/";
 const initialState = {
   feedback: [],
   loading: false,
-  saved: true,
+  saved: "SAVED",
   count: 0,
 };
 
@@ -52,6 +52,9 @@ const responseSlice = createSlice({
       .addCase(getAllResponse.pending, (state, action) => {
         state.loading = true;
       })
+      .addCase(updateResponse.pending, (state, action) => {
+        state.saved = "SAVING";
+      })
 
       .addCase(createResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
@@ -87,7 +90,7 @@ const responseSlice = createSlice({
       })
       .addCase(updateResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
-        state.saved = false;
+        state.saved = "SAVED";
       });
   },
 });

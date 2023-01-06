@@ -15,12 +15,13 @@ import { CheckBox } from "../../../Components/Survey/Question/QuestionType/Check
 import { DropDown } from "../../../Components/Survey/Question/QuestionType/DropDown";
 import { LinearScale } from "../../../Components/Survey/Question/QuestionType/LinearScale";
 
-import { Typography, Container, Grid, Button } from "@mui/material";
+import { Typography, Container, Grid, Button, Box } from "@mui/material";
+
+import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
+import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
+import ErrorIcon from '@mui/icons-material/Error';
 
 function QuestionPage(props) {
-  const [feedback, setFeedback] = useState([]);
-  const [saved, setSaved] = useState(true);
-  const [clear, setClear] = useState(false);
   const [canAnswer, setCanAnswer] = useState(true);
 
   //redux
@@ -29,6 +30,7 @@ function QuestionPage(props) {
   const rfeedback = useSelector((state) => state.responses.feedback);
   const questions = useSelector((state) => state.forms.form.questions);
   const count = useSelector((state) => state.responses.count);
+  const saved = useSelector((state) => state.responses.saved);
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -91,7 +93,6 @@ function QuestionPage(props) {
             _id: rfeedback._id
           }
           dispatch(updateResponse(tempFeedback));
-          setSaved(false);
         }
         
       }
@@ -128,6 +129,16 @@ function QuestionPage(props) {
       <Navbar />
       {form?.published ? (<>
       {!canAnswer? "You have already answered this form" : (<>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                {(saved === "SAVING")? 
+                (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
+                {(saved === "SAVED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
+                {(saved === "FAILED")?
+                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
+            </Box>
+        </Box>
       <Container maxWidth="md" sx={{ my: 4 }}>
         <Grid
           m={2}
