@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { deleteQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton, Stack, Switch, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Box, Paper } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -37,6 +37,7 @@ function QuestionList(){
     const [localSave, setLocalSave] = useState(true);
     const [load, setLoad] = useState(false);
     const [expanded, setExpanded] = useState([]);
+    const [open, setOpen] = useState(false);
 
     useEffect(() => {
         if( questions !== rform.questions && localSave === true){
@@ -184,8 +185,56 @@ function QuestionList(){
         setLocalSave(false);
     }
 
+    function handleRequired(i){
+        
+        var tempQuestion = JSON.parse(JSON.stringify(questions));
+        
+        //if form is required all and question is required, alert user that they cannot uncheck required and need to turn off required all
+        if(rform.requiredAll === true && tempQuestion[i].required === true){
+            handleClickOpen();
+            return;
+        }
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+
+
+        tempQuestion[i].required = !tempQuestion[i].required;
+        setQuestions(tempQuestion);
+        setLocalSave(false);
+    }
+
+    const handleClickOpen = () => {
+        setOpen(true);
+      };
+    
+      const handleClose = () => {
+        setOpen(false);
+      };
+
+    const handleAllRequired = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            
+        }
+        
+        if(!rform.requiredAll === true){
+            var formTemp = JSON.parse(JSON.stringify(rform));
+            formTemp.requiredAll = !rform.requiredAll;
+            //set all question required to true
+            formTemp.questions.forEach(question => {
+                question.required = true;
+            });
+            dispatch(updateForm(formTemp));
+        }
+        else{
+            dispatch(updateForm({...rform, requiredAll: !rform.requiredAll}));
+        }
+        setLocalSave(false);
+    }
+
     return(
-        <DragDropContext onDragEnd={onDragEnd}>
+        <><DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable">
                 {(provided) => (
                     <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
@@ -201,14 +250,14 @@ function QuestionList(){
                                                             <div style={{ display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "12px" }}>
                                                                 <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                                             </div>
-                                                            {(q.questionType === "Multiple Choice") ? <MultipleChoice index={i} disable={true}/> : ""}
-                                                            {(q.questionType === "Short Answer") ? <ShortAnswer index={i} disable={true}/> : ""}
-                                                            {(q.questionType === "Paragraph") ? <Paragraph index={i} disable={true}/> : ""}
-                                                            {(q.questionType === "Checkboxes") ? <CheckBox index={i} disable={true}/> : ""}
-                                                            {(q.questionType === "Drop-down") ? <DropDownList index={i}/> : ""}
-                                                            {(q.questionType === "Linear Scale") ? <LinearScale index={i} disable={true}/> : ""}
-                                                            
-                                                            </>
+                                                            {(q.questionType === "Multiple Choice") ? <MultipleChoice index={i} disable={true} /> : ""}
+                                                            {(q.questionType === "Short Answer") ? <ShortAnswer index={i} disable={true} /> : ""}
+                                                            {(q.questionType === "Paragraph") ? <Paragraph index={i} disable={true} /> : ""}
+                                                            {(q.questionType === "Checkboxes") ? <CheckBox index={i} disable={true} /> : ""}
+                                                            {(q.questionType === "Drop-down") ? <DropDownList index={i} /> : ""}
+                                                            {(q.questionType === "Linear Scale") ? <LinearScale index={i} disable={true} /> : ""}
+
+                                                        </>
                                                     ) : ""}
                                                 </AccordionSummary>
 
@@ -226,10 +275,10 @@ function QuestionList(){
                                                                     multiline={true}
                                                                     value={q.questionText}
                                                                     variant="filled"
-                                                                    sx={{ mt: 1, mb: 1, mr: 1}}
+                                                                    sx={{ mt: 1, mb: 1, mr: 1 }}
                                                                     onChange={(e) => { handleQuestionText(e.target.value, i); } } />
                                                                 <FormControl sx={{ m: 1, minWidth: 230 }}>
-                                                                    <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => {handleQuestionType(e.target.value, i);}}>
+                                                                    <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => { handleQuestionType(e.target.value, i); } }>
                                                                         <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{ mr: "6px" }} /> Short answer</MenuItem>
                                                                         <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Paragraph"}> <SubjectIcon sx={{ mr: "6px" }} /> Paragraph</MenuItem>
                                                                         <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
@@ -242,19 +291,32 @@ function QuestionList(){
                                                                 </FormControl>
                                                             </div>
 
-                                                            {(q.questionType === "Multiple Choice") ? <MultipleChoiceEdit index={i}/> : ""}
-                                                            {(q.questionType === "Checkboxes") ? <CheckBoxEdit index={i}/> : ""}
-                                                            {(q.questionType === "Linear Scale") ? <LinearScaleEdit index={i}/> : ""}
-                                                            {(q.questionType === "Drop-down") ? <DropDownEdit index={i}/> : ""}
-                                                            
+                                                            {(q.questionType === "Multiple Choice") ? <MultipleChoiceEdit index={i} /> : ""}
+                                                            {(q.questionType === "Checkboxes") ? <CheckBoxEdit index={i} /> : ""}
+                                                            {(q.questionType === "Linear Scale") ? <LinearScaleEdit index={i} /> : ""}
+                                                            {(q.questionType === "Drop-down") ? <DropDownEdit index={i} /> : ""}
+
                                                         </div>
                                                     </div>
                                                 </AccordionDetails>
                                                 <AccordionActions>
-                                                    {(questions.length > 1) ? (
-                                                        <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
-                                                            <DeleteOutlineIcon />
-                                                        </IconButton>) : ""}
+                                                    {/* {(questions.length > 1) ? (
+                                <Stack direction="row" spacing={2}>
+                                    <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>
+                                    <Switch checked={q.required} onChange={() => { handleRequired(i); } } />
+                                </Stack>
+                                ) : ""} */}
+                                                    <Stack direction="row" spacing={2}>
+                                                        {(questions.length > 1) ? (
+                                                            <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
+                                                                <DeleteOutlineIcon />
+                                                            </IconButton>
+                                                        ) : ""}
+                                                        <Divider orientation="vertical" flexItem />
+                                                        <Typography variant="body2" sx={{ mt: 1, mr: 1 }}>Required <Switch checked={q.required} onChange={() => { handleRequired(i); } } /> </Typography>
+                                                    </Stack>
                                                 </AccordionActions>
                                             </Accordion>
                                         </div>
@@ -267,6 +329,31 @@ function QuestionList(){
                 )}
             </Droppable>
         </DragDropContext>
+        <Dialog open={open} onClose={handleClose}>
+            <DialogTitle>Setting</DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    You cannot uncheck required if the form is required all. Please turn off required all first
+                </DialogContentText>
+                <Paper sx={{p:4}}>
+                <Box>
+                    <Typography variant='h6'>Question defaults</Typography>
+                    <Typography variant='h7'>Settings applied to all new questions</Typography>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                        <Box>
+                            <Typography variant='h6'>Make questions required by default</Typography>
+                        </Box>
+                        <Box>
+                            <Switch checked={rform.requiredAll} onChange={() => {handleAllRequired()}}/>
+                        </Box>
+                    </Box>
+                </Box></Paper>
+            </DialogContent>
+            <DialogActions>
+                <Button onClick={handleClose}>Cancel</Button>
+                <Button onClick={handleClose}>Okay</Button>
+            </DialogActions>
+        </Dialog></>
     )
 }
 

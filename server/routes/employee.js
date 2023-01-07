@@ -10,6 +10,8 @@ router.get('/', AuthAdmin, getEmployees);
 
 router.get('/:id', AuthAdmin, getEmployeeByID);
 
+router.get('/f/:id', getEmployeeByID);
+
 router.post('/', AuthAdmin, createEmployee);
 
 router.patch('/:id',AuthAdmin, updateEmployee);

@@ -17,6 +17,7 @@ import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
 import ErrorIcon from '@mui/icons-material/Error';
 import Collab from '../../../Components/Survey/Question/Collab';
 import Response from '../../../Components/Survey/Response/Response';
+import { getAdmins } from '../../../Redux/slices/admin';
 
 
 function EditForm(){
@@ -37,6 +38,14 @@ function EditForm(){
     useEffect(() => {
         retrieveForm();
     }, [retrieveForm]);
+
+    const retrieveAdmins = useCallback(() => {
+        dispatch(getAdmins());
+      }, [dispatch]);
+    
+    useEffect(() => {
+        retrieveAdmins();
+    }, [retrieveAdmins]);
     
     const [tab, setTab] = useState(0);
     const [form, setForm] = useState([]);
@@ -144,10 +153,11 @@ function EditForm(){
         }
         
         if(!form.requiredAll === true){
-            var formTemp = form;
-            formTemp = {...form, requiredAll: !form.requiredAll};
+            var formTemp = JSON.parse(JSON.stringify(form));
+            formTemp.requiredAll = !form.requiredAll;
+            //set all question required to true
             formTemp.questions.forEach(question => {
-                formTemp = {...formTemp, questions: {...question, required: true}};
+                question.required = true;
             });
             setForm(formTemp);
         }
