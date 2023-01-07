@@ -179,8 +179,8 @@ export function MultipleChoice(props) {
   useEffect(() => {
     if (reduxResponse !== undefined) {
       setAnswer({
-        text: reduxResponse[index].answer[0]?.text,
-        optionID: reduxResponse[index].answer[0]?.optionID,
+        text: reduxResponse[index]?.answer[0]?.text,
+        optionID: reduxResponse[index]?.answer[0]?.optionID,
       });
     }
   }, [reduxResponse]);

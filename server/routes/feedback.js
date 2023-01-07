@@ -7,11 +7,14 @@ import {
   updateFeedback,
   deleteFeedback,
   getFeedbackByEmployeeIDAndFormID,
+  getFeedbackByEmployeeID,
 } from "../controllers/feedback.js"; // import the functions from the controller
 
 const router = express.Router(); // create a router
 
 router.get("/", getFeedbacks);
+
+router.get("/:employeeID", getFeedbackByEmployeeID); // get feedback by employee id and form id (formID is the id of the form
 
 router.get("/:formID/:employeeID", getFeedbackByEmployeeIDAndFormID);
 

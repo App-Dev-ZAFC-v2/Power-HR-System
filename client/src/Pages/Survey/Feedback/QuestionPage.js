@@ -36,6 +36,7 @@ function QuestionPage(props) {
   const questions = useSelector((state) => state.forms.form.questions);
   const count = useSelector((state) => state.responses.count);
   const saved = useSelector((state) => state.responses.saved);
+  const loading = useSelector((state) => state.responses.loading);
   const dispatch = useDispatch();
 
   const { id } = useParams();
@@ -153,7 +154,9 @@ function QuestionPage(props) {
   return (
     <>
       <Navbar />
-      {form?.published ? (
+      {loading ? (
+        ""
+      ) : form?.published ? (
         <>
           {!submit ? (
             !canAnswer ? (
