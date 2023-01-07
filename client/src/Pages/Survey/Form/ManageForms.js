@@ -1,4 +1,4 @@
-import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme, Container, TextField, LinearProgress } from "@mui/material";
+import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme, Container, TextField, LinearProgress, Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
 import photo from "../../../Assets/BackgroundProfile/Cloudy.png";
 import icon from "../../../Assets/addIcon.png";
@@ -7,6 +7,7 @@ import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteForm, createForm, getFormsByUser, getFormsByCollaborator } from "../../../Redux/slices/form";
 import { getAdmins } from "../../../Redux/slices/admin";
+import { DashboardLayout } from "../../../Components/Admin/Dashboard/dashboard-layout";
 
 const ManageForms = () => {
     //Media Query
@@ -128,19 +129,23 @@ const ManageForms = () => {
     
 
     return (
-        <><Navbar />
+        <><DashboardLayout tab="Manage Form">
             {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
-            <Container maxWidth="lg" sx={{ mt: 4 }}>
-            <Typography variant="h2">Manage Forms</Typography>
+            <Container maxWidth="lg">
             <Grid container spacing={6} sx={{ mt: 0 }}>
                 <Grid item  xs={12} sm={6} md={3} >
-                    <Card sx={{ height: 308.34}}>
+                    {/* <Card sx={{ height: 308.34}}>
                         <CardActionArea sx={{p:0, m:0, height: 308.34}} onClick={() => handleClickOpen("create")}>
                             <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
                                 <Box component="img" src={icon} height={64}/>
                             </Box>
                         </CardActionArea>
-                    </Card>
+                    </Card> */}
+                    <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer"}} onClick={() => handleClickOpen("create")}>
+                        <Paper elevation={12} sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                            <Box component="img" src={icon} height={64}/>
+                        </Paper>
+                    </Box>
                     <Dialog fullScreen={fullScreen} open={openCreate} onClose={() => handleClose("create")} aria-labelledby="responsive-dialog-title" fullWidth>
                             <DialogTitle id="responsive-dialog-title">
                                 Create new form
@@ -167,7 +172,7 @@ const ManageForms = () => {
                 </Grid>
                 {forms?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
-                        <Card>
+                        <Card elevation={12} sx={{height: "100%"}}>
                             <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
                                 <CardMedia
                                     component="img"
@@ -262,7 +267,7 @@ const ManageForms = () => {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Container></>
+        </Container></DashboardLayout></>
     )
 
 }
