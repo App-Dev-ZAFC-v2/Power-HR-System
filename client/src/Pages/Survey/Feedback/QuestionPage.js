@@ -5,7 +5,11 @@ import { useParams } from "react-router-dom";
 import Navbar from "../../../Components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getFormByID } from "../../../Redux/slices/form";
-import { createResponse, getResponse, updateResponse } from "../../../Redux/slices/response";
+import {
+  createResponse,
+  getResponse,
+  updateResponse,
+} from "../../../Redux/slices/response";
 
 //question type
 import { MultipleChoice } from "../../../Components/Survey/Question/QuestionType/MultipleChoice";
@@ -17,9 +21,9 @@ import { LinearScale } from "../../../Components/Survey/Question/QuestionType/Li
 
 import { Typography, Container, Grid, Button, Box } from "@mui/material";
 
-import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
-import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
-import ErrorIcon from '@mui/icons-material/Error';
+import BackupRoundedIcon from "@mui/icons-material/BackupRounded";
+import CloudDoneRoundedIcon from "@mui/icons-material/CloudDoneRounded";
+import ErrorIcon from "@mui/icons-material/Error";
 
 function QuestionPage(props) {
   const [canAnswer, setCanAnswer] = useState(true);
@@ -46,26 +50,23 @@ function QuestionPage(props) {
   }, []);
 
   useEffect(() => {
-    if(count === 0){
+    if (count === 0) {
       var temp = [];
       for (var i = 0; i < form?.questions?.length; i++) {
         temp.push({
           questionID: form.questions[i]._id,
-          answer: [{text: "",
-          optionID: ""}],
+          answer: [{ text: "", optionID: "" }],
         });
       }
-      
-      var tempFeedback ={
+
+      var tempFeedback = {
         response: temp,
         employeeID: employeeID,
         formID: id,
-      }
+      };
       dispatch(createResponse(tempFeedback));
-
-    }
-    else if(count >= 1){
-      if(count > 1 && form.once === true){
+    } else if (count >= 1) {
+      if (count > 1 && form.once === true) {
         setCanAnswer(false);
         return;
       }
@@ -74,22 +75,20 @@ function QuestionPage(props) {
       for (var i = 0; i < form?.questions?.length; i++) {
         temp.push({
           questionID: form.questions[i]._id,
-          answer: [{text: "",
-          optionID: ""}],
+          answer: [{ text: "", optionID: "" }],
         });
       }
 
-      if(rfeedback._id === undefined){
+      if (rfeedback._id === undefined) {
         console.log("create");
-        var tempFeedback ={
+        var tempFeedback = {
           response: temp,
           employeeID: employeeID,
           formID: id,
-        }
+        };
         dispatch(createResponse(tempFeedback));
-      }
-      else{
-        for (var i = 0; i < form.questions.length; i++) {
+      } else {
+        for (var i = 0; i < form?.questions?.length; i++) {
           for (var j = 0; j < temp.length; j++) {
             if (rfeedback?.response[i]?.questionID === temp[j]?.questionID) {
               temp[j].answer = rfeedback.response[i].answer;
@@ -98,48 +97,48 @@ function QuestionPage(props) {
           }
         }
 
-        var tempFeedback ={
+        var tempFeedback = {
           response: temp,
           employeeID: employeeID,
           formID: id,
-          _id: rfeedback._id
-        }
+          _id: rfeedback._id,
+        };
         dispatch(updateResponse(tempFeedback));
       }
     }
   }, [count]);
-
 
   const handleClear = () => {
     var temp = [];
     for (var i = 0; i < form?.questions?.length; i++) {
       temp.push({
         questionID: form.questions[i]._id,
-        answer: [{
-          text: "",
-          optionID: ""
-        }],
+        answer: [
+          {
+            text: "",
+            optionID: "",
+          },
+        ],
       });
     }
     // setFeedback(temp);
     console.log(temp);
-    var tempFeedback ={
+    var tempFeedback = {
       response: temp,
       employeeID: employeeID,
       formID: id,
-      _id: rfeedback._id
-    }
+      _id: rfeedback._id,
+    };
     dispatch(updateResponse(tempFeedback));
-
-  }
+  };
 
   const handleSubmit = () => {
     var temp = JSON.parse(JSON.stringify(rfeedback));
 
     //check if all questions are answered based on question required
     for (var i = 0; i < form.questions.length; i++) {
-      if(form.questions[i].required === true){
-        if(temp.response[i].answer[0].text === ""){
+      if (form.questions[i].required === true) {
+        if (temp.response[i].answer[0].text === "") {
           alert("Please answer all required questions");
           return;
         }
@@ -149,96 +148,180 @@ function QuestionPage(props) {
     temp.draft = false;
     dispatch(updateResponse(temp));
     setSubmit(true);
-  }
-
-
+  };
 
   return (
     <>
       <Navbar />
-      {form?.published ? (<>
-      {!submit? 
-      !canAnswer? "You have already answered this form" : (<>
-        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
-                {(saved === "SAVING")? 
-                (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
-                {(saved === "SAVED")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved as a draft</Typography></Box>) : ""}
-                {(saved === "FAILED")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
-            </Box>
-        </Box>
-      <Container maxWidth="md" sx={{ my: 4 }}>
-        <Grid
-          m={2}
-          p={2}
-          sx={{ borderTop: "10px solid black", borderRadius: 2, boxShadow: 2 }}
-        >
-          <Typography variant="h4">{form?.name}</Typography>
-          <Typography variant="body" gutterBottom>
-            {form?.description}
-          </Typography>
-        </Grid>
-        {/* map the questions here */}
-        {questions?.map((q, i) => {
-          return (
-            <Grid
-              m={2}
-              p={2}
-              sx={{
-                borderRadius: 2,
-                boxShadow: 2,
-              }}
-            >
+      {form?.published ? (
+        <>
+          {!submit ? (
+            !canAnswer ? (
+              "You have already answered this form"
+            ) : (
               <>
-                <div
+                <Box
+                  sx={{ width: "100%", bgcolor: "background.paper", pt: 2 }}
                   style={{
                     display: "flex",
                     justifyContent: "center",
                     alignItems: "center",
-                    paddingRight: "12px",
                   }}
-                ></div>
-                {q.questionType === "Multiple Choice" ? (
-                  <MultipleChoice index={i} />
-                ) : (
-                  ""
-                )}
-                {q.questionType === "Short Answer" ? (
-                  <ShortAnswer index={i} />
-                ) : (
-                  ""
-                )}
-                {q.questionType === "Paragraph" ? <Paragraph index={i} /> : ""}
-                {q.questionType === "Checkboxes" ? <CheckBox index={i} /> : ""}
-                {q.questionType === "Drop-down" ? <DropDown index={i} /> : ""}
-                {q.questionType === "Linear Scale" ? (
-                  <LinearScale index={i} />
-                ) : (
-                  ""
-                )}
+                >
+                  <Box
+                    style={{
+                      display: "flex",
+                      marginRight: "24px",
+                      marginLeft: "24px",
+                    }}
+                  >
+                    {saved === "SAVING" ? (
+                      <Box style={{ display: "flex", alignItems: "center" }}>
+                        <BackupRoundedIcon sx={{ mr: 1 }} />
+                        <Typography variant="subtitle1">Saving...</Typography>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
+                    {saved === "SAVED" ? (
+                      <Box style={{ display: "flex", alignItems: "center" }}>
+                        <CloudDoneRoundedIcon sx={{ mr: 1 }} />
+                        <Typography variant="subtitle1">
+                          Saved as a draft
+                        </Typography>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
+                    {saved === "FAILED" ? (
+                      <Box style={{ display: "flex", alignItems: "center" }}>
+                        <ErrorIcon sx={{ mr: 1 }} />
+                        <Typography variant="subtitle1">
+                          Save unsuccessfully
+                        </Typography>
+                      </Box>
+                    ) : (
+                      ""
+                    )}
+                  </Box>
+                </Box>
+                <Container maxWidth="md" sx={{ my: 4 }}>
+                  <Grid
+                    m={2}
+                    p={2}
+                    sx={{
+                      borderTop: "10px solid black",
+                      borderRadius: 2,
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Typography variant="h4">{form?.name}</Typography>
+                    <Typography variant="body" gutterBottom>
+                      {form?.description}
+                    </Typography>
+                  </Grid>
+                  {/* map the questions here */}
+                  {questions?.map((q, i) => {
+                    return (
+                      <Grid
+                        m={2}
+                        p={2}
+                        sx={{
+                          borderRadius: 2,
+                          boxShadow: 2,
+                        }}
+                      >
+                        <>
+                          <div
+                            style={{
+                              display: "flex",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              paddingRight: "12px",
+                            }}
+                          ></div>
+                          {q.questionType === "Multiple Choice" ? (
+                            <MultipleChoice index={i} />
+                          ) : (
+                            ""
+                          )}
+                          {q.questionType === "Short Answer" ? (
+                            <ShortAnswer index={i} />
+                          ) : (
+                            ""
+                          )}
+                          {q.questionType === "Paragraph" ? (
+                            <Paragraph index={i} />
+                          ) : (
+                            ""
+                          )}
+                          {q.questionType === "Checkboxes" ? (
+                            <CheckBox index={i} />
+                          ) : (
+                            ""
+                          )}
+                          {q.questionType === "Drop-down" ? (
+                            <DropDown index={i} />
+                          ) : (
+                            ""
+                          )}
+                          {q.questionType === "Linear Scale" ? (
+                            <LinearScale index={i} />
+                          ) : (
+                            ""
+                          )}
+                        </>
+                      </Grid>
+                    );
+                  })}
+                  <Grid m={2} p={2}>
+                    <Button
+                      onClick={handleSubmit}
+                      variant="contained"
+                      color="success"
+                      sx={{ mt: 2 }}
+                    >
+                      Submit
+                    </Button>
+                    <Button
+                      onClick={handleClear}
+                      variant="contained"
+                      color="error"
+                      sx={{ mt: 2, ml: 2 }}
+                    >
+                      Clear
+                    </Button>
+                  </Grid>
+                </Container>
               </>
-            </Grid>
-          );
-        })}
-        <Grid m={2} p={2}>
-          <Button onClick={handleSubmit} variant="contained" color="success" sx={{ mt: 2 }}>
-            Submit
-          </Button>
-          <Button onClick={handleClear} variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
-            Clear
-          </Button>
-        </Grid>
-      </Container>
-      </>)
-      : <Container maxWidth="md" sx={{ my: 4 }}>
-          <Typography variant="h4" sx={{mt: 4}}>Thank you for your response!</Typography>
-          {!form.once? <Button onClick={() => {window.location.reload(true)}} variant="contained" color="success" sx={{ mt: 2 }}>
-            New response
-          </Button> : ""}
-        </Container>}
-      </>) : formload? "Loading..." : "This form is closed"}
+            )
+          ) : (
+            <Container maxWidth="md" sx={{ my: 4 }}>
+              <Typography variant="h4" sx={{ mt: 4 }}>
+                Thank you for your response!
+              </Typography>
+              {!form.once ? (
+                <Button
+                  onClick={() => {
+                    window.location.reload(true);
+                  }}
+                  variant="contained"
+                  color="success"
+                  sx={{ mt: 2 }}
+                >
+                  New response
+                </Button>
+              ) : (
+                ""
+              )}
+            </Container>
+          )}
+        </>
+      ) : formload ? (
+        "Loading..."
+      ) : (
+        "This form is closed"
+      )}
     </>
   );
 }

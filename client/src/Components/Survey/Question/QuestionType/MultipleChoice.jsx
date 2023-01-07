@@ -8,6 +8,7 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -212,7 +213,16 @@ export function MultipleChoice(props) {
       }}
     >
       <Typography variant="subtitle1" style={{ marginLeft: "0px" }}>
-        {question.questionText}
+        <Stack direction="row">
+          {question.questionText}
+          {question.required ? (
+            <Typography color="error" ml={1}>
+              *
+            </Typography>
+          ) : (
+            ""
+          )}
+        </Stack>
       </Typography>
       {question.questionImage !== "" ? (
         <div>

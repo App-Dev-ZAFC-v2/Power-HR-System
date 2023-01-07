@@ -39,10 +39,15 @@ export const getResponseByFormID = createAsyncThunk(
 export const updateResponse = createAsyncThunk(
   "response/update",
   async (data) => {
-      const res = await axios.patch(API_URL + data._id, data);
-      return res.data;
+    const res = await axios.patch(API_URL + data._id, data);
+    return res.data;
   }
 );
+
+//set save state
+export const setSaving = createAsyncThunk("response/setSaving", async () => {
+  return "SAVING";
+});
 
 const responseSlice = createSlice({
   name: "response",
@@ -66,8 +71,7 @@ const responseSlice = createSlice({
         state.loading = false;
       })
       .addCase(getResponse.fulfilled, (state, action) => {
-
-        if(action.payload.length === 0){
+        if (action.payload.length === 0) {
           state.feedback = [];
           state.count = 0;
           state.loading = false;
@@ -77,8 +81,11 @@ const responseSlice = createSlice({
         var temp = new Date(action.payload[0].date);
         var index = 0;
         //get latest date and draft is true
-        for(let i = 1; i < action.payload.length; i++){
-          if(temp < new Date(action.payload[i].date) && action.payload[i].draft === true){
+        for (let i = 1; i < action.payload.length; i++) {
+          if (
+            temp < new Date(action.payload[i].date) &&
+            action.payload[i].draft === true
+          ) {
             temp = new Date(action.payload[i].date);
             index = i;
           }
@@ -86,10 +93,10 @@ const responseSlice = createSlice({
 
         state.count = action.payload.length;
 
-        if(action.payload[index].draft === true){
+        if (action.payload[index].draft === true) {
           state.feedback = action.payload[index];
         }
-        
+
         state.loading = false;
       })
       .addCase(getResponseByFormID.fulfilled, (state, action) => {
@@ -99,6 +106,9 @@ const responseSlice = createSlice({
       .addCase(updateResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
         state.saved = "SAVED";
+      })
+      .addCase(setSaving.fulfilled, (state, action) => {
+        state.saved = action.payload;
       });
   },
 });
