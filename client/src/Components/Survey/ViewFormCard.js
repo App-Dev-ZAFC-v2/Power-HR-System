@@ -91,7 +91,7 @@ export default function ViewForm(props) {
     } else if (checkResponse.draft === true) {
       return <Chip label="Answer Pending" color="warning" size="small" />;
     } else {
-      return <Chip label="Completed" color="success" size="small" />;
+      return <Chip label="Answer Complete" color="success" size="small" />;
     }
   }
 
