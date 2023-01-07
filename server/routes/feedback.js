@@ -14,11 +14,11 @@ const router = express.Router(); // create a router
 
 router.get("/", getFeedbacks);
 
-router.get("/:employeeID", getFeedbackByEmployeeID); // get feedback by employee id and form id (formID is the id of the form
+router.get("/form/:id", getFeedbackByID);
+
+router.get("/employee/:employeeID", getFeedbackByEmployeeID); // get feedback by employee id and form id (formID is the id of the form
 
 router.get("/:formID/:employeeID", getFeedbackByEmployeeIDAndFormID);
-
-router.get("/:id", getFeedbackByID);
 
 router.post("/", createFeedback);
 

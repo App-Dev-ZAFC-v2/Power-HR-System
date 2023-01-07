@@ -18,6 +18,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 import Collab from '../../../Components/Survey/Question/Collab';
 import Response from '../../../Components/Survey/Response/Response';
 import { getAdmins } from '../../../Redux/slices/admin';
+import { DashboardLayout } from '../../../Components/Admin/Dashboard/dashboard-layout';
 
 
 function EditForm(){
@@ -225,7 +226,7 @@ function EditForm(){
 
     return(
         <>
-        <Navbar />
+        <DashboardLayout tab={"Form " + rform.name}>
         {(permission === false && rform.length !== 0) ?
         (<>
         <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
@@ -285,7 +286,7 @@ function EditForm(){
                         </Grid>
                         <QuestionList/>
                     </Grid>
-                    <Paper elevation={2} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0}} >
+                    <Paper elevation={12} sx={{ position: 'fixed', bottom: 0, width: "100%"}} >
                         {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
                         <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
                             <Fab variant="extended" onClick={() => {handleAddQuestion()}}>
@@ -396,7 +397,7 @@ function EditForm(){
         </Container>
         
         </>) : ""}
-        </>
+        </DashboardLayout></>
     )
 }
 
