@@ -66,3 +66,35 @@ export const getFeedbackByEmployeeIDAndFormID = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+//get feedback by employee id and get the latest one from each form
+export const getFeedbackByEmployeeID = async (req, res) => {
+  const { employeeID } = req.params;
+  try {
+    const feedback = await Feedback.aggregate([
+      {
+        $match: {
+          employeeID: mongoose.Types.ObjectId(employeeID),
+        },
+      },
+      {
+        $sort: {
+          date: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$formID",
+          formID: { $first: "$formID" },
+          employeeID: { $first: "$employeeID" },
+          response: { $first: "$response" },
+          draft: { $first: "$draft" },
+          date: { $first: "$date" },
+        },
+      },
+    ]);
+    res.status(200).json(feedback);
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};

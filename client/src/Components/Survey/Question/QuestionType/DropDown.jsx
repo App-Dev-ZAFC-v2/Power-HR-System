@@ -13,6 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { setSaving, updateForm } from "../../../../Redux/slices/form";
+import { updateResponse } from "../../../../Redux/slices/response";
 import { useState, useEffect } from "react";
 import { Stack } from "@mui/material";
 
@@ -181,6 +182,34 @@ export function DropDown(props) {
   const option = useSelector(
     (state) => state.forms.form.questions[index].options
   );
+  const [answer, setAnswer] = useState({ text: "", optionID: "" });
+
+  const reduxResponse = useSelector(
+    (state) => state.responses.feedback?.response
+  );
+  const reduxFeedback = useSelector((state) => state.responses.feedback);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (reduxResponse !== undefined) {
+      setAnswer({
+        text: reduxResponse[index].answer[0]?.answerText,
+        optionID: reduxResponse[index].answer[0]?.optionID,
+      });
+    }
+  }, [reduxResponse]);
+
+  //handle answer
+  const handleAnswer = (value) => {
+    var select = option.find((op) => op._id === value);
+    var temp = {
+      text: select.optionText,
+      optionID: select._id,
+    };
+    var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
+    tempFeedback.response[index].answer = [temp];
+    dispatch(updateResponse(tempFeedback));
+  };
 
   return (
     <div
@@ -217,20 +246,22 @@ export function DropDown(props) {
       )}
       <FormControl sx={{ mt: "6px", minWidth: 230 }}>
         <Select
-          value={""}
+          value={answer.optionID ? answer.optionID : ""}
           displayEmpty
           inputProps={{ "aria-label": "Without label" }}
+          onChange={(e) => {
+            handleAnswer(e.target.value);
+          }}
         >
           <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={""}>
-            {" "}
-            Choose{" "}
+            Choose
           </MenuItem>
           <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
           {option?.map((op, j) => (
             <MenuItem
               sx={{ pt: "16.5px", pb: "16.5px" }}
               key={j}
-              value={op.optionText}
+              value={op._id}
             >
               {op.optionText}
             </MenuItem>
