@@ -1,17 +1,22 @@
-import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, Link } from "@mui/material";
+import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, Link, Badge, Paper, Divider } from "@mui/material";
 import Logo from "../Assets/Logo.png";
 import { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch, useSelector } from "react-redux";
 import { getApplicantByID } from "../Redux/slices/applicant";
-import { getAdminByID } from "../Redux/slices/admin";
+import { getAdminByID, updateAdmin, updateCurrentAdmin } from "../Redux/slices/admin";
 import { getEmployeeByID } from "../Redux/slices/employee";
+import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function ResponsiveAppBar() {
     const [anchorElNav, setAnchorElNav] = useState(null);
     const [anchorElUser, setAnchorElUser] = useState(null);
+    const [anchorElNotif, setAnchorElNotif] = useState(null);
     const [name, setName] = useState("");
+    const [message, setMessage] = useState([]);
+    const [check, setCheck] = useState(false);
     const userArr = ["applicant", "admin", "employee", "executive"];
+    const [link, setLink] = useState("");
 
     const token = localStorage.getItem("authToken");
     const userType = JSON.parse(atob(token.split(".")[1])).userType;
@@ -48,7 +53,9 @@ function ResponsiveAppBar() {
 
     const employee = useSelector((state) => state.employees.employee);
     const applicant = useSelector((state) => state.applicants.applicant);
-    const admin = useSelector((state) => state.admins.admin);
+    const admin = useSelector((state) => state.admins.currentAdmin);
+    const allAdmins = useSelector((state) => state.admins.admin);
+    const rloading = useSelector((state) => state.admins.loading);
 
     useEffect(() => {
       if (userType === 0) {
@@ -60,20 +67,49 @@ function ResponsiveAppBar() {
       else {
         dispatch(getEmployeeByID(detailId));
       }
-    }, []);
+    }, [detailId]);
 
     useEffect(() => {
       if (userType === 0) {
-        setName(applicant?.name);
+        if(applicant.length > 1) {
+          var temp = applicant.filter((item) => item._id === detailId);
+          setName(temp[0]?.name);
+        }
+        else {
+          setName(applicant?.name);
+        }
       }
       else if (userType === 1) {
         setName(admin?.name);
       }
       else {
-        setName(employee?.name);
+        if (employee.length > 1) {
+          var temp = employee.filter((item) => item._id === detailId);
+          setName(temp[0]?.name);
+        }
+        else {
+          setName(employee?.name);
+        }
       }
     }, [applicant, admin, employee]);
 
+    //sort notification by date and show only unread notifications
+    useEffect(() => {
+      if(admin === null) return;
+      if(check) return;
+
+      var temp = JSON.parse(JSON.stringify(admin.notification));
+
+
+      temp.sort((a, b) => {
+        return new Date(b.date) - new Date(a.date);
+      });
+      temp = temp.filter((item) => item.read === false);
+
+      setMessage(temp);
+      setCheck(true);
+      
+    }, [admin]);
 
   
     const handleOpenNavMenu = (event) => {
@@ -90,6 +126,37 @@ function ResponsiveAppBar() {
     const handleCloseUserMenu = () => {
       setAnchorElUser(null);
     };
+
+    const handleOpenNotifMenu = (event) => {
+      setAnchorElNotif(event.currentTarget);
+    };
+
+    const handleCloseNotifMenu = () => {
+      setAnchorElNotif(null);
+    };
+
+    const handleMessage = (id) => {
+      var tempAdmin = JSON.parse(JSON.stringify(admin));
+
+      tempAdmin.notification.forEach((item) => {
+        if(item._id === id){
+          item.read = true;
+        }
+      });
+      setMessage(tempAdmin.notification.filter((item) => item.read === false));
+      dispatch(updateCurrentAdmin(tempAdmin));
+      setLink(tempAdmin.notification.filter((item) => item._id === id)[0].link);
+    };
+
+    useEffect(() => {
+      if(link !== "") {
+        window.location.href = link;
+      }
+    }, [link]);
+
+
+
+
 
     const handleLogout = () => {
       localStorage.removeItem("authToken");
@@ -211,6 +278,69 @@ function ResponsiveAppBar() {
                   </Button>
                 </Link>
               ))}
+            </Box>
+            
+            <Box sx={{ mr: "24px"}}>
+              <IconButton
+                size="large"
+                aria-label="notifications"
+                color="inherit"
+                onClick={handleOpenNotifMenu}
+              >
+                <Badge badgeContent={message.length} color="error">
+                  <NotificationsIcon />
+                </Badge>
+              </IconButton>
+              <Menu
+                sx={{ mt: "45px"}}
+                style={{}}
+                id="menu-appbar"
+                anchorEl={anchorElNotif}
+                anchorOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                keepMounted
+                transformOrigin={{
+                  vertical: "top",
+                  horizontal: "right",
+                }}
+                open={Boolean(anchorElNotif)}
+                MenuListProps={{ disablePadding: true }}
+                onClose={handleCloseNotifMenu}
+              >
+                {/* <MenuItem sx={{width: "500px"}} disabled>
+                  <Typography textAlign="center">No new notifications</Typography>
+                </MenuItem> */}
+                <Box sx={{width: "500px", pt: 0}}>
+                  <Paper sx={{pt: "20px", pb: "20px"}}>
+                    <Typography variant="h4" textAlign="center">Notifications</Typography>
+                  </Paper>
+                </Box>
+
+                {message.length === 0 ? (
+                  <MenuItem sx={{width: "500px", p:0}} disabled>
+                    <Paper sx={{pt: "30px", pb: "30px", width: 1}}>
+                      <Typography sx={{pl: "24px"}}>No new notifications</Typography>
+                    </Paper>
+                  </MenuItem>
+                ) : (
+                  message.map((msg, index) => (
+                    <div><MenuItem sx={{ width: "500px" }} key={index} onClick={() => (handleMessage(msg._id))}>
+                      <Box sx={{ flexDirection: 'column' }}>
+                        <Box sx={{ width: '100%', maxWidth: 500, m: 0 }}>
+                          <Typography sx={{ m: 0, whiteSpace: "normal" }} variant="h6">{msg.subject}</Typography>
+                        </Box>
+                        <Box sx={{ width: '100%', maxWidth: 500, m: 0 }}>
+                          <Typography sx={{ m: 0, whiteSpace: "normal" }} variant="body1">{msg.message}</Typography>
+                        </Box>
+                        {/* <Typography variant="subtitle2">{new Date(msg.date)}</Typography> */}
+                      </Box>
+                    </MenuItem><Divider /></div>
+                  ))
+                )}
+
+              </Menu>
             </Box>
   
             <Box sx={{ flexGrow: 0 }}>

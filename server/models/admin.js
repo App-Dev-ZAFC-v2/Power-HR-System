@@ -10,7 +10,9 @@ const adminSchema = mongoose.Schema({
     name: String,
 
     notification: [{
+        subject: String,
         message: String,
+        link: {type: String, default: ""},
         read: {type: Boolean, default: false},
         date: {type: Date, default: Date.now},
     }],

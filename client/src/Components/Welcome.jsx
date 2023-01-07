@@ -1,8 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import { styled } from '@mui/material/styles';
 import {Box, Paper, Typography} from '@mui/material'
 import welcomeimg from '../Assets/welcome.png'
+import { useSelector } from 'react-redux';
 
 const Item = styled(Paper)(({ theme }) => ({
     backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : 'white',
@@ -15,24 +15,24 @@ const Item = styled(Paper)(({ theme }) => ({
 
 
 export default function Welcome(){
-    const [user, setUser] = useState([]);
-    const token = localStorage.getItem('authToken');
+    const [user, setUser] = useState();
     
-    // FIND BETTER WAY TO DO THIS
-    const userType = JSON.parse(atob(token.split('.')[1])).userType;
-    // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
-    const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
+    const employee = useSelector((state) => state.employees.employee);
+    const applicant = useSelector((state) => state.applicants.applicant);
+    const admin = useSelector((state) => state.admins.admin);
 
     useEffect(() => {
-      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}`) :
-        axios.get(`http://localhost:5000/employees/f/${detailId}`))
-        .then(res => {
-            setUser(res.data);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    })
+        setUser(employee);
+    }, [employee]);
+
+    useEffect(() => {
+        setUser(applicant);
+    }, [applicant]);
+
+    useEffect(() => {
+        setUser(admin);
+    }, [admin]);
+
     return(
         <Item variant='outlined'>
             <Box component="img" sx={{height: 200}} src={welcomeimg}/>

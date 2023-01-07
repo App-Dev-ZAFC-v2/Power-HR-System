@@ -17,6 +17,7 @@ import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
 import ErrorIcon from '@mui/icons-material/Error';
 import Collab from '../../../Components/Survey/Question/Collab';
 import Response from '../../../Components/Survey/Response/Response';
+import { getAdmins } from '../../../Redux/slices/admin';
 
 
 function EditForm(){
@@ -37,6 +38,14 @@ function EditForm(){
     useEffect(() => {
         retrieveForm();
     }, [retrieveForm]);
+
+    const retrieveAdmins = useCallback(() => {
+        dispatch(getAdmins());
+      }, [dispatch]);
+    
+    useEffect(() => {
+        retrieveAdmins();
+    }, [retrieveAdmins]);
     
     const [tab, setTab] = useState(0);
     const [form, setForm] = useState([]);
