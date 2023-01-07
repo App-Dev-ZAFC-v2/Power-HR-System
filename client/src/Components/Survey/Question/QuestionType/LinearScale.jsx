@@ -9,10 +9,12 @@ import {
   Stack,
   TextField,
   Typography,
+  RadioGroup,
 } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setSaving, updateForm } from "../../../../Redux/slices/form";
 import { useState, useEffect } from "react";
+import { updateResponse } from "../../../../Redux/slices/response";
 
 export function LinearScaleEdit(props) {
   const { index } = props;
@@ -165,6 +167,33 @@ export function LinearScale(props) {
     (state) => state.forms.form.questions[index].options
   );
 
+  const [answer, setAnswer] = useState({ optioID: "", scale: 0 });
+
+  const reduxResponse = useSelector(
+    (state) => state?.responses.feedback?.response
+  );
+
+  const reduxFeedback = useSelector((state) => state.responses.feedback);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (reduxResponse !== undefined) {
+      setAnswer({
+        optionID: reduxResponse[index]?.answer[0]?.optionID,
+        scale: reduxResponse[index]?.answer[0]?.scale,
+      });
+    }
+  }, [reduxResponse]);
+
+  const handleAnswer = (value) => {
+    var selectedOption = option.find((op) => op.optionScale === value);
+    var temp = { optionID: selectedOption?.optionID, scale: value };
+    var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
+    tempFeedback.response[index].answer[0] = temp;
+
+    dispatch(updateResponse(index));
+  };
+
   const list = [];
   for (let i = option[0].optionScale; i <= option[1].optionScale; i++) {
     list.push(
@@ -228,7 +257,16 @@ export function LinearScale(props) {
           </Paper>
         </Grid>
         <Grid item xs="auto">
-          {list}
+          <RadioGroup
+            row
+            aria-label="position"
+            name="position"
+            defaultValue="top"
+            value={answer.scale}
+            onChange={(e) => handleAnswer(e.target.value)}
+          >
+            {list}
+          </RadioGroup>
         </Grid>
         <Grid item xs sx={{ mt: "34px" }}>
           <Paper elevation={0}>
