@@ -49,7 +49,7 @@ const responseSlice = createSlice({
   initialState,
   extraReducers: (builder) => {
     builder
-      .addCase(getAllResponse.pending, (state, action) => {
+      .addCase(getResponseByFormID.pending, (state, action) => {
         state.loading = true;
       })
       .addCase(updateResponse.pending, (state, action) => {

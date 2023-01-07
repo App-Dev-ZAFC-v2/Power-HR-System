@@ -56,6 +56,10 @@ export default function Collab() {
       return;
     }
 
+    if(admins.admin.length - 1 === listAdmin.length){
+      return;
+    }
+
     var templistAdmin = [];
     for (let i = 0; i < admins.admin.length; i++) {
       if(admins.admin[i]._id !== form.createdBy){
@@ -118,6 +122,7 @@ export default function Collab() {
     //If collab admin is not in tempCollabAdmin, then send notification to them to inform them that they have been removed as a collaborator
     for(let i = 0; i < tempCollabAdmin.length; i++){
       if(!collabAdmin.includes(tempCollabAdmin[i]._id)){
+        console.log({name: tempCollabAdmin[i].name , check :collabAdmin.includes(tempCollabAdmin[i]._id)});
         await sendNotification(tempCollabAdmin[i],
           "You have been added as a collaborator to form " + form.name + "",
           "New Collaborator",

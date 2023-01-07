@@ -13,7 +13,7 @@ export const getFeedbacks = async (req, res) => {
 export const getFeedbackByID = async (req, res) => {
   const { id } = req.params;
   try {
-    const feedback = await Feedback.findById(id);
+    const feedback = await Feedback.find({ formID: id, draft: false });
     res.status(200).json(feedback);
   } catch (error) {
     res.status(404).json({ message: error.message });

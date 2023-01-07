@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { deleteQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton, Stack, Switch, Typography } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -184,6 +184,25 @@ function QuestionList(){
         setLocalSave(false);
     }
 
+    function handleRequired(i){
+        
+        var tempQuestion = JSON.parse(JSON.stringify(questions));
+        
+        //if form is required all and question is required, alert user that they cannot uncheck required and need to turn off required all
+        if(rform.requiredAll === true && tempQuestion[i].required === true){
+            alert("You cannot uncheck required if the form is required all. Please turn off required all first in setting.");
+            return;
+        }
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+
+
+        tempQuestion[i].required = !tempQuestion[i].required;
+        setQuestions(tempQuestion);
+        setLocalSave(false);
+    }
+
     return(
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable">
@@ -251,10 +270,23 @@ function QuestionList(){
                                                     </div>
                                                 </AccordionDetails>
                                                 <AccordionActions>
-                                                    {(questions.length > 1) ? (
-                                                        <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
-                                                            <DeleteOutlineIcon />
-                                                        </IconButton>) : ""}
+                                                    {/* {(questions.length > 1) ? (
+                                                        <Stack direction="row" spacing={2}>
+                                                            <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
+                                                                <DeleteOutlineIcon />
+                                                            </IconButton>
+                                                            <Switch checked={q.required} onChange={() => { handleRequired(i); } } />
+                                                        </Stack>
+                                                        ) : ""} */}
+                                                        <Stack direction="row" spacing={2}>
+                                                            {(questions.length > 1) ? (
+                                                                <IconButton aria-label="delete" onClick={() => { handleDeleteQuestion(i); } }>
+                                                                    <DeleteOutlineIcon />
+                                                                </IconButton>
+                                                            ) : ""}
+                                                            <Divider orientation="vertical" flexItem />
+                                                            <Typography variant="body2" sx={{ mt: 1, mr: 1 }}>Required <Switch checked={q.required} onChange={() => { handleRequired(i); } } /> </Typography>
+                                                        </Stack>
                                                 </AccordionActions>
                                             </Accordion>
                                         </div>
