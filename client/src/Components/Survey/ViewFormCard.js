@@ -60,7 +60,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
-import { Button } from "@mui/material";
+import { Button, Chip } from "@mui/material";
 import DescriptionIcon from "@mui/icons-material/Description";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
@@ -87,11 +87,11 @@ export default function ViewForm(props) {
     //if id found in response and draft = false, return "Filled"
     const checkResponse = response?.find((res) => res.formID === id);
     if (!checkResponse) {
-      return "Not Filled";
+      return <Chip label="Not Answered" color="error" size="small" />;
     } else if (checkResponse.draft === true) {
-      return "Pending";
+      return <Chip label="Answer Pending" color="warning" size="small" />;
     } else {
-      return "Filled";
+      return <Chip label="Completed" color="success" size="small" />;
     }
   }
 
@@ -109,7 +109,7 @@ export default function ViewForm(props) {
     <TableContainer component={Paper}>
       <Table sx={{ minWidth: 650 }} aria-label="simple table">
         <TableHead>
-          <TableRow>
+          <TableRow sx={{ borderColor: "grey.500" }}>
             <TableCell>Question</TableCell>
             <TableCell align="left">Description</TableCell>
             <TableCell align="center">Status</TableCell>
@@ -120,21 +120,34 @@ export default function ViewForm(props) {
           {form?.map((row, index) => (
             <TableRow
               key={row.name}
-              sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              sx={{
+                // "&:last-child td, &:last-child th": { border: 0 },
+                borderColor: "grey.300",
+              }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell
+                component="th"
+                scope="row"
+                sx={{ borderColor: "grey.300" }}
+              >
                 {row?.name}
               </TableCell>
-              <TableCell align="left">{row.description}</TableCell>
-              <TableCell align="center">{status[index]}</TableCell>
-              <TableCell align="center">
+              <TableCell align="left" sx={{ borderColor: "grey.300" }}>
+                {row.description}
+              </TableCell>
+              <TableCell align="center" sx={{ borderColor: "grey.300" }}>
+                {status[index]}
+              </TableCell>
+              <TableCell align="center" sx={{ borderColor: "grey.300" }}>
                 <Button
                   variant="contained"
                   color="success"
                   size="small"
                   onClick={() => (window.location = "/form/" + row._id)}
+                  width="100%"
+                  endIcon={<DescriptionIcon />}
                 >
-                  Fill <DescriptionIcon />
+                  Fill
                 </Button>
               </TableCell>
             </TableRow>

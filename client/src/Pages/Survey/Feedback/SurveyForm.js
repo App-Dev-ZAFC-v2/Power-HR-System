@@ -22,11 +22,11 @@ export default function SurveyForm() {
   return (
     <>
       <Navbar />
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Grid container spacing={4} sx={{ mt: 0, boxShadow: 5 }}>
-          {/* {forms?.map((f) => (
-            <ViewFormCard dataform={f} />
-          ))} */}
+      <Container maxWidth="lg" sx={{ mt: 2 }}>
+        <Typography variant="h4" component="h1">
+          Survey Form
+        </Typography>
+        <Grid container spacing={4} sx={{ mt: 2, mb: 5, boxShadow: 8 }}>
           <ViewFormCard dataform={forms} />
         </Grid>
       </Container>
