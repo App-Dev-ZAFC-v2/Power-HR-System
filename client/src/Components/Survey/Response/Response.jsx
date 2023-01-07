@@ -39,7 +39,7 @@ function Response(){
                     <Grid
                         m={2}
                         p={2}
-                        sx={{ borderTop: "10px solid black", borderRadius: 2, boxShadow: 2 }}
+                        sx={{ borderTop: "10px solid black", borderRadius: 2, boxShadow: 12 }}
                     >
                         <Typography variant="caption">Responses cannot be edited</Typography>
                         <Typography variant="h4">{form?.name}</Typography>

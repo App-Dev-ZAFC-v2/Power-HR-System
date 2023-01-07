@@ -31,7 +31,7 @@ export const getAllResponse = createAsyncThunk("response/fetch", async () => {
 export const getResponseByFormID = createAsyncThunk(
   "response/fetchByFormID",
   async (formID) => {
-    const res = await axios.get(API_URL + formID);
+    const res = await axios.get(API_URL + "form/" + formID);
     return res.data;
   }
 );
@@ -39,7 +39,7 @@ export const getResponseByFormID = createAsyncThunk(
 export const getResponseByEmployeeID = createAsyncThunk(
   "response/fetchByEmployeeID",
   async (employeeID) => {
-    const res = await axios.get(API_URL + employeeID);
+    const res = await axios.get(API_URL + "employee/" + employeeID);
     return res.data;
   }
 );

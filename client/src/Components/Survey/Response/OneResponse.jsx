@@ -32,7 +32,7 @@ function OneResponse(prop){
 
     return load? "" : (listResponse.map((item, index) => {
             return(
-                <Grid m={2} p={2} sx={{borderRadius: 2, boxShadow: 2,}}>
+                <Grid m={2} p={2} sx={{borderRadius: 2, boxShadow: 12}}>
                     <div style={{ display: "flex", justifyContent: "center", alignItems: "center",paddingRight: "12px"}}></div>
                         <div key={index}>
                             {item.question.questionType === "Multiple Choice" ? <MultipleChoiceResponse  response={item.response} question={item.question} /> : ""}
