@@ -153,10 +153,11 @@ function EditForm(){
         }
         
         if(!form.requiredAll === true){
-            var formTemp = form;
-            formTemp = {...form, requiredAll: !form.requiredAll};
+            var formTemp = JSON.parse(JSON.stringify(form));
+            formTemp.requiredAll = !form.requiredAll;
+            //set all question required to true
             formTemp.questions.forEach(question => {
-                formTemp = {...formTemp, questions: {...question, required: true}};
+                question.required = true;
             });
             setForm(formTemp);
         }
