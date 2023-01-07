@@ -211,7 +211,7 @@ export default function ViewForm(props) {
           <TableHead>
             <TableRow sx={{ borderColor: "grey.500" }}>
               <TableCell>Question Title</TableCell>
-              <TableCell align="left">Description</TableCell>
+              <TableCell align="center">Description</TableCell>
               <TableCell align="center">Status</TableCell>
               <TableCell align="center">Action</TableCell>
             </TableRow>
@@ -239,7 +239,7 @@ export default function ViewForm(props) {
                 >
                   {row?.name}
                 </TableCell>
-                <TableCell align="left" sx={{ borderColor: "grey.300" }}>
+                <TableCell align="center" sx={{ borderColor: "grey.300" }}>
                   {row.description}
                 </TableCell>
                 <TableCell align="center" sx={{ borderColor: "grey.300" }}>
