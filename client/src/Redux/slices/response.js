@@ -36,6 +36,14 @@ export const getResponseByFormID = createAsyncThunk(
   }
 );
 
+export const getResponseByEmployeeID = createAsyncThunk(
+  "response/fetchByEmployeeID",
+  async (employeeID) => {
+    const res = await axios.get(API_URL + employeeID);
+    return res.data;
+  }
+);
+
 export const updateResponse = createAsyncThunk(
   "response/update",
   async (data) => {
@@ -55,6 +63,9 @@ const responseSlice = createSlice({
   extraReducers: (builder) => {
     builder
       .addCase(getResponseByFormID.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(getResponseByEmployeeID.pending, (state, action) => {
         state.loading = true;
       })
       .addCase(updateResponse.pending, (state, action) => {
@@ -100,6 +111,10 @@ const responseSlice = createSlice({
         state.loading = false;
       })
       .addCase(getResponseByFormID.fulfilled, (state, action) => {
+        state.feedback = action.payload;
+        state.loading = false;
+      })
+      .addCase(getResponseByEmployeeID.fulfilled, (state, action) => {
         state.feedback = action.payload;
         state.loading = false;
       })
