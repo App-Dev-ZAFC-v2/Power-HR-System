@@ -8,6 +8,7 @@ import {
   RadioGroup,
   TextField,
   Typography,
+  Stack,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import {
@@ -22,16 +23,16 @@ import { updateResponse } from "../../../../Redux/slices/response";
 
 export function MultipleChoiceEdit(props) {
   const { index } = props;
-  const rform = useSelector(state => state.forms.form);
-  const saved = useSelector(state => state.forms.saved);
+  const rform = useSelector((state) => state.forms.form);
+  const saved = useSelector((state) => state.forms.saved);
 
   const [option, setOption] = useState([]);
   const [localSave, setLocalSave] = useState(true);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if(rform.questions[index].options !== undefined){
-      if(option !== rform.questions[index].options && localSave === true) {
+    if (rform.questions[index].options !== undefined) {
+      if (option !== rform.questions[index].options && localSave === true) {
         setOption(rform.questions[index].options);
       }
     }
@@ -39,21 +40,23 @@ export function MultipleChoiceEdit(props) {
 
   //auto save
   useEffect(() => {
-    if(saved === "SAVING" && localSave === false  || saved === "FAILED" && localSave === false){
+    if (
+      (saved === "SAVING" && localSave === false) ||
+      (saved === "FAILED" && localSave === false)
+    ) {
       const getData = setTimeout(() => {
         var tempForm = JSON.parse(JSON.stringify(rform));
         tempForm.questions[index].options = option;
         dispatch(updateForm(tempForm));
-        if(saved !== "FAILED")
-          setLocalSave(true);
+        if (saved !== "FAILED") setLocalSave(true);
       }, 1000);
       return () => clearTimeout(getData);
     }
   }, [option, saved]);
 
   function handleOptionText(value, j) {
-    if(saved === "SAVED"){
-        dispatch(setSaving());
+    if (saved === "SAVED") {
+      dispatch(setSaving());
     }
     var temp = JSON.parse(JSON.stringify(option));
     temp[j].optionText = value;
@@ -62,7 +65,7 @@ export function MultipleChoiceEdit(props) {
   }
 
   function handleOptionDelete(j) {
-    if(saved === "SAVED"){
+    if (saved === "SAVED") {
       dispatch(setSaving());
     }
 
@@ -76,7 +79,7 @@ export function MultipleChoiceEdit(props) {
   }
 
   function handleOptionAdd() {
-    if(saved === "SAVED"){
+    if (saved === "SAVED") {
       dispatch(setSaving());
     }
 
@@ -89,7 +92,6 @@ export function MultipleChoiceEdit(props) {
     setOption(temp);
 
     setLocalSave(false);
-
 
     // let i = index;
     // let j = option.length - 1;
@@ -168,31 +170,31 @@ export function MultipleChoice(props) {
     (state) => state.forms.form.questions[index].options
   );
 
-  const reduxResponse = useSelector((state) => state.responses.feedback?.response);
+  const reduxResponse = useSelector(
+    (state) => state.responses.feedback?.response
+  );
   const reduxFeedback = useSelector((state) => state.responses.feedback);
   const dispatch = useDispatch();
 
   useEffect(() => {
     if (reduxResponse !== undefined) {
-      setAnswer({ text: reduxResponse[index].answer[0]?.text, optionID: reduxResponse[index].answer[0]?.optionID});
+      setAnswer({
+        text: reduxResponse[index].answer[0]?.text,
+        optionID: reduxResponse[index].answer[0]?.optionID,
+      });
     }
   }, [reduxResponse]);
 
-  // function handleAnswer(value) {
-  //   setAnswer([{ text: value, optionId: value }]);
-  // }
-
   //handle answer
   const handleAnswer = (value) => {
-    var select = option.find((op) => op._id === value)
+    var select = option.find((op) => op._id === value);
     var temp = {
       text: select.optionText,
       optionID: select._id,
-    }
+    };
 
     var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
     tempFeedback.response[index].answer = [temp];
-
 
     dispatch(updateResponse(tempFeedback));
     // setAnswer(temp);
@@ -211,7 +213,16 @@ export function MultipleChoice(props) {
       }}
     >
       <Typography variant="subtitle1" style={{ marginLeft: "0px" }}>
-        {question.questionText}
+        <Stack direction="row">
+          {question.questionText}
+          {question.required ? (
+            <Typography color="error" ml={1}>
+              *
+            </Typography>
+          ) : (
+            ""
+          )}
+        </Stack>
       </Typography>
       {question.questionImage !== "" ? (
         <div>
@@ -223,7 +234,10 @@ export function MultipleChoice(props) {
         ""
       )}
       <FormControl sx={{ mt: "6px" }}>
-        <RadioGroup value={answer.optionID? answer.optionID : ""} onChange={(e) => handleAnswer(e.target.value)}>
+        <RadioGroup
+          value={answer.optionID ? answer.optionID : ""}
+          onChange={(e) => handleAnswer(e.target.value)}
+        >
           {option?.map((op, i) => (
             <FormControlLabel
               disabled={disable}
