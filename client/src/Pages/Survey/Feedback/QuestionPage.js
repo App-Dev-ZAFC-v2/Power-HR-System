@@ -23,6 +23,7 @@ import ErrorIcon from '@mui/icons-material/Error';
 
 function QuestionPage(props) {
   const [canAnswer, setCanAnswer] = useState(true);
+  const [submit, setSubmit] = useState(false);
 
   //redux
   const form = useSelector((state) => state.forms.form);
@@ -44,29 +45,50 @@ function QuestionPage(props) {
     dispatch(getResponse({ formID, employeeID }));
   }, []);
 
-  // //auto save
-  // useEffect(() => {
-  //   if (feedback.length > 0 && saved === false) {
-  //     const getData = setTimeout(() => {
-  //       dispatch(updateResponse({ feedback, employeeID, formID: id }));
-  //     }, 1000);
-  //     return () => clearTimeout(getData);
-  //   }
-  // }, [feedback]);
-
-
   useEffect(() => {
-    if(form?.questions?.length > rfeedback?.response?.length){
-      if (form?.questions?.length > 0) {
-        var temp = [];
-        for (var i = 0; i < form?.questions?.length; i++) {
-          temp.push({
-            questionID: form.questions[i]._id,
-            answer: [{text: "",
-            optionID: ""}],
-          });
-        }
+    if(count === 0){
+      var temp = [];
+      for (var i = 0; i < form?.questions?.length; i++) {
+        temp.push({
+          questionID: form.questions[i]._id,
+          answer: [{text: "",
+          optionID: ""}],
+        });
+      }
+      
+      var tempFeedback ={
+        response: temp,
+        employeeID: employeeID,
+        formID: id,
+      }
+      dispatch(createResponse(tempFeedback));
 
+    }
+    else if(count >= 1){
+      if(count > 1 && form.once === true){
+        setCanAnswer(false);
+        return;
+      }
+
+      var temp = [];
+      for (var i = 0; i < form?.questions?.length; i++) {
+        temp.push({
+          questionID: form.questions[i]._id,
+          answer: [{text: "",
+          optionID: ""}],
+        });
+      }
+
+      if(rfeedback._id === undefined){
+        console.log("create");
+        var tempFeedback ={
+          response: temp,
+          employeeID: employeeID,
+          formID: id,
+        }
+        dispatch(createResponse(tempFeedback));
+      }
+      else{
         for (var i = 0; i < form.questions.length; i++) {
           for (var j = 0; j < temp.length; j++) {
             if (rfeedback?.response[i]?.questionID === temp[j]?.questionID) {
@@ -75,29 +97,18 @@ function QuestionPage(props) {
             }
           }
         }
-        // console.log(response)
-        if(rfeedback._id === undefined){
-          if(count > 1 && form.once === true){
-            setCanAnswer(false);
-          }
-          else{
-            console.log("create");
-            //dispatch(createResponse({ feedback: temp, employeeID, formID: id }));
-          }
+
+        var tempFeedback ={
+          response: temp,
+          employeeID: employeeID,
+          formID: id,
+          _id: rfeedback._id
         }
-        else{
-          var tempFeedback ={
-            response: temp,
-            employeeID: employeeID,
-            formID: id,
-            _id: rfeedback._id
-          }
-          dispatch(updateResponse(tempFeedback));
-        }
-        
+        dispatch(updateResponse(tempFeedback));
       }
     }
-  }, [rfeedback]);
+  }, [count]);
+
 
   const handleClear = () => {
     var temp = [];
@@ -122,13 +133,32 @@ function QuestionPage(props) {
 
   }
 
+  const handleSubmit = () => {
+    var temp = JSON.parse(JSON.stringify(rfeedback));
+
+    //check if all questions are answered based on question required
+    for (var i = 0; i < form.questions.length; i++) {
+      if(form.questions[i].required === true){
+        if(temp.response[i].answer[0].text === ""){
+          alert("Please answer all required questions");
+          return;
+        }
+      }
+    }
+
+    temp.draft = false;
+    dispatch(updateResponse(temp));
+    setSubmit(true);
+  }
+
 
 
   return (
     <>
       <Navbar />
       {form?.published ? (<>
-      {!canAnswer? "You have already answered this form" : (<>
+      {!submit? 
+      !canAnswer? "You have already answered this form" : (<>
         <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
             <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
                 {(saved === "SAVING")? 
@@ -193,7 +223,7 @@ function QuestionPage(props) {
           );
         })}
         <Grid m={2} p={2}>
-          <Button variant="contained" color="success" sx={{ mt: 2 }}>
+          <Button onClick={handleSubmit} variant="contained" color="success" sx={{ mt: 2 }}>
             Submit
           </Button>
           <Button onClick={handleClear} variant="contained" color="error" sx={{ mt: 2, ml: 2 }}>
@@ -201,7 +231,14 @@ function QuestionPage(props) {
           </Button>
         </Grid>
       </Container>
-      </>)}</>) : formload? "Loading..." : "This form is closed"}
+      </>)
+      : <Container maxWidth="md" sx={{ my: 4 }}>
+          <Typography variant="h4" sx={{mt: 4}}>Thank you for your response!</Typography>
+          {!form.once? <Button onClick={() => {window.location.reload(true)}} variant="contained" color="success" sx={{ mt: 2 }}>
+            New response
+          </Button> : ""}
+        </Container>}
+      </>) : formload? "Loading..." : "This form is closed"}
     </>
   );
 }

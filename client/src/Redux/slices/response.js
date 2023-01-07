@@ -6,7 +6,7 @@ const initialState = {
   feedback: [],
   loading: false,
   saved: "SAVED",
-  count: 0,
+  count: -1,
 };
 
 export const createResponse = createAsyncThunk(
@@ -58,6 +58,7 @@ const responseSlice = createSlice({
 
       .addCase(createResponse.fulfilled, (state, action) => {
         state.feedback = action.payload;
+        state.count = state.count + 1;
         state.saved = true;
       })
       .addCase(getAllResponse.fulfilled, (state, action) => {
@@ -65,6 +66,13 @@ const responseSlice = createSlice({
         state.loading = false;
       })
       .addCase(getResponse.fulfilled, (state, action) => {
+
+        if(action.payload.length === 0){
+          state.feedback = [];
+          state.count = 0;
+          state.loading = false;
+          return;
+        }
 
         var temp = new Date(action.payload[0].date);
         var index = 0;
@@ -81,7 +89,7 @@ const responseSlice = createSlice({
         if(action.payload[index].draft === true){
           state.feedback = action.payload[index];
         }
-
+        
         state.loading = false;
       })
       .addCase(getResponseByFormID.fulfilled, (state, action) => {
