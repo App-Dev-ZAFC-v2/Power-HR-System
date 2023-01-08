@@ -12,6 +12,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 import { setSaving, updateForm } from "../../../../Redux/slices/form";
 import { useState, useEffect } from "react";
+import { updateResponse } from "../../../../Redux/slices/response";
 
 export function CheckBoxEdit(props) {
   const { index } = props;
@@ -161,6 +162,54 @@ export function CheckBox(props) {
     (state) => state.forms.form.questions[index].options
   );
 
+  const reduxResponse = useSelector(
+    (state) => state.responses.feedback?.response
+  );
+  const reduxFeedback = useSelector((state) => state.responses.feedback);
+  const dispatch = useDispatch();
+
+  const [check, setChecked] = useState([]);
+
+  useEffect(() => {
+    var temp = [];
+    if (reduxResponse !== undefined) {
+      for (let i = 0; i < option.length; i++) {
+        if(reduxResponse[index].answer !== undefined){
+          var temp1 = reduxResponse[index].answer.find(
+            (ans) => ans.optionID === option[i]._id
+          );
+          if (temp1 !== undefined) {
+            temp.push(true);
+          } else {
+            temp.push(false);
+          }
+        }
+      }
+      setChecked(temp);
+    }
+  }, [reduxResponse]);
+
+
+
+  const handleChange = (e, i) => {
+    var temp = JSON.parse(JSON.stringify(check));
+    temp[i] = e.target.checked;
+    setChecked(temp);
+    var tempAnswer = [];
+    for (let i = 0; i < option.length; i++) {
+      if (temp[i] === true) {
+        tempAnswer.push({
+          optionID: option[i]._id,
+          text: option[i].optionText,
+        });
+      }
+    }
+    var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
+    tempFeedback.response[index].answer = tempAnswer;
+    dispatch(updateResponse(tempFeedback));
+  };
+
+
   return (
     <div
       style={{
@@ -194,12 +243,13 @@ export function CheckBox(props) {
       ) : (
         ""
       )}
-      <FormControl sx={{ mt: "6px" }}>
+
+      <FormControl sx={{ mt: "6px"}} >
         {option?.map((op, i) => (
           <FormControlLabel
             disabled={disable}
             value={op._id}
-            control={<Checkbox style={{ marginRight: "3px" }} />}
+            control={<Checkbox checked={check[i] || false} style={{ marginRight: "3px" }} onChange={(e) => handleChange(e,i)}/>}
             label={
               <Typography style={{ color: "#000000" }}>
                 {op.optionText}
