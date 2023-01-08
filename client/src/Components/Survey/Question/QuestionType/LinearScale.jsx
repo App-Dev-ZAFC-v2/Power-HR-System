@@ -167,7 +167,7 @@ export function LinearScale(props) {
     (state) => state.forms.form.questions[index].options
   );
 
-  const [answer, setAnswer] = useState({ optioID: "", scale: 0 });
+  const [answer, setAnswer] = useState("");
 
   const reduxResponse = useSelector(
     (state) => state?.responses.feedback?.response
@@ -178,20 +178,16 @@ export function LinearScale(props) {
 
   useEffect(() => {
     if (reduxResponse !== undefined) {
-      setAnswer({
-        optionID: reduxResponse[index]?.answer[0]?.optionID,
-        scale: reduxResponse[index]?.answer[0]?.scale,
-      });
+      setAnswer(reduxResponse[index]?.answer[0]?.optionID);
     }
   }, [reduxResponse]);
 
   const handleAnswer = (value) => {
-    var selectedOption = option.find((op) => op.optionScale === value);
-    var temp = { optionID: selectedOption?.optionID, scale: value };
+    setAnswer(value);
     var tempFeedback = JSON.parse(JSON.stringify(reduxFeedback));
-    tempFeedback.response[index].answer[0] = temp;
+    tempFeedback.response[index].answer[0].optionID = value;
 
-    dispatch(updateResponse(index));
+    dispatch(updateResponse(tempFeedback));
   };
 
   const list = [];
@@ -261,8 +257,8 @@ export function LinearScale(props) {
             row
             aria-label="position"
             name="position"
-            defaultValue="top"
-            value={answer.scale}
+            defaultValue=""
+            value={answer}
             onChange={(e) => handleAnswer(e.target.value)}
           >
             {list}

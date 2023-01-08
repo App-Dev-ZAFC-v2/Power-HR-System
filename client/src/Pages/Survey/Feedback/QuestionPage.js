@@ -160,7 +160,18 @@ function QuestionPage(props) {
         <>
           {!submit ? (
             !canAnswer ? (
-              "You have already answered this form"
+              <Container
+                maxWidth="md"
+                style={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "column",
+                  marginTop: "24px",
+                }}
+              >
+                "You have already answered this form"
+              </Container>
             ) : (
               <>
                 <Box
