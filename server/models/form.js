@@ -7,6 +7,11 @@ const formSchema = mongoose.Schema({
         ref: 'Admin'
     },
 
+    collaborator: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Admin'
+    }],
+
     name: String,
 
     description:{type: String, default: "No description"},
@@ -19,13 +24,30 @@ const formSchema = mongoose.Schema({
         options: [{
             optionText: String,
             optionImage: {type: String, default: ""},
+            optionScale: {type: Number, default: 0},
         }],
     }],
 
     once:{
         type: Boolean,
         default: false,
-    }
+    },
+
+    published: {
+        type: Boolean,
+        default: false,
+    },
+
+    dueDate: {
+        active: {type: Boolean, default: false},
+        date: {type: String, default: ""},
+    },
+
+    requiredAll: {
+        type: Boolean,
+        default: false,
+    },
+
 });
 
 const Form = mongoose.model("Form", formSchema);

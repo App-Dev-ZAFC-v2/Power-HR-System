@@ -6,6 +6,16 @@ const adminSchema = mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
+
+    name: String,
+
+    notification: [{
+        subject: String,
+        message: String,
+        link: {type: String, default: ""},
+        read: {type: Boolean, default: false},
+        date: {type: Date, default: Date.now},
+    }],
 });
 
 const Admin = mongoose.model("Admin", adminSchema);

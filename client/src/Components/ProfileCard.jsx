@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import axios from 'axios';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
@@ -7,27 +6,28 @@ import Typography from '@mui/material/Typography';
 import photo from "../Assets/default.png";
 import { Grid } from '@mui/material';
 import bg from '../Assets/BackgroundProfile/Cloudy.png'
+import { useSelector } from 'react-redux';
 
 export default function ProfileCard() {
 
-    const [user, setUser] = useState([]);
-    const token = localStorage.getItem('authToken');
-    
-    // FIND BETTER WAY TO DO THIS
-    const userType = JSON.parse(atob(token.split('.')[1])).userType;
-    // const userId = JSON.parse(atob(token.split('.')[1])).UserId;
-    const detailId = JSON.parse(atob(token.split('.')[1])).detailId;
+    const [user, setUser] = useState();
+
+    const employee = useSelector((state) => state.employees.employee);
+    const applicant = useSelector((state) => state.applicants.applicant);
+    const admin = useSelector((state) => state.admins.admin);
 
     useEffect(() => {
-      (userType === 0 ? axios.get(`http://localhost:5000/applicants/${detailId}/`) :
-        axios.get(`http://localhost:5000/employees/${detailId}/`))
-        .then(res => {
-            setUser(res.data);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-    })
+      setUser(employee);
+    }, [employee]);
+
+    useEffect(() => {
+      setUser(applicant);
+    }, [applicant]);
+
+    useEffect(() => {
+      setUser(admin);
+    }, [admin]);
+
 
 
   return (

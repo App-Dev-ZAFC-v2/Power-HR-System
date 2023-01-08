@@ -22,14 +22,40 @@ export const getFormByID = async (req, res) =>{
     }
 }
 
+export const getFormsByUser = async (req, res) =>{
+    try{
+        const { userID } = req.params;
+        const form = await FormModel.find({createdBy: userID});
+        res.status(200).json(form);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getFormsByCollaborator = async (req, res) =>{
+    try{
+        const { userID } = req.params;
+        const form = await FormModel.find({collaborator: userID});
+        res.status(200).json(form);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
+export const getFormsByPublished = async (req, res) =>{
+    try{
+        const form = await FormModel
+            .find({published: true})
+            // .where('dueDate').gt(new Date());
+        res.status(200).json(form);
+    } catch (error) {
+        res.status(404).json({ message: error.message });
+    }
+}
+
 export const createForm = async (req, res) => {
     try{
-        const data = {
-            createdBy : req.body.createdBy,
-            name: req.body.name,
-            description: req.body.description
-        }
-
+        const data = req.body;
         const newForm = new FormModel(data);
         await newForm.save();
         res.status(201).json(newForm);
@@ -52,9 +78,15 @@ export const updateForm = async (req, res) => {
     try {
         const {id } = req.params;
         const data = {
+            createdBy : req.body.createdBy,
+            collaborator: req.body.collaborator,
             name: req.body.name,
             description: req.body.description,
-            questions: req.body.questions
+            questions: req.body.questions,
+            once: req.body.once,
+            published: req.body.published,
+            dueDate: req.body.dueDate,
+            requiredAll: req.body.requiredAll,
         } 
 
         if(!mongoose.Types.ObjectId.isValid(id))

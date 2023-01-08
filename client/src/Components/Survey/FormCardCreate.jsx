@@ -35,12 +35,15 @@ function FormCardCreate() {
                 questionType: "Multiple Choice",
                 questionImage: "",
                 required: false,
-                options: [{optionText: "Option 1", optionImage: ""}]
-            }]
-        }
+                options: [{optionText: "Option 1", optionImage: ""}],
+                openView: false,
+            }],
+            once: false,
+        };
         
         if(form.name !==""){
             formAPI.createForm(form).then((newForm) => {
+                console.log(newForm);
                 window.open('/form/edit-form/' + newForm._id);
             })
             handleClose();

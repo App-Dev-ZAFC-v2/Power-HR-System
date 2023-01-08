@@ -1,436 +1,407 @@
-import { useEffect, useRef, useState} from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useParams } from 'react-router-dom';
+import { addQuestion, getFormByID, setSaving, updateForm } from '../../../Redux/slices/form';
+import { useCallback, useEffect, useState } from 'react';
 import Navbar from '../../../Components/Navbar';
-import FormAPI from '../../../API/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Box, Button, Divider, Fab, FormControl, FormControlLabel, Grid, IconButton, LinearProgress, MenuItem, Paper, Radio, Select, TextField, Typography  } from '@mui/material';
-import { Container } from '@mui/system';
-import FormBar from '../../../Components/Survey/FormBar';
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
-import CloseIcon from '@mui/icons-material/Close';
-import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { Box, Container, Grid, Accordion, AccordionSummary, AccordionDetails, TextField, Tabs, Tab, Paper, Fab, Typography, Switch, Icon, IconButton, AvatarGroup, Avatar, Tooltip} from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import CheckBoxIcon from '@mui/icons-material/CheckBox';
-import ArrowDropDownCircleIcon from '@mui/icons-material/ArrowDropDownCircle';
-import LinearScaleIcon from '@mui/icons-material/LinearScale';
-import ShortTextIcon from '@mui/icons-material/ShortText';
-import SubjectIcon from '@mui/icons-material/Subject';
 import SaveIcon from '@mui/icons-material/Save';
-import Question from '../../../Components/Survey/Question';
-
+import QuestionList from '../../../Components/Survey/Question/QuestionList';
+import dayjs from 'dayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { DateTimePicker } from '@mui/x-date-pickers/DateTimePicker';
+import ArrowBackIosRoundedIcon from '@mui/icons-material/ArrowBackIosRounded';
+import BackupRoundedIcon from '@mui/icons-material/BackupRounded';
+import CloudDoneRoundedIcon from '@mui/icons-material/CloudDoneRounded';
+import ErrorIcon from '@mui/icons-material/Error';
+import Collab from '../../../Components/Survey/Question/Collab';
+import Response from '../../../Components/Survey/Response/Response';
+import { getAdmins } from '../../../Redux/slices/admin';
+import { DashboardLayout } from '../../../Components/Admin/Dashboard/dashboard-layout';
+import QuestionPageReview from '../../../Components/Survey/Question/QuestionPageReview';
 
 
 function EditForm(){
-    const scrollRef = useRef(null);
-    const [questions, setQuestions] = useState([]);
-    const [open, setOpen] = useState([]);
-    const [openBar, setOpenBar] = useState(true);
-    const [form, setForm] = useState({});
-    const [loadingForm, setLoading] = useState(true);
     const { id } = useParams();
-    const [save, setSave] = useState(true);
-    const [bottom, setBottom] = useState(false);
-    
-    var timer = null;
+    const token = localStorage.getItem("authToken");
+    const adminId = JSON.parse(atob(token.split(".")[1])).detailId;
+    //Redux
+    const rform = useSelector(state => state.forms.form);
+    // const loading = useSelector(state => state.forms.loading);
+    const saved = useSelector(state => state.forms.saved);
 
-    const SavingState = Object.freeze({
-        NOT_SAVED: 0,
-        SAVING: 1,
-        SAVED: 2
-    })
+    const dispatch = useDispatch();
 
-    const [savingState, setSavingState] = useState(SavingState.SAVED);
-
-    useEffect(()=>{
-        FormAPI.getFormByID(id)
-        .then((data) => {
-            setQuestions(data.questions)
-            var tempOpen = [...open];
-            for (let i = 0; i < data.questions.length; i++) {
-                tempOpen.push(false);
-            }
-            setOpen(tempOpen);
-            setForm(data);
-            setLoading(false);
-        })
-        .catch(err => {
-            console.log(err);
-        })
-
-    }, [])
+    const retrieveForm = useCallback(() => {
+        dispatch(getFormByID(id));
+    }, [dispatch]);
 
     useEffect(() => {
-        if (scrollRef.current) {
-          scrollRef.current.scrollIntoView({ behaviour: "smooth" });
-        }
-    }, [questions]);
+        retrieveForm();
+    }, [retrieveForm]);
 
-    async function onDragEnd(result) {
-        setBottom(false);
-        if (!result.destination) {
-          return;
-        }
-        var tempOneQuestion = [...questions];
-      
-        const tempQuestion = await reorder(
-            tempOneQuestion,
-            result.source.index,
-            result.destination.index
-        );
+    const retrieveAdmins = useCallback(() => {
+        dispatch(getAdmins());
+      }, [dispatch]);
+    
+    useEffect(() => {
+        retrieveAdmins();
+    }, [retrieveAdmins]);
+    
+    const [tab, setTab] = useState(0);
+    const [form, setForm] = useState([]);
+    const [user, setUser] = useState([]);
+    const [permission, setPermission] = useState(false);
+    const [localSave, setLocalSave] = useState(true);
 
-        var tempOpen = [...open];
+    
 
-        if((tempOpen[result.destination.index] === false && tempOpen[result.source.index] === true) || (tempOpen[result.destination.index] === true && tempOpen[result.source.index] === false)){
-            var swapOpen = tempOpen[result.destination.index];
-            tempOpen[result.destination.index] = tempOpen[result.source.index];
-            tempOpen[result.source.index] = swapOpen;
-        }
-        else if((tempOpen[result.destination.index] === false && tempOpen[result.source.index] === false)){
-            for(let i = 0; i < tempOpen.length; i++){
-                if(tempOpen[i] === true){
-                    tempOpen[i] = false;
-                    tempOpen[i-1] = true;
-                }
+
+    useEffect(() => {
+        if(form !== "" && form !== rform)
+            setForm(rform);
+    }, [rform]);
+
+    // useEffect(() => {
+    //     if(saved !== "" && saved !== rsaved)
+    //         setSaved(rsaved);
+    // }, [rsaved]);
+
+    //set permission if user is owner or collaborator
+    useEffect(() => {
+        if(rform.length !== 0){
+            if(rform.createdBy === adminId){
+                setPermission(true);
             }
+            else{
+                rform?.collaborator.forEach(collab => {
+                    if(collab === adminId){
+                        setPermission(true);
+                    }
+                });
+            }
+        }
+    }, [rform]);
+
+    const handleTab = (event, newValue) => {
+        // window.history.replaceState(null, null, `/form/edit-form/${id}/${newValue}`);
+        setTab(newValue);
+    };
+
+    const handleName = (value) => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+
+        setForm({...form, name: value});
+        setLocalSave(false);
+    }
+
+    const handleDescription = (value) => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        setForm({...form, description: value});
+        setLocalSave(false);
+    }
+
+    useEffect(() => {
+        if((form !== "" && form !== rform) || (saved === "SAVING" && localSave === false || saved === "FAILED" && localSave === false)){
+            const getData = setTimeout(() => {
+            dispatch(updateForm(form));
+            if(saved !== "FAILED")
+                setLocalSave(true);
+            }, 2000)
+            return () => clearTimeout(getData)
+        }
+      }, [form, dispatch, rform, saved]);
+
+    const handleAddQuestion = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+
+        // var tempQuestions = JSON.parse(JSON.stringify(form.questions));
+        // tempQuestions.push({
+        //     questionText: "Untitled Question " + (tempQuestions.length + 1),
+        //     questionType: "Multiple Choice",
+        //     questionImage: "",
+        //     required: false,
+        //     options: [{optionText: "Option 1", optionImage: ""}],
+        //     openView: true,
+        // })
+
+        // setForm({...form, questions: tempQuestions});
+        
+        var length = form.questions.length;
+        var required = form.requiredAll;
+        dispatch(addQuestion({length, required}));
+        setLocalSave(false);
+    }
+
+    const handleLimit = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        setForm({...form, once: !form.once});
+        setLocalSave(false);
+    }
+
+    const handleAllRequired = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            
         }
         
-        setOpen(tempOpen);
-        setQuestions(tempQuestion);
-        setSave(false);
-    };
-
-     const reorder = async (list, startIndex, endIndex) => {
-        const result = Array.from(list);
-        const [removed] = result.splice(startIndex, 1);
-        result.splice(endIndex, 0, removed);
-        return result;
-    };
-
-    function handleExpand(i){
-        var tempOpen = [...open];
-        for (let j = 0; j < tempOpen.length; j++) {
-            if(i === j ){
-                tempOpen[j] = true;
-            }else{
-                tempOpen[j] = false;
-            }
-        }
-        setOpen(tempOpen);
-        setOpenBar(false);
-    }
-
-    function handleExpandBar(){
-        var tempOpen = [...open];
-        for (let j = 0; j < tempOpen.length; j++) {
-            tempOpen[j] = false;
-        }
-        setOpen(tempOpen);
-        setOpenBar(true);
-    }
-
-    function handleQuestionValue(qtext, i){
-        setBottom(false);
-        var tempQuestion = [...questions];
-        tempQuestion[i].questionText = qtext;
-        setQuestions(tempQuestion)
-        setSave(false);
-    }
-
-    function handleOptionValue(otext,i, j){
-        setBottom(false);
-        var tempQuestion = [...questions];
-        tempQuestion[i].options[j].optionText = otext;
-        setQuestions(tempQuestion)
-        setSave(false);
-    }
-
-    function handleNameValue(textname){
-        setBottom(false);
-        var tempForm = form;
-        tempForm.name = textname;
-        setForm(tempForm)
-        setSave(false);
-    }
-
-    function handleDescriptionValue(textdescription){
-        setBottom(false);
-        var tempForm = form;
-        tempForm.description = textdescription;
-        setForm(tempForm)
-        setSave(false);
-    }
-
-    function removeOption(i, j){
-        setBottom(false);
-        var tempQuestion = [...questions];
-        if(tempQuestion[i].options.length > 1){
-            tempQuestion[i].options.splice(j, 1);
-            setQuestions(tempQuestion)
-            setSave(false);
-        }  
-    }
-
-    function addOption(i){
-        setBottom(false);
-        var tempQuestion = [...questions];
-        tempQuestion[i].options.push({optionText: "Option " + (tempQuestion[i].options.length + 1), optionImage: ""});
-        setQuestions(tempQuestion);
-        setSave(false);
-    }
-
-    function addMoreQuestion(){
-        var tempQuestion = [...questions];
-        var tempOpen = [...open];
-
-        for (let j = 0; j < tempOpen.length; j++) {  
-            tempOpen[j] = false;
-        }
-
-        tempQuestion.push({
-            questionText: "Untitled Question " + (tempQuestion.length + 1),
-            questionType: "Multiple Choice",
-            questionImage: "",
-            required: false,
-            options: [{optionText: "Option 1", optionImage: ""}]
-        })
-        tempOpen.push(true);
-        setOpen(tempOpen);
-        setQuestions(tempQuestion);
-        setSave(false);
-        setBottom(true);
-    }
-
-    function deleteQuestion(i){
-        setBottom(false);
-        var tempQuestion = [...questions];
-        var tempOpen = [...open];
-        if(questions.length > 1){
-            tempQuestion.splice(i, 1);
-            tempOpen.splice(i,1);
-        }
-        if(i === 0){
-            tempOpen[i] = true;
+        if(!form.requiredAll === true){
+            var formTemp = JSON.parse(JSON.stringify(form));
+            formTemp.requiredAll = !form.requiredAll;
+            //set all question required to true
+            formTemp.questions.forEach(question => {
+                question.required = true;
+            });
+            setForm(formTemp);
         }
         else{
-            tempOpen[i-1] = true;
+            setForm({...form, requiredAll: !form.requiredAll});
         }
-        
-        setQuestions(tempQuestion);
-        setOpen(tempOpen);
-        setSave(false);
+        setLocalSave(false);
     }
 
-    function saveForm(){
-        var data = {
-          name: form.name,
-          description: form.description,
-          questions: questions
+    const handlePublished = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+            
         }
-        setLoading(true);
-        FormAPI.updateForm(id, data)
-        .then((result) => {     
-             setQuestions(result.questions);
-             setLoading(false);
-             setSave(true);
-            },
-        ).catch(err => {console.log(err)});
+        if(!form.published === false){
+            var date = {
+                active: false,
+                date: "",
+            }
+            setForm({...form, published: !form.published, dueDate: date});
+        }
+        else
+            setForm({...form, published: !form.published});
 
-        // clearTimeout(timer);
-        // setSavingState(SavingState.NOT_SAVED);
-        // timer = setTimeout(() => {
-        //     setSavingState(SavingState.SAVING);
-        //     FormAPI.updateForm(id, data).then((result) => {
-        //         setQuestions(result.questions);
-        //         setForm(result);
-        //         setLoading(false);
-        //         setSavingState(SavingState.SAVED);
-        //     }).catch(err => {console.log(err)})
-        // }, 10000);
+        setLocalSave(false);
     }
 
-    // function saveState(){
-    //     if(savingState === SavingState.SAVED){
-    //         return <Typography variant='subtitle' style={{color: "green"}}>Saved</Typography>
-    //     }else{
-    //         return <Typography variant='subtitle' style={{color: "blue"}}>Saving...</Typography>
+    const handleDueDateActive = () => {
+        if(saved === "SAVED"){
+            dispatch(setSaving());
+        }
+        var date ={
+            active: !form.dueDate.active,
+            date: dayjs(),
+        }
+        setForm({...form, dueDate: date});
+
+        setLocalSave(false);
+    }
+
+    const handleDueDate = (e) => {
+        if(saved === "SAVED"){
+            setLocalSave(false);
+        }
+        setForm({...form, dueDate: e});
+        setLocalSave(false);
+    }
+
+    function HandleAvatar(){
+        return user.map((u) => (
+            <Tooltip title={u.name}>
+                <Avatar key={u.name} alt={u.name} src={u.avatar} />
+            </Tooltip>
+        ));
+    }   
+
+    // const handleSave = () => {
+    //     if(saved === "SAVED"){
+    //         dispatch(setSaving());
+    //         setLocalSave(false);
     //     }
+    //     dispatch(updateForm(rform));
     // }
 
 
-    function question(){
-        return questions.map((q, i) => (
-            <Draggable key={i} draggableId={i + " id"} index={i}>
-                {(provided) => (
-                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                        <div>
-                            <div style={{marginTop: "15px"}}>
-                                <Accordion onChange={()=>{handleExpand(i)}} expanded={open[i] || false}>
-                                    <AccordionSummary aria-controls="panel1a-content" id="panel1a-header" elevation={1} style={{width:'100%'}}>
-                                        { !open[i]? (
-                                            <>
-                                                <div style={{display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "12px"}}>
-                                                    <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
-                                                </div>
-                                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '15px', paddingBottom: '15px' }}>
-                                                    <Typography variant="subtitle1" style={{ marginLeft: '0px' }}>{q.questionText}</Typography>
-                                                    {(q.questionImage !== "") ? (
-                                                        <div>
-                                                            <img src={q.questionImage} width="400px" height="auto" /><br></br><br></br>
-                                                        </div>
-                                                    ) : ""}
-
-                                                    {q.options.map((op, j) => (
-                                                        <div key={j}>
-                                                            <div style={{ display: 'flex' }}>
-                                                                <FormControlLabel disabled control={<Radio style={{ marginRight: '3px', }} />} label={<Typography style={{ color: '#555555' }}>
-                                                                    {op.optionText}
-                                                                </Typography>} />
-                                                            </div>
-
-                                                            <div>
-                                                                {(op.optionImage !== "") ? (
-                                                                    <img src={op.optionImage} width="160px" height="auto" />
-                                                                ) : ""}
-                                                            </div>
-                                                        </div>
-                                                    ))}
-                                                </div></>
-                                        ): ""}
-                                    </AccordionSummary>
-
-                                    <AccordionDetails >
-                                        <div style={{display: "flex"}}>
-                                            <div style={{display: "flex", justifyContent: "center", alignItems: "center", paddingRight: "12px"}}>
-                                                    <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
-                                            </div>
-                                            <div style={{display: 'flex',flexDirection:'column', alignItems:'flex-start', marginTop:'-15px', width: '100%'}}>
-                                                <div style={{display:'flex', width: '100%', justifyContent: 'space-between'}}>
-                                                    <TextField 
-                                                            fullWidth={true} 
-                                                            placeholder="Question Text" 
-                                                            rowsmax={20}
-                                                            multiline={true}
-                                                            value={q.questionText}
-                                                            variant="filled"
-                                                            sx={{m: 1}}
-                                                        onChange={(e)=>{handleQuestionValue(e.target.value, i)}}
-                                                    />
-                                                    <FormControl sx={{ m: 1, minWidth: 230 }} >
-                                                        <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} >
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{mr: "6px"}}/> Short answer</MenuItem>
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Paragraph"}> <SubjectIcon sx={{mr: "6px"}}/> Paragraph</MenuItem>
-                                                            <Divider sx={{ borderBottomWidth: 2, bgcolor: "black"}}/>
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Multiple Choice"}> <RadioButtonCheckedIcon sx={{mr: "6px"}}/> Multiple choice</MenuItem>
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Checkboxes"}> <CheckBoxIcon sx={{mr: "6px"}}/> Checkboxes</MenuItem>
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Drop-down"}> <ArrowDropDownCircleIcon sx={{mr: "6px"}}/> Drop-down</MenuItem>
-                                                            <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }}/>
-                                                            <MenuItem sx={{pt:"16.5px", pb:"16.5px" }} value={"Linear Scale"}> <LinearScaleIcon sx={{mr: "6px"}}/> Linear scale</MenuItem>
-                                                        </Select>
-                                                    </FormControl>
-                                                </div>
-
-                                                <div style={{width: '100%'}}>
-                                                    {q.options.map((op, j) => (
-                                                        <div key={j}>
-                                                            <div  style={{display:'flex', flexDirection:'row', marginLeft:'-12.5px', justifyContent: 'space-between', paddingTop: '5px', paddingBottom: '5px'}}>
-                                                                <Radio disabled />
-                                                                <TextField 
-                                                                    fullWidth={true} 
-                                                                    placeholder="Option text" 
-                                                                    value={op.optionText}
-                                                                    onChange={(e)=>{handleOptionValue(e.target.value, i, j)}}
-                                                                />
-                                                                {(q.options.length > 1)? (
-                                                                    <IconButton aria-label="delete" onClick={()=>{removeOption(i, j)}} sx={{ml:"12px"}}>
-                                                                        <CloseIcon sx={{m:"6px"}}/>
-                                                                    </IconButton>)
-                                                                : ""}
-                                                            </div>
-
-                                                            
-                                                        </div>
-                                                    ))}
-                                                    <div style={{display:'flex', flexDirection:'row', marginLeft:'-12.5px', paddingTop: '5px', paddingBottom: '5px'}}>
-                                                        <Radio disabled />
-                                                        <Button size="small" onClick={()=>{addOption(i)}} style={{textTransform: 'none', marginLeft:"-5px"}}>
-                                                            Add Option
-                                                        </Button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </AccordionDetails>
-                                    <AccordionActions>
-                                        {(questions.length > 1)? (
-                                            <IconButton aria-label="delete" onClick={()=>{deleteQuestion(i)}}>
-                                                <DeleteOutlineIcon />
-                                            </IconButton>): ""}               
-                                    </AccordionActions>
-                                </Accordion>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </Draggable>
-        ))
-    }
-
     return(
         <>
-            <Navbar/>
-            {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
-            <Container>
-                <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
-                    <Grid item xs={12} sm={5} sx={{ width: '100%' }}>
-                        <Grid sx={{ borderTop: '10px solid black', borderRadius: 2 }}>
-                        <Accordion onChange={handleExpandBar} expanded={openBar || false}>
-                            <AccordionSummary aria-controls="panel1a-content" id="formBar" elevation={1} style={{width:'100%'}}>
-                                { !openBar? (
-                                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', paddingTop: '15px', paddingBottom: '15px' }}>
-                                        <Typography variant="h4" sx={{ fontFamily: 'sans-serif Roboto', marginBottom: "15px" }}>{form.name}</Typography>
-                                        <Typography variant="subtitle1" style={{ marginLeft: '0px' }}>{form.description}</Typography>
-                                    </div>) : "" 
-                                }
-                            </AccordionSummary>
+        <DashboardLayout tab={"Form " + rform.name}>
+        {(permission === false && rform.length !== 0) ?
+        (<>
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                <ErrorIcon sx={{mr: 1}} />
+                <Typography variant="subtitle1">You don't have permission to edit this form</Typography>
+            </Box>
+        </Box>
+        </>) : ""}
 
-                            <AccordionDetails sx={{mt:"-48px"}}>
-                                <div style={{display:'flex', width: '100%', flexWrap: "wrap"}}>
-                                    <TextField onChange={(e)=>{handleNameValue(e.target.value)}} fullWidth={true} placeholder="Form Text" rowsmax={3} multiline={true} defaultValue={form.name} variant="standard" sx={{m: 1}} inputProps={{style: {fontSize: 40, fontFamily: 'sans-serif Roboto', lineHeight:"50px"}}} margin="normal"/>
-                                    <TextField onChange={(e)=>{handleDescriptionValue(e.target.value)}} fullWidth={true} placeholder="Form Text" rowsmax={3} multiline={true} defaultValue={form.description} variant="standard" sx={{m: 1}} inputProps={{style: {fontFamily: 'sans-serif Roboto'}}} margin="normal"/>
-                                </div>
-                            </AccordionDetails>
-                        </Accordion>
+
+
+        {(permission === true)?
+        (<>
+        <div style={{position: "-webkit-sticky", position: "sticky", top: "64px", zIndex: 1}}>
+        
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: "12" }}>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                    {(saved === "SAVING")? 
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
+                    {(saved === "SAVED")?
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
+                    {(saved === "FAILED")?
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
+                </Box>
+                <Box>
+                    <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
+                        <HandleAvatar/>
+                    </AvatarGroup>
+                </Box>
+            </Box>
+            <Box>
+                <Tabs value={tab} onChange={handleTab} centered>
+                    <Tab label="Questions" />
+                    <Tab label="Preview" />
+                    <Tab label="Settings" />
+                    <Tab label="Responses"/>
+                </Tabs>
+            </Box>
+        </Box>
+        </div>
+        {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
+        <Container>
+            {tab === 0?(
+                <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'128px' }}>
+                    <Grid item xs={12} sm={5} sx={{ width: '75%' }}>
+                        <Grid sx={{ borderTop: '10px solid black', borderRadius: 2, boxShadow: 12 }}>
+                            <Accordion expanded={true}>
+                                <AccordionSummary aria-controls="panel1a-content" id="formBar" elevation={1} style={{width:'100%'}}>
+                                </AccordionSummary>
+
+                                <AccordionDetails sx={{mt:"-48px"}}>
+                                    <div style={{display:'flex', width: '100%', flexWrap: "wrap"}}>
+                                        <TextField onChange={(e)=>{handleName(e.target.value)}} fullWidth={true} placeholder="Form Text" rowsmax={3} multiline={true} defaultValue={form.name} variant="standard" sx={{m: 1}} inputProps={{style: {fontSize: 40, fontFamily: 'sans-serif Roboto', lineHeight:"50px"}}} margin="normal"/>
+                                        <TextField onChange={(e)=>{handleDescription(e.target.value)}} fullWidth={true} placeholder="Form Description" rowsmax={3} multiline={true} defaultValue={form.description} variant="standard" sx={{m: 1}} inputProps={{style: {fontFamily: 'sans-serif Roboto'}}} margin="normal"/>
+                                    </div>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                        <QuestionList/>
                     </Grid>
-                    {/* <FormBar onChange={handleExpandBar}  dataform={form} opened={openBar}/> */}
-                    <DragDropContext onDragEnd={onDragEnd}>
-                        <Droppable droppableId="droppable">
-                            {(provided) => (
-                                <div className='droppable' {...provided.droppableProps} ref={provided.innerRef}>
-                                    {question()}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
-                        {bottom? (<div ref={scrollRef}/>) : ""}
+                    <Paper elevation={12} sx={{ position: 'fixed', bottom: 0, width: "100%"}} >
+                        {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
+                        <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
+                            <Fab variant="extended" onClick={() => {handleAddQuestion()}}>
+                                <AddIcon sx={{ mr: 1 }} />
+                                Add Question
+                            </Fab>
+                            {/* <Fab variant="extended" onClick={() => {handleSave()}} disabled={saved && true}>
+                                <SaveIcon sx={{ mr: 1 }} />
+                                {(!saved)? "Saving..." : (saved? "Saved" : "Save")}
+                            </Fab> */}
+                        </Box>
+                    </Paper>
+                </Grid>
+            ): ""}
+            {tab === 1? <QuestionPageReview/>: ""}
+            {tab === 2?(
+                <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
+                    <Grid item xs={12} sm={5} sx={{ width: '75%', boxShadow: 12  }}>
+                        <Paper sx={{p:4}}>
+                            <Box sx={{pb:4, borderBottom: 1 }}>
+                                <Typography variant='h3'>Settings</Typography>
+                            </Box>
+
+                            <Box sx={{pl: 4, pt: 4, pb:4, borderBottom: 1 }}>
+                                <Typography variant='h6'>Form</Typography>
+                                <Typography variant='h7'>Manage form setting</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Collaborators</Typography>
+                                        <Typography variant='h7'>Add others people to edit this form</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Collab/>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Publish</Typography>
+                                        <Typography variant='h7'>Make sure the form are ready to published</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Switch checked={form.published} onChange={() => {handlePublished()}}/>
+                                    </Box>
+                                </Box>
+                            </Box>
+                            
+                            <Box sx={{pl: 4, pt: 4, pb:4, borderBottom: 1 }}>
+                                <Typography variant='h6'>Responses</Typography>
+                                <Typography variant='h7'>Manage how responses are collected</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Limit to 1 response</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Switch checked={form.once} onChange={() => {handleLimit()}}/>
+                                    </Box>
+                                </Box>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Accepting responses</Typography>
+                                        <Typography variant='h7'>This will turn {!form.published? "on": "off"} publish</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Switch checked={form.published} onChange={() => {handlePublished()}}/>
+                                    </Box>
+                                </Box>
+                                {(form.published)? (
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Accepting responses until</Typography>
+                                        {(form.dueDate.active)? (
+                                            <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                                <DateTimePicker
+                                                    value={form.dueDate.date}
+                                                    onChange={(e) => {handleDueDate(e.target.value)}}
+                                                    renderInput={(params) => <TextField {...params} />}
+                                                    />
+                                            </LocalizationProvider>
+                                        ) : ""}
+                                        
+                                    </Box>
+                                    <Box>
+                                        <Switch checked={form.dueDate.active} onChange={() => {handleDueDateActive()}}/>
+                                    </Box>
+                                </Box>
+                                ): ""}
+                            </Box>
+
+                            <Box sx={{pl: 4, pt: 4}}>
+                                <Typography variant='h6'>Question defaults</Typography>
+                                <Typography variant='h7'>Settings applied to all new questions</Typography>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                    <Box>
+                                        <Typography variant='h6'>Make questions required by default</Typography>
+                                    </Box>
+                                    <Box>
+                                        <Switch checked={form.requiredAll} onChange={() => {handleAllRequired()}}/>
+                                    </Box>
+                                </Box>
+                            </Box>
+                        </Paper>
                     </Grid>
                 </Grid>
-                <Paper elevation={2} sx={{ position: 'fixed', bottom: 0, left: 0, right: 0 }} >
-                    {loadingForm ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>}
-                    <Box sx={{ '& > :not(style)': { m: 1 }}} display="flex" justifyContent="center" alignItems="center">
-                        <Fab variant="extended" onClick={addMoreQuestion}>
-                            <AddIcon sx={{ mr: 1 }} />
-                            Add Question
-                        </Fab>
-                        <Fab variant="extended" onClick={saveForm} disabled={save && true}>
-                            <SaveIcon sx={{ mr: 1 }} />
-                            {loadingForm? "Saving..." : (save? "Saved" : "Save")}
-                        </Fab>
-                    </Box>
-
-                </Paper>
-            </Container></>
+            ): ""}
+            {tab === 3?(
+                <Response/>
+            ): ""}
+        </Container>
+        
+        </>) : ""}
+        </DashboardLayout></>
     )
 }
 
