@@ -7,7 +7,8 @@ import { registerUser } from './user.js';
 
 export const getEmployees = async (req, res) => {
     try{
-        const employees = await Employee.find();
+        // find all employees where the inavtive field is not true
+        const employees = await Employee.find({ inactive: false });
         res.status(200).json(employees);
     }
     catch(error){
@@ -87,5 +88,33 @@ export const registerEmployee = async (req, res) => {
     }
     catch(error){
         res.status(500).json({ message: "Something went wrong in registering employee", error });
+    }
+}
+
+//remove employee by setting inactive to true and set inactive date to today
+export const removeEmployee = async (req, res) => {
+    const { id } = req.params;
+    try{
+        const employee = await Employee.findById(id);
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+        const updatedEmployee = await Employee.findByIdAndUpdate(id, { inactive: true, inactiveDate: Date.now() }, { new: true });
+        res.json(updatedEmployee);
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong in removing employee", error });
+    }
+}
+
+//reactivate employee by setting inactive to false and set inactive date to null
+export const reactivateEmployee = async (req, res) => {
+    const { id } = req.params;
+    try{
+        const employee = await Employee.findById(id);
+        if(!mongoose.Types.ObjectId.isValid(id)) return res.status(404).send(`No employee with id: ${id}`);
+        const updatedEmployee = await Employee.findByIdAndUpdate(id, { inactive: false, inactiveDate: null }, { new: true });
+        res.json(updatedEmployee);
+    }
+    catch(error){
+        res.status(500).json({ message: "Something went wrong in removing employee", error });
     }
 }

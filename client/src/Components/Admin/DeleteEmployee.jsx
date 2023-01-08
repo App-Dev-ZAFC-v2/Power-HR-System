@@ -5,7 +5,7 @@ import axios from 'axios';
 function DeleteEmployee(props) {
     const deleteEmployee = () => {
         console.log("in deleteEmployee");
-        axios.delete(`http://localhost:5000/employees/${props.id}`, {
+        axios.patch(`http://localhost:5000/employees/remove/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }

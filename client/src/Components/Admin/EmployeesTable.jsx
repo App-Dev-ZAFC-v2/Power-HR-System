@@ -260,8 +260,8 @@ export default function EmployeesTable() {
   
 
   const handleDelete = (id) => {
-    console.log(id);
-    axios.delete(`http://localhost:5000/employees/${id}`, {
+    // console.log(id);
+    axios.patch(`http://localhost:5000/employees/remove/${id}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -387,15 +387,15 @@ export default function EmployeesTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row?.name}
                       </TableCell>
-                      <TableCell align="left">{row.position}</TableCell>
-                      <TableCell align="left">{row.executiveRole ? "Executive": "Non-Executive"}</TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">{row.contact}</TableCell>
+                      <TableCell align="left">{row?.position}</TableCell>
+                      <TableCell align="left">{row?.executiveRole ? "Executive": "Non-Executive"}</TableCell>
+                      <TableCell align="left">{row?.email}</TableCell>
+                      <TableCell align="left">{row?.contact}</TableCell>
                       <TableCell align="left">
-                        <Button variant="primary" href={`/admin/update-employee/${row._id}`} >Edit</Button>
-                        <Button variant='danger' onClick={() => handleDelete(row._id)}>Delete</Button>
+                        <Button variant="primary" href={`/admin/update-employee/${row?._id}`} >Edit</Button>
+                        <Button variant='danger' onClick={() => handleDelete(row?._id)}>Delete</Button>
                       </TableCell>
                     </TableRow>
                   );

@@ -1,5 +1,6 @@
 import Feedback from "../models/feedback.js";
 import mongoose from "mongoose";
+import Employee from "../models/employee.js";
 
 export const getFeedbacks = async (req, res) => {
   try {
