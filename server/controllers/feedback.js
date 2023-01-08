@@ -99,3 +99,19 @@ export const getFeedbackByEmployeeID = async (req, res) => {
     res.status(404).json({ message: error.message });
   }
 };
+
+//delete response by form id
+export const deleteFeedbackByFormID = async (req, res) => {
+  const { formID } = req.params;
+  try {
+    if (!mongoose.Types.ObjectId.isValid(formID))
+      return res.status(404).send(`No form with id: ${formID}`);
+
+    await Feedback.deleteMany({ formID: formID });
+    res.json({ message: "Feedback deleted successfully." });
+
+  } catch (error) {
+    res.status(404).json({ message: error.message });
+  }
+};
+

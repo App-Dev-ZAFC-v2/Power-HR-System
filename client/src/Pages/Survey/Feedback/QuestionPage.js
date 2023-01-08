@@ -24,6 +24,7 @@ import { Typography, Container, Grid, Button, Box } from "@mui/material";
 import BackupRoundedIcon from "@mui/icons-material/BackupRounded";
 import CloudDoneRoundedIcon from "@mui/icons-material/CloudDoneRounded";
 import ErrorIcon from "@mui/icons-material/Error";
+import { DashboardLayout } from "../../../Components/Employee/Dashboard/dashboard-layout";
 
 function QuestionPage(props) {
   const [canAnswer, setCanAnswer] = useState(true);
@@ -139,7 +140,7 @@ function QuestionPage(props) {
     //check if all questions are answered based on question required
     for (var i = 0; i < form.questions.length; i++) {
       if (form.questions[i].required === true) {
-        if (temp.response[i].answer[0].text === "") {
+        if (temp.response[i].answer[0].optionID === "") {
           alert("Please answer all required questions");
           return;
         }
@@ -153,7 +154,7 @@ function QuestionPage(props) {
 
   return (
     <>
-      <Navbar />
+      <DashboardLayout tab={form?.name}>
       {loading ? (
         ""
       ) : form?.published ? (
@@ -311,35 +312,62 @@ function QuestionPage(props) {
             )
           ) : (
             <Container maxWidth="md" sx={{ my: 4 }}>
-              <Typography variant="h4" sx={{ mt: 4 }}>
+              <Grid
+                    m={2}
+                    p={2}
+                    sx={{
+                      borderTop: "10px solid black",
+                      borderRadius: 2,
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Typography variant="h4">{form?.name}</Typography>
+                    <Typography variant="body" gutterBottom>
+                      {form?.description}
+                    </Typography>
+                  </Grid>
+
+                  <Grid
+                    m={2}
+                    p={2}
+                    sx={{
+                      borderRadius: 2,
+                      boxShadow: 2,
+                    }}
+                  >
+                    <Typography variant="h4" sx={{ mt: 4 }}>
                 Thank you for your response!
               </Typography>
-              {!form.once ? (
-                <Grid>
-                  <Button
-                    onClick={() => {
-                      window.location.reload(true);
-                    }}
-                    variant="contained"
-                    color="success"
-                    sx={{ mt: 2 }}
-                  >
-                    New response
-                  </Button>
-                  <Button
-                    onClick={() => {
-                      window.location.href = "/form";
-                    }}
-                    variant="contained"
-                    color="error"
-                    sx={{ mt: 2, ml: 2 }}
-                  >
-                    Back to Feedback Survery List
-                  </Button>
-                </Grid>
-              ) : (
-                ""
-              )}
+              
+                  <Grid>
+                    {!form.once ? (
+                    <Button
+                      onClick={() => {
+                        window.location.reload(true);
+                      }}
+                      variant="contained"
+                      color="success"
+                      sx={{ mt: 2 }}
+                    >
+                      New response
+                    </Button>
+                    ) : (
+                      ""
+                    )}
+                    <Button
+                      onClick={() => {
+                        window.location.href = "/form";
+                      }}
+                      variant="contained"
+                      color="primary"
+                      sx={{ mt: 2, ml: 2 }}
+                    >
+                      Back to Feedback Survery List
+                    </Button>
+                  </Grid>
+                  </Grid>
+              
+              
             </Container>
           )}
         </>
@@ -348,7 +376,7 @@ function QuestionPage(props) {
       ) : (
         "This form is closed"
       )}
-    </>
+    </DashboardLayout></>
   );
 }
 

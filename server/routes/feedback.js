@@ -8,6 +8,7 @@ import {
   deleteFeedback,
   getFeedbackByEmployeeIDAndFormID,
   getFeedbackByEmployeeID,
+  deleteFeedbackByFormID,
 } from "../controllers/feedback.js"; // import the functions from the controller
 
 const router = express.Router(); // create a router
@@ -25,6 +26,8 @@ router.post("/", createFeedback);
 router.patch("/:id", updateFeedback);
 
 router.delete("/:id", deleteFeedback);
+
+router.delete("/form/:formID", deleteFeedbackByFormID);
 
 // router.delete('/employee', getEmployeeWithFeedback);
 

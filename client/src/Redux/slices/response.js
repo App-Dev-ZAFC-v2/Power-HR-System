@@ -57,6 +57,15 @@ export const setSaving = createAsyncThunk("response/setSaving", async () => {
   return "SAVING";
 });
 
+//delete response by form id
+export const deleteResponseByFormID = createAsyncThunk(
+  "response/deleteByFormID",
+  async (formID) => {
+    const res = await axios.delete(API_URL + "form/" + formID);
+    return res.data;
+  }
+);
+
 const responseSlice = createSlice({
   name: "response",
   initialState,
@@ -124,6 +133,10 @@ const responseSlice = createSlice({
       })
       .addCase(setSaving.fulfilled, (state, action) => {
         state.saved = action.payload;
+      })
+      .addCase(deleteResponseByFormID.fulfilled, (state, action) => {
+        state.feedback = [];
+        state.count = 0;
       });
   },
 });

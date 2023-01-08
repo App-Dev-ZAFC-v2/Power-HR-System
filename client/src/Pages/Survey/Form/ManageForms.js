@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { deleteForm, createForm, getFormsByUser, getFormsByCollaborator } from "../../../Redux/slices/form";
 import { getAdmins } from "../../../Redux/slices/admin";
 import { DashboardLayout } from "../../../Components/Admin/Dashboard/dashboard-layout";
+import { deleteResponseByFormID } from "../../../Redux/slices/response";
 
 const ManageForms = () => {
     //Media Query
@@ -72,6 +73,7 @@ const ManageForms = () => {
       }, [retrieveAdmins]);
 
     const deleteSingleForm = (formid) => {
+        dispatch(deleteResponseByFormID(formid));
         dispatch(deleteForm(formid))
         .unwrap()
         .then(() => {

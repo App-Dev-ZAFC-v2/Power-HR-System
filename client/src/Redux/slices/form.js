@@ -76,7 +76,7 @@ export const deleteForm = createAsyncThunk(
     'forms/form/delete',
     async (formID) => {
         const res = await axios.delete(API_URL + formID);
-        return res.data;
+        return formID;
     }
 );
 
