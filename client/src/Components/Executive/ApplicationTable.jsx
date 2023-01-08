@@ -21,7 +21,17 @@ import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from "@mui/material/DialogContentText";
 import DialogTitle from "@mui/material/DialogTitle";
+import Link from "@mui/material/Link";
 // import { useParams } from "react-router-dom";
+// import { useParams } from "react-router-dom";
+
+// const useStyles = makeStyles({
+//   link: {
+//     '&:hover': {
+//       color: 'white',
+//     },
+//   },
+// });
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -122,36 +132,46 @@ function EnhancedTableHead(props) {
   );
 }
 
-export default function AppTable() {
+export default function AppTable(props) {
   const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("calories");
+  const [orderBy, setOrderBy] = React.useState("name");
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  const [Applications, setApplications] = useState([]);
+  const [rows, setRows] = useState([]);
+  // const [Applications, setApplications] = useState([]);
   const [open, setOpen] = React.useState(false);
   const [details, setDetails] = useState("");
+  const [stat, setStat] = useState("");
+  const [mail, setMail] = useState("");
 
-  const [status, setStatus] = useState({
-    applicationStatus: "",
-  });
+  const {applicants, quota, job_id} = props;
 
-  const applicantId = JSON.parse(
-    atob(localStorage.getItem("authToken").split(".")[1])
-  ).detailId;
+  //email subject
+  const subject = "Application Status";
+  const body = "Congratulations! You have been shortlisted. Please prepare for the interview.";
+
+  const fail = "Sorry! You have not been shortlisted. Please try again next time.";
+
+  // const [combined, setCombined] = useState({ props, quota });
+
+  // const applicationId = JSON.parse(
+  //   atob(localStorage.getItem("authToken").split(".")[1])
+  // ).detailId;
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:5000/applications`)
-      .then((res) => {
-        setApplications(res.data);
-        console.log(res.data);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, [applicantId]);
+    // set rows from props
+    // setRows(combined.props1.applicants, combined.quota.quota);
+    // console.log("inside", combined.props1.applicants);
+
+    setRows(applicants, quota, job_id);
+    // console.log("quota", quota.quota);
+    console.log("inside", applicants);
+    console.log("quota", quota);
+    console.log("job_id", job_id);
+
+  }, [applicants, job_id, quota]);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
@@ -161,7 +181,7 @@ export default function AppTable() {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = Applications.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.name);
       setSelected(newSelecteds);
       return;
     }
@@ -181,8 +201,10 @@ export default function AppTable() {
     setDense(event.target.checked);
   };
 
-  const handleClickOpen = (id) => {
+  const handleClickOpen = (id, appStatus, email) => {
     setDetails(id);
+    setStat(appStatus);
+    setMail(email);
     setOpen(true);
   };
 
@@ -190,14 +212,55 @@ export default function AppTable() {
     setOpen(false);
   };
 
-  const handleShortlist = async (status) => {
-    console.log(status);
+  const handleShortlist = async (applicationId, status, currentQuota, id) => {
     // e.preventDefault();
     axios
-      .patch(`http://localhost:5000/applications/${applicantId}`, { status })
+      .patch(`http://localhost:5000/applications/${applicationId}`, {
+        applicationStatus: status,
+      })
+      .then((res) => {
+        
+        // console.log(index);
+        console.log(res.data); 
+        
+        if(status === "Shortlisted"){
+          handleQuota(currentQuota - 1, id);
+        }else if(status === "Rejected"){
+          handleQuota(currentQuota + 1, id);
+        }
+
+        window.alert("Application is updated.");
+        window.location.href = `/executive/manage-applicant`;
+
+        console.log("status",status);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
+
+  const handleQuota = async (latestQuota, id) =>{
+    axios
+      .patch(`http://localhost:5000/jobs/${id}`, {
+        quota: latestQuota,
+      })
       .then((res) => {
         console.log(res.data);
-        window.alert("Application is updated.");
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+  const deleteApplication = async (applicationId) => {
+    // e.preventDefault();
+    axios
+      .delete(`http://localhost:5000/applications/${applicationId}`)
+      .then((res) => {
+        // console.log(status);
+        // console.log(index);
+        console.log(res.data);
+        window.alert("Application is deleted.");
         window.location.href = `/executive/manage-applicant`;
       })
       .catch((err) => {
@@ -205,8 +268,9 @@ export default function AppTable() {
       });
   };
 
+
   const emptyRows =
-    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - Applications.length) : 0;
+    page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
   return (
     <Box sx={{ width: "100%" }}>
@@ -224,40 +288,39 @@ export default function AppTable() {
               orderBy={orderBy}
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
-              rowCount={Applications.length}
+              rowCount={rows.length}
             />
             <TableBody>
-              {stableSort(Applications, getComparator(order, orderBy))
+              {stableSort(rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((application, index) => {
-                  const date = new Date(application?.applicationDate);
+                .map((rows, index) => {
+                  const date = new Date(rows?.applicationDate);
                   const today = date.toLocaleDateString("en-GB", {
                     day: "numeric",
                     month: "short",
                     year: "numeric",
                   });
-
                   return (
                     <>
-                      <TableRow hover key={application?._id}>
+                      <TableRow hover key={rows?._id}>
                         <TableCell align="center">
-                          {application?.applicant?.name}
+                          {rows?.applicant?.name}
                         </TableCell>
                         <TableCell align="center">
-                          {application?.applicant?.email}
+                          {rows?.applicant?.email}
                         </TableCell>
                         <TableCell align="center">
-                          {application?.applicant?.contact}
+                          {rows?.applicant?.contact}
                         </TableCell>
                         <TableCell align="center">{today}</TableCell>
                         <TableCell align="center">
-                          {application?.applicationStatus}
+                          {rows?.applicationStatus}
                         </TableCell>
                         <TableCell align="center">
                           <Button
-                            key={application._id}
+                            key={rows._id}
                             color="primary"
-                            onClick={() => handleClickOpen(application._id)}
+                            onClick={() => handleClickOpen(rows._id, rows?.applicationStatus, rows?.applicant?.email)}
                           >
                             {" "}
                             Details
@@ -273,20 +336,36 @@ export default function AppTable() {
                             </DialogTitle>
                             <DialogContent>
                               <p>Please select your option</p>
+                              <Button>View Resume/CV</Button>
                             </DialogContent>
                             <DialogActions>
                               <Button
-                                onClick={() => handleShortlist("Shortlisted")}
+                                onClick={() => handleShortlist(details, "Shortlisted", quota, job_id)}
                                 variant="success"
                               >
                                 Shortlist
                               </Button>
                               <Button
-                                onClick={() => handleShortlist("Rejected")}
-                                variant="danger"
+                                onClick={() => handleShortlist(details, "Rejected", quota, job_id)}
+                                variant="warning"
                               >
                                 Not Shortlist
                               </Button>
+                              <Button
+                                onClick={() => handleShortlist(details, "Idle")}
+                                variant="secondary"
+                              >
+                                Idle
+                              </Button>
+                              {stat === "Rejected" && (
+                                <Button onClick={() => deleteApplication(details)} variant="danger"> Delete </Button>
+                              )}
+                              {stat === "Rejected" && (
+                                <Button  variant="success"><Link href={`mailto:${mail}?subject=${subject}&body=${fail}`} underline="none" color="#FFFFFF">Email applicant</Link>  </Button>
+                              )}
+                              {stat === "Shortlisted" && (
+                                <Button  variant="success"><Link href={`mailto:${mail}?subject=${subject}&body=${body}`} underline="none" color="#FFFFFF">Email applicant</Link>  </Button>
+                              )}
                               <Button onClick={handleClose}>Close</Button>
                             </DialogActions>
                           </Dialog>
@@ -310,7 +389,7 @@ export default function AppTable() {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={Applications.length}
+          count={rows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}

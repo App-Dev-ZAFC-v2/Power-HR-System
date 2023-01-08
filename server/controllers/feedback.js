@@ -1,5 +1,6 @@
 import Feedback from "../models/feedback.js";
 import mongoose from "mongoose";
+import Employee from "../models/employee.js";
 
 export const getFeedbacks = async (req, res) => {
     try{
@@ -52,4 +53,38 @@ export const deleteFeedback = async (req, res) => {
     await Feedback.findByIdAndRemove(id);
     res.json({ message: "Feedback deleted successfully." });
 }
+
+//view feedback list that has been answered by employees
+export const getEmployeeWithFeedback = async (req, res) => {
+    try {
+
+      //select all feedbacks
+      const feedbacks = await Feedback.find().lean();
+  
+      //select all employees that have feedbacks
+      const employeeIDs = feedbacks.map((feedback) => feedback.employee);
+  
+      //select all employees
+      const employees = await Employee.find({ _id: { $in: employeeIDs } }).select({
+          name: 1,
+          email: 1,
+          contact: 1,
+          position: 1,
+      });
+  
+      //combine employees and feedbacks
+      const combined = employees.map((employee) => {
+          //find feedbacks that belong to the employee
+          const employeeFeedbacks = feedbacks.filter(
+              (feedback) => feedback.employee.toString() == employee._id.toString()
+          );
+  
+          return {...employee._doc, feedbacks: employeeFeedbacks};
+      });
+      res.status(200).json(combined);
+  
+    } catch (error) {
+      res.status(404).json({ message: error.message });
+    }
+  };
 

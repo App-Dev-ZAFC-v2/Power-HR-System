@@ -1,6 +1,6 @@
 import express from 'express'; // import express
 
-import {getFeedbacks, getFeedbackByID, createFeedback, updateFeedback, deleteFeedback} from '../controllers/feedback.js'; // import the functions from the controller
+import {getFeedbacks, getFeedbackByID, createFeedback, updateFeedback, deleteFeedback, getEmployeeWithFeedback} from '../controllers/feedback.js'; // import the functions from the controller
 
 const router = express.Router(); // create a router
 
@@ -13,6 +13,8 @@ router.post('/', createFeedback);
 router.patch('/:id', updateFeedback);
 
 router.delete('/:id', deleteFeedback);
+
+router.delete('/employee', getEmployeeWithFeedback);
 
 export default router; // export the router
 
