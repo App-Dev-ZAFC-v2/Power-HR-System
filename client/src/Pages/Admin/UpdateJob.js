@@ -47,7 +47,7 @@ function UpdateEmployee(){
         <Container >
             <Row>
                 <Col className='m-auto' md={8}>
-                    <Paper elevation={12} sx={{mt: "24px", pt: "12px"}}>
+                    <Paper elevation={12} sx={{mt: "24px", pt: "24px", pb: "24px", mb: "48px"}}>
                     {
                         id ? 
                         <>

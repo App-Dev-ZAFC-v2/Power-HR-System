@@ -254,7 +254,6 @@ export default function EmployeesTable() {
         }
     })
     .then(res => {
-        console.log(res.data);
         setRows(res.data);
         setIsLoading(false);
     })

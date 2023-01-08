@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Form, Button, Alert } from 'react-bootstrap';
+import { Form, Alert } from 'react-bootstrap';
+import { Button } from '@mui/material';
 
 function AddEmployee(){
     const [employee, setEmployee] = useState({
@@ -39,8 +40,6 @@ function AddEmployee(){
         if(form.checkValidity() === true){
             e.preventDefault();
             setInvalid(false);
-            console.log(employee);
-            console.log(validated);
             axios.post('http://localhost:5000/employees/register/', employee, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
@@ -199,7 +198,7 @@ function AddEmployee(){
             </Form.Group>
 
             
-            <Button className='mb-3' variant="success" type="submit">
+            <Button variant="contained" color="success">
                 Add New Employee
             </Button>
             {

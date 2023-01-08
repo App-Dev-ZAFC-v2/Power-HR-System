@@ -737,9 +737,6 @@ const handleDelete = (id) => {
     setPage(0);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
@@ -788,7 +785,7 @@ const handleDelete = (id) => {
                             )}
                           </IconButton>
                         </TableCell>
-                        <TableCell align="center">{row?.name}</TableCell>
+                        <TableCell align="left">{row?.name}</TableCell>
                         <TableCell align="left">{row?.level}</TableCell>
                        <TableCell align="left">{row?.salary?.min} - {row?.salary?.max}</TableCell>
                        <TableCell align="left">{row?.location}</TableCell>
@@ -802,7 +799,7 @@ const handleDelete = (id) => {
                        </TableCell>
                        <TableCell align="left">
                         <Tooltip title="Edit">
-                            <IconButton color="primary" aria-label="edit" href={`/admin/update-employee/${row?._id}`}>
+                            <IconButton color="primary" aria-label="edit" href={`/admin/update-job/${row?._id}`}>
                               <EditIcon />
                             </IconButton>
                           </Tooltip>
