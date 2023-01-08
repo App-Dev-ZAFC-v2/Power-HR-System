@@ -32,7 +32,6 @@ import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 
-
 import ManageAnalytics from "./Pages/Executive/Analytics";
 
 import ReviewEmployee from "./Pages/Executive/ReviewFeedback";
@@ -41,10 +40,8 @@ import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
 import QuestionPage from "./Pages/Survey/Feedback/QuestionPage";
 
 function App() {
-  
   return (
     <div className="App">
-      
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/login" element={<Login />} />
@@ -71,7 +68,7 @@ function App() {
 
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
-        {/* <Route path="/applicant/jobs" element={<JobPage />} /> */}
+        <Route path="/applicant/jobs" element={<JobPage />} />
         <Route
           path="/applicant/jobs/:search/:specialization"
           element={<JobPage />}
@@ -81,18 +78,16 @@ function App() {
           element={<ViewApplication />}
         />
 
-        <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
+        <Route
+          path="/executive/manage-applicant"
+          element={<ShortlistApplicant />}
+        />
 
         <Route path="/executive/analytics" element={<ManageAnalytics />} />
 
-
         <Route path="/executive/review-feedback" element={<ReviewEmployee />} />
-
-
-        
       </Routes>
     </div>
-    
   );
 }
 

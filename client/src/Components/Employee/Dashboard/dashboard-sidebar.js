@@ -11,28 +11,30 @@ import {
 } from "@mui/material";
 import WorkIcon from "@mui/icons-material/Work";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Groups2Icon from "@mui/icons-material/Groups2";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+// import DescriptionIcon from "@mui/icons-material/Description";
 import Logo from "../../../Assets/Logo.png";
 import { NavItem } from "./nav-item";
-import { getApplicantByID } from "../../../Redux/slices/applicant";
+import { getEmployeeByID } from "../../../Redux/slices/employee";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PageviewIcon from "@mui/icons-material/Pageview";
+
 const items = [
   {
-    href: "/applicant/dashboard",
+    href: "/employee/dashboard",
     icon: <DashboardIcon fontSize="small" />,
     title: "Dashboard",
   },
   {
-    href: "/applicant/jobs",
-    icon: <PageviewIcon fontSize="small" />,
-    title: "View Available Jobs",
+    href: "/form",
+    icon: <Groups2Icon fontSize="small" />,
+    title: "Feedback Survey",
   },
   {
-    href: "/applicant/view-application",
+    href: "",
     icon: <WorkIcon fontSize="small" />,
-    title: "View Application",
+    title: "About",
   },
 ];
 
@@ -48,10 +50,10 @@ export const DashboardSidebar = (props) => {
   const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
 
   const dispatch = useDispatch();
-  const applicant = useSelector((state) => state.applicants.applicant);
+  const employee = useSelector((state) => state.employees.employee);
 
   useEffect(() => {
-    dispatch(getApplicantByID(detailId));
+    dispatch(getEmployeeByID(detailId));
   }, [dispatch, detailId]);
 
   const handleLogout = () => {
@@ -69,7 +71,7 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Link href="/applicant/dashboard" underline="none" color="inherit">
+          <Link href="/employee/dashboard" underline="none" color="inherit">
             <Box sx={{ p: 3, display: "flex", flexDirection: "row" }}>
               <Box
                 component="img"
@@ -102,7 +104,7 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography color="inherit" variant="subtitle1">
-                  {applicant?.name}
+                  {employee?.name}
                 </Typography>
               </div>
             </Box>

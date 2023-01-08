@@ -9,30 +9,43 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import WorkIcon from "@mui/icons-material/Work";
 import LogoutIcon from "@mui/icons-material/Logout";
+import Groups2Icon from "@mui/icons-material/Groups2";
 import DashboardIcon from "@mui/icons-material/Dashboard";
+// import DescriptionIcon from "@mui/icons-material/Description";
 import Logo from "../../../Assets/Logo.png";
 import { NavItem } from "./nav-item";
-import { getApplicantByID } from "../../../Redux/slices/applicant";
+import { getEmployeeByID } from "../../../Redux/slices/employee";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import PageviewIcon from "@mui/icons-material/Pageview";
+import QueryStatsIcon from "@mui/icons-material/QueryStats";
+import FactCheckIcon from "@mui/icons-material/FactCheck";
+import RateReviewIcon from "@mui/icons-material/RateReview";
 const items = [
   {
-    href: "/applicant/dashboard",
+    href: "/executive/dashboard",
     icon: <DashboardIcon fontSize="small" />,
     title: "Dashboard",
   },
   {
-    href: "/applicant/jobs",
-    icon: <PageviewIcon fontSize="small" />,
-    title: "View Available Jobs",
+    href: "/executive/manage-applicant",
+    icon: <Groups2Icon fontSize="small" />,
+    title: "Manage Applicant",
   },
   {
-    href: "/applicant/view-application",
-    icon: <WorkIcon fontSize="small" />,
-    title: "View Application",
+    href: "/executive/analytics",
+    icon: <QueryStatsIcon fontSize="small" />,
+    title: "Manage Analytics",
+  },
+  {
+    href: "/executive/manage-applicant",
+    icon: <FactCheckIcon fontSize="small" />,
+    title: "Manage Applicant Status",
+  },
+  {
+    href: "/executive/review-feedback",
+    icon: <RateReviewIcon fontSize="small" />,
+    title: "Review Survey Responses",
   },
 ];
 
@@ -48,10 +61,10 @@ export const DashboardSidebar = (props) => {
   const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
 
   const dispatch = useDispatch();
-  const applicant = useSelector((state) => state.applicants.applicant);
+  const employee = useSelector((state) => state.employees.employee);
 
   useEffect(() => {
-    dispatch(getApplicantByID(detailId));
+    dispatch(getEmployeeByID(detailId));
   }, [dispatch, detailId]);
 
   const handleLogout = () => {
@@ -69,7 +82,7 @@ export const DashboardSidebar = (props) => {
         }}
       >
         <div>
-          <Link href="/applicant/dashboard" underline="none" color="inherit">
+          <Link href="/executive/dashboard" underline="none" color="inherit">
             <Box sx={{ p: 3, display: "flex", flexDirection: "row" }}>
               <Box
                 component="img"
@@ -102,7 +115,7 @@ export const DashboardSidebar = (props) => {
             >
               <div>
                 <Typography color="inherit" variant="subtitle1">
-                  {applicant?.name}
+                  {employee?.name}
                 </Typography>
               </div>
             </Box>

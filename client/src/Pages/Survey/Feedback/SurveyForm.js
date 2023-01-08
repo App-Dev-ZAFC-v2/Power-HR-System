@@ -1,10 +1,11 @@
 import React, { useEffect, useCallback } from "react";
-import Navbar from "../../../Components/Navbar";
+// import Navbar from "../../../Components/Navbar";
 import ViewFormCard from "../../../Components/Survey/ViewFormCard";
 //import API from "../../../API/form";
-import { Container, Grid, Typography } from "@mui/material";
+import { Container, Grid } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { getForms, getFormsByPublished } from "../../../Redux/slices/form";
+import { getFormsByPublished } from "../../../Redux/slices/form";
+import { DashboardLayout } from "../../../Components/Employee/Dashboard/dashboard-layout";
 
 export default function SurveyForm() {
   //redux
@@ -21,15 +22,14 @@ export default function SurveyForm() {
 
   return (
     <>
-      <Navbar />
-      <Container maxWidth="lg" sx={{ mt: 2 }}>
-        <Typography variant="h4" component="h1">
-          Survey Form
-        </Typography>
-        <Grid container spacing={4} sx={{ mt: 2, mb: 5, boxShadow: 8 }}>
-          <ViewFormCard dataform={forms} />
-        </Grid>
-      </Container>
+      <DashboardLayout tab="Feedback Survey">
+        {/* <Navbar /> */}
+        <Container maxWidth="lg" sx={{ mt: 2 }}>
+          <Grid container spacing={4} sx={{ ml: 1, mt: 2 }}>
+            <ViewFormCard dataform={forms} />
+          </Grid>
+        </Container>
+      </DashboardLayout>
     </>
   );
 }
