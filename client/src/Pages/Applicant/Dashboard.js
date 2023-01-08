@@ -7,21 +7,6 @@ import { Grid } from "@mui/material";
 import { Button } from "react-bootstrap";
 
 function ApplicantDashboard() {
-  // const [jobs, setJobs] = useState([]);
-  // const [loading, setLoading] = useState(true);
-
-  // useEffect(() => {
-  //     async function getJobs() {
-  //     const res = await axios.get("/api/jobs");
-  //     setJobs(res.data);
-  //     setLoading(false);
-  //     }
-  //     getJobs();
-  // }, []);
-
-  // if (loading) {
-  //     return <h1>Loading...</h1>;
-  // }
 
   return (
     <>
@@ -55,15 +40,6 @@ function ApplicantDashboard() {
           </Grid>
         </Grid>
       </Container>
-      {/* <h2>Jobs</h2>
-        {jobs.map((job) => (
-            <div key={job._id}>
-            <h3>{job.title}</h3>
-            <p>{job.description}</p>
-            <p>{job.location}</p>
-            <p>{job.salary}</p>
-            </div>
-        ))} */}
       <Button variant="primary" href="/applicant/jobs">
         View Available Jobs
       </Button>
@@ -73,5 +49,7 @@ function ApplicantDashboard() {
     </>
   );
 }
+
+
 
 export default ApplicantDashboard;
