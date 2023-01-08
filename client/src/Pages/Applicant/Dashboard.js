@@ -1,58 +1,48 @@
-import React from 'react';
-import Navbar from '../../Components/Navbar';
-import ProfileCard from '../../Components/ProfileCard';
-import Welcome from '../../Components/Welcome';
-import Container from '@mui/material/Container';
-import {Grid} from '@mui/material'
-import { Button } from 'react-bootstrap';
+import React from "react";
+// import Navbar from "../../Components/Navbar";
+import ProfileCard from "../../Components/ProfileCard";
+import Welcome from "../../Components/Welcome";
+import Container from "@mui/material/Container";
+import { Grid } from "@mui/material";
+import { Button } from "react-bootstrap";
+import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
 
 function ApplicantDashboard() {
-    // const [jobs, setJobs] = useState([]);
-    // const [loading, setLoading] = useState(true);
-    
-    // useEffect(() => {
-    //     async function getJobs() {
-    //     const res = await axios.get("/api/jobs");
-    //     setJobs(res.data);
-    //     setLoading(false);
-    //     }
-    //     getJobs();
-    // }, []);
-    
-    // if (loading) {
-    //     return <h1>Loading...</h1>;
-    // }
-    
-    return (
-        <><Navbar />
+  return (
+    <>
+      <DashboardLayout tab="Dashboard">
         <Container maxWidth="lg">
-        <Grid container spacing={2} mt={3} sx={{ display: { xs: 'none', md: 'flex' }}}>
-            <Grid item xs={4} sx={{display: { xs: 'none', md: 'flex' }}}>
-                <ProfileCard/>
+          <Grid
+            container
+            spacing={2}
+            mt={3}
+            sx={{ display: { xs: "none", md: "flex" } }}
+          >
+            <Grid item xs={4} sx={{ display: { xs: "none", md: "flex" } }}>
+              <ProfileCard />
             </Grid>
             <Grid item xs>
-                <Welcome/>
+              <Welcome />
             </Grid>
-        </Grid>
+          </Grid>
 
-        <Grid mt={3} container spacing={2} direction="column" alignItems="center" justify="center" sx={{display: { xs: 'flex', md: 'none' }}}>
-            <Grid item sx={{display: { xs: 'flex', md: 'none' }}}>
-                <ProfileCard/>
+          <Grid
+            mt={3}
+            container
+            spacing={2}
+            direction="column"
+            alignItems="center"
+            justify="center"
+            sx={{ display: { xs: "flex", md: "none" } }}
+          >
+            <Grid item sx={{ display: { xs: "flex", md: "none" } }}>
+              <ProfileCard />
             </Grid>
-        </Grid>
+          </Grid>
         </Container>
-        {/* <h2>Jobs</h2>
-        {jobs.map((job) => (
-            <div key={job._id}>
-            <h3>{job.title}</h3>
-            <p>{job.description}</p>
-            <p>{job.location}</p>
-            <p>{job.salary}</p>
-            </div>
-        ))} */}
-        <Button variant="primary" href="/applicant/jobs">View Available Jobs</Button>
-        </>
-    );
-    }
+      </DashboardLayout>
+    </>
+  );
+}
 
 export default ApplicantDashboard;

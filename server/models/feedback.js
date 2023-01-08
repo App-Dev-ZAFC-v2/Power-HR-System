@@ -1,15 +1,31 @@
 import mongoose from "mongoose";
 
 const feedbackSchema = mongoose.Schema({
-    createdByID: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Employee",
+  formID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "form",
+  },
+
+  employeeID: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "employee",
+  },
+
+  response: [
+    {
+      questionID: String,
+      answer: [
+        {
+          text: String,
+          optionID: String,
+        },
+      ],
     },
+  ],
 
-    createdByName: String,
-    feedbackTitle: String,
-    feedbackMessage: String,
+  draft: { type: Boolean, default: true },
 
+  date: { type: Date, default: Date.now },
 });
 
 const Feedback = mongoose.model("Feedback", feedbackSchema);

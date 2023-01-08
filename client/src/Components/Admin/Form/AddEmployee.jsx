@@ -47,7 +47,6 @@ function AddEmployee(){
                 }
             })
             .then(res => {
-                console.log(res);
                 setSuccess(true);
                 setError(false);
             }

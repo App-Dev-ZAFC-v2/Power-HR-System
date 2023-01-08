@@ -23,14 +23,28 @@ import AddFeedback from "./Pages/Admin/AddFeedback";
 import UpdateUsername from "./Pages/User/Pages/updateusername";
 import UpdatePassword from "./Pages/User/Pages/updatepassword";
 
-import Feedback from "./Pages/Employee/Feedback";
 import JobPage from "./Pages/Applicant/JobPage";
+// import AddJob from "./Pages/Admin/AddJob";
+import ViewApplication from "./Pages/Applicant/ViewApplication";
+
+import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
+
+import ManageForms from "./Pages/Survey/Form/ManageForms";
+import EditForm from "./Pages/Survey/Form/EditForm";
+
+import ManageAnalytics from "./Pages/Executive/Analytics";
+
+import ReviewEmployee from "./Pages/Executive/ReviewFeedback";
+
+import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
+import QuestionPage from "./Pages/Survey/Feedback/QuestionPage";
 
 function App() {
   return (
     <div className="App">
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path="/login" element={<Login />} />
         <Route path="/register" element={<ApplicantRegister />} />
         <Route path="/employee/dashboard" element={<EmployeeDashboard />} />
         <Route path="/executive/dashboard" element={<ExecutiveDashboard />} />
@@ -46,12 +60,32 @@ function App() {
         <Route path="/profile" element={<Profile />} />
         <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
         <Route path="/admin/add-feedback" element={<AddFeedback />} />
+        <Route path="/admin/manage-forms" element={<ManageForms />} />
 
+        <Route path="/form/edit-form/:id" element={<EditForm />} />
+        <Route path="/form" element={<SurveyForm />} />
+        <Route path="/form/:id" element={<QuestionPage />} />
 
-        <Route path="/employee/feedback" element={<Feedback />} />
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />
         <Route path="/applicant/jobs" element={<JobPage />} />
+        <Route
+          path="/applicant/jobs/:search/:specialization"
+          element={<JobPage />}
+        />
+        <Route
+          path="/applicant/view-application"
+          element={<ViewApplication />}
+        />
+
+        <Route
+          path="/executive/manage-applicant"
+          element={<ShortlistApplicant />}
+        />
+
+        <Route path="/executive/analytics" element={<ManageAnalytics />} />
+
+        <Route path="/executive/review-feedback" element={<ReviewEmployee />} />
       </Routes>
     </div>
   );

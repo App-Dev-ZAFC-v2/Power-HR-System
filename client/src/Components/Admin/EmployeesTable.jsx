@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import DeleteEmployee from './DeleteEmployee';
 import axios from 'axios';
-import { Button } from 'react-bootstrap';
+import { Button } from '@mui/material';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Box from '@mui/material/Box';
@@ -24,6 +24,8 @@ import Switch from '@mui/material/Switch';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
+import PersonAddIcon from '@mui/icons-material/PersonAdd';
+import EditIcon from '@mui/icons-material/Edit';
 
 // function createData(name, calories, fat, carbs, protein) {
 //   return {
@@ -209,7 +211,11 @@ function EnhancedTableToolbar(props) {
           Employees
         </Typography>
       )}
-
+      <Tooltip title="Add Employee">
+        <IconButton href="/admin/update-employee">
+          <PersonAddIcon />
+        </IconButton>
+      </Tooltip>
       {numSelected > 0 ? (
         <Tooltip title="Delete">
           <IconButton>
@@ -260,8 +266,8 @@ export default function EmployeesTable() {
   
 
   const handleDelete = (id) => {
-    console.log(id);
-    axios.delete(`http://localhost:5000/employees/${id}`, {
+    // console.log(id);
+    axios.patch(`http://localhost:5000/employees/remove/${id}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -387,15 +393,25 @@ export default function EmployeesTable() {
                         scope="row"
                         padding="none"
                       >
-                        {row.name}
+                        {row?.name}
                       </TableCell>
-                      <TableCell align="left">{row.position}</TableCell>
-                      <TableCell align="left">{row.executiveRole ? "Executive": "Non-Executive"}</TableCell>
-                      <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">{row.contact}</TableCell>
+                      <TableCell align="left">{row?.position}</TableCell>
+                      <TableCell align="left">{row?.executiveRole ? "Executive": "Non-Executive"}</TableCell>
+                      <TableCell align="left">{row?.email}</TableCell>
+                      <TableCell align="left">{row?.contact}</TableCell>
                       <TableCell align="left">
-                        <Button variant="primary" href={`/admin/update-employee/${row._id}`} >Edit</Button>
-                        <Button variant='danger' onClick={() => handleDelete(row._id)}>Delete</Button>
+                        {/* <Button variant="contained" color="primary" size="small" href={`/admin/update-employee/${row?._id}`} >Edit</Button>
+                        <Button variant="outlined" color="error" size="small" onClick={() => handleDelete(row?._id)}>Delete</Button> */}
+                        <Tooltip title="Edit">
+                          <IconButton color="primary" aria-label="edit" href={`/admin/update-employee/${row?._id}`}>
+                            <EditIcon />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <IconButton color="error" aria-label="delete" onClick={() => handleDelete(row?._id)}>
+                            <DeleteIcon />
+                          </IconButton>
+                        </Tooltip>
                       </TableCell>
                     </TableRow>
                   );
@@ -422,10 +438,6 @@ export default function EmployeesTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }

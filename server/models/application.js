@@ -1,21 +1,22 @@
 import mongoose from "mongoose";
 
 const applicationSchema = mongoose.Schema({
-    applicationDate : {
-        type: Date,
-        default: new Date()
-    },
-    applicant : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Applicant"
-    },
-    job : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Job"
-    },
-    hireDate : Date,
-    qualification: String,
-    cgpa: Number,
+  applicationDate: {
+    type: Date,
+    default: new Date(),
+  },
+  applicationStatus: {
+    type: String,
+    default: "New", //New, Shortlisted, Rejected, Accepted
+  },
+  job: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Job",
+  },
+  applicant: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Applicant",
+  },
 });
 
 const Application = mongoose.model("Application", applicationSchema);
