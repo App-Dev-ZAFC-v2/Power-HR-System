@@ -3,8 +3,7 @@ import PropTypes from 'prop-types';
 import styled from '@emotion/styled';
 import { AppBar, Avatar, Badge, Box, Divider, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
-import { Bell as BellIcon } from '../icons/bell';
-import { UserCircle as UserCircleIcon } from '../icons/user-circle';
+import NotificationsIcon from "@mui/icons-material/Notifications";
 import { AccountPopover } from './account-popover';
 import { useSelector } from 'react-redux';
 
@@ -62,7 +61,7 @@ export const DashboardNavbar = (props) => {
                 color="primary"
                 variant="dot"
               >
-                <BellIcon fontSize="small" />
+                <NotificationsIcon fontSize="small" />
               </Badge>
             </IconButton>
           </Tooltip>
