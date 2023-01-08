@@ -40,7 +40,7 @@ function OneResponse(prop){
                             {item.question.questionType === "Paragraph" ? <ParagraphResponse response={item.response} question={item.question} /> : ""}
                             {item.question.questionType === "Checkboxes" ? <CheckBoxResponse response={item.response} question={item.question} /> : ""}
                             {item.question.questionType === "Drop-down" ? <DropDownResponse response={item.response} question={item.question} /> : ""}
-                            {item.question.questionType === "linear Scale" ? <LinearScaleResponse response={item.response} question={item.question} /> : ""}
+                            {item.question.questionType === "Linear Scale" ? <LinearScaleResponse response={item.response} question={item.question} /> : ""}
                         </div>
                 </Grid>
             )

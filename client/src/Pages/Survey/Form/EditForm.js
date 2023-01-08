@@ -19,6 +19,7 @@ import Collab from '../../../Components/Survey/Question/Collab';
 import Response from '../../../Components/Survey/Response/Response';
 import { getAdmins } from '../../../Redux/slices/admin';
 import { DashboardLayout } from '../../../Components/Admin/Dashboard/dashboard-layout';
+import QuestionPageReview from '../../../Components/Survey/Question/QuestionPageReview';
 
 
 function EditForm(){
@@ -241,29 +242,32 @@ function EditForm(){
 
         {(permission === true)?
         (<>
-        <div style={{position: "-webkit-sticky", position: "sticky", top: 0, zIndex: 1}}>
-        <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
-            <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
-                {(saved === "SAVING")? 
-                (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
-                {(saved === "SAVED")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
-                {(saved === "FAILED")?
-                (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
+        <div style={{position: "-webkit-sticky", position: "sticky", top: "64px", zIndex: 1}}>
+        
+        <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: "12" }}>
+            <Box sx={{ width: '100%', bgcolor: 'background.paper', pt: 2}} style={{display: "flex", justifyContent: "center", alignItems: "center"}}>
+                <Box style={{display: 'flex', marginRight: "24px", marginLeft: "24px"}}>
+                    {(saved === "SAVING")? 
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><BackupRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saving...</Typography></Box>) : ""}
+                    {(saved === "SAVED")?
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><CloudDoneRoundedIcon sx={{mr: 1}} /><Typography variant="subtitle1">Saved</Typography></Box>) : ""}
+                    {(saved === "FAILED")?
+                    (<Box style={{ display: 'flex', alignItems: "center"}}><ErrorIcon sx={{mr: 1}} /><Typography variant="subtitle1">Save unsuccessfully</Typography></Box>) : ""}
+                </Box>
+                <Box>
+                    <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
+                        <HandleAvatar/>
+                    </AvatarGroup>
+                </Box>
             </Box>
             <Box>
-                <AvatarGroup max={4} sx={{'& .MuiAvatar-root': { width: 24, height: 24, fontSize: 15 }}}>
-                    <HandleAvatar/>
-                </AvatarGroup>
+                <Tabs value={tab} onChange={handleTab} centered>
+                    <Tab label="Questions" />
+                    <Tab label="Preview" />
+                    <Tab label="Settings" />
+                    <Tab label="Responses"/>
+                </Tabs>
             </Box>
-        </Box>
-        <Box sx={{ width: '100%', bgcolor: 'background.paper', boxShadow: "0px 3px 1px -2px rgb(0 0 0 / 20%), 0px 2px 2px 0px rgb(0 0 0 / 14%), 0px 1px 0px 0px rgb(0 0 0 / 12%)" }}>
-            <Tabs value={tab} onChange={handleTab} centered>
-                <Tab label="Questions" />
-                <Tab label="Preview" />
-                <Tab label="Settings" />
-                <Tab label="Responses"/>
-            </Tabs>
         </Box>
         </div>
         {/* {loading ? (<Box sx={{ width: '100%' }}> <LinearProgress color="secondary" /></Box>) : <Box sx={{ width: '100%', height: '4px' }}></Box>} */}
@@ -271,7 +275,7 @@ function EditForm(){
             {tab === 0?(
                 <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'128px' }}>
                     <Grid item xs={12} sm={5} sx={{ width: '75%' }}>
-                        <Grid sx={{ borderTop: '10px solid black', borderRadius: 2 }}>
+                        <Grid sx={{ borderTop: '10px solid black', borderRadius: 2, boxShadow: 12 }}>
                             <Accordion expanded={true}>
                                 <AccordionSummary aria-controls="panel1a-content" id="formBar" elevation={1} style={{width:'100%'}}>
                                 </AccordionSummary>
@@ -301,10 +305,10 @@ function EditForm(){
                     </Paper>
                 </Grid>
             ): ""}
-            {tab === 1? "": ""}
+            {tab === 1? <QuestionPageReview/>: ""}
             {tab === 2?(
                 <Grid container direction="column" justify="center" alignItems="center" sx={{ mt: 5, mb:'64px' }}>
-                    <Grid item xs={12} sm={5} sx={{ width: '75%' }}>
+                    <Grid item xs={12} sm={5} sx={{ width: '75%', boxShadow: 12  }}>
                         <Paper sx={{p:4}}>
                             <Box sx={{pb:4, borderBottom: 1 }}>
                                 <Typography variant='h3'>Settings</Typography>

@@ -243,7 +243,7 @@ function QuestionList(){
                                 {(provided) => (
                                     <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
                                         <div style={{ marginTop: "15px" }}>
-                                            <Accordion onChange={() => { handleExpand(i); } } expanded={expanded[i] || false}>
+                                            <Accordion onChange={() => { handleExpand(i); } } expanded={expanded[i] || false} sx={{boxShadow: 12 }}>
                                                 <AccordionSummary aria-controls="panel1a-content" id="panel1a-header" elevation={1} style={{ width: '100%' }}>
                                                     {!expanded[i] ? (
                                                         <>
