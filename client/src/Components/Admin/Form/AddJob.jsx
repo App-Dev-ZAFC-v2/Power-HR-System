@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 
-import Navbar from '../../Components/Navbar';
-
 
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
@@ -76,7 +74,6 @@ function AddJob(){
 
     return (
         <>
-        <Navbar/>
         <Container>
             <Form>
                 <Form.Group controlId="formBasicEmail">
