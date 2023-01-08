@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react';
 
 import axios from 'axios';
 
-import Navbar from '../../Components/Navbar';
-
 
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 
@@ -64,14 +62,18 @@ function AddJob(){
         console.log(scopeList);
         console.log(requirementsList);
         axios.post("http://localhost:5000/jobs", job)
-            .then(res => console.log(res))
-            .catch(err => console.log(err));
+            .then(res => {
+                console.log(res);
+                window.location = "/admin/manage-job";
+            })
+            .catch(err => {
+                console.log(err);
+            })
     }
 
 
     return (
         <>
-        <Navbar/>
         <Container>
             <Form>
                 <Form.Group controlId="formBasicEmail">

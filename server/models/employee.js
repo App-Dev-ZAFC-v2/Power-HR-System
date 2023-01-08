@@ -11,7 +11,10 @@ const employeeSchema = mongoose.Schema({
     position: String,
     // employeeRole differentiate between executive and employee
     executiveRole: Boolean,
-    inactive: Boolean,
+    inactive: {
+        type: Boolean,
+        default: false,
+    },
     inactiveDate: {
         type: Date,
         default: null,
