@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
-
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import axios from 'axios';
 
 
 import { Form, Container, Row, Col } from 'react-bootstrap';
-import { Button } from '@mui/material';
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemText } from '@mui/material';
 
 function AddJob(){
     const [job, setJob] = useState({
@@ -59,9 +59,6 @@ function AddJob(){
         //     scope: scopeList,
         //     requirements: requirementsList
         // });
-        console.log(job);
-        console.log(scopeList);
-        console.log(requirementsList);
         axios.post("http://localhost:5000/jobs", job)
             .then(res => {
                 console.log(res);
@@ -71,6 +68,31 @@ function AddJob(){
                 console.log(err);
             })
     }
+
+    const handleDelete = (index, type) => {
+        if(type === "scope"){
+            setScopeList(scopeList.filter((_, i) => i !== index));
+            setJob({...job, scope: scopeList.filter((_, i) => i !== index)});
+        }else if(type === "requirements"){
+            setRequirementsList(requirementsList.filter((_, i) => i !== index));
+            setJob({...job, requirements: requirementsList.filter((_, i) => i !== index)});
+        }
+    }
+
+    function generate(element, type) {
+        return element.map((value, index) => (
+                <><Divider /><ListItem
+                secondaryAction={<IconButton edge="end" aria-label="delete" onClick={() => handleDelete(index, type)} >
+                    <RemoveCircleIcon />
+                </IconButton>}
+            >
+                <ListItemText primary={value} />
+            </ListItem><Divider /></>
+            )
+        );
+    }
+
+    
 
 
     return (
@@ -89,24 +111,25 @@ function AddJob(){
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Scope</Form.Label>
-                    <Form.Control type="text" placeholder="Enter job scope" name="scope" value={scope} onChange={(e) => setScope(e.target.value)}/>
-                    <Button variant="contained" color="primary" onClick={addScope}>Add</Button>
-                    <ul>
-                        {scopeList.map((scope, index) => (
-                            <li key={index}>{scope}</li>
-                        ))}
-                    </ul>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <Form.Control type="text" placeholder="Enter job scope" name="scope" value={scope} onChange={(e) => setScope(e.target.value)}/>
+                        <Button sx={{ml: "12px"}} variant="contained" color="primary" onClick={addScope}>Add</Button>
+                    </Box>
+                    
+                    <List dense>
+                        {generate(scopeList, "scope")}
+                    </List>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Requirements</Form.Label>
-                    <Form.Control type="text" placeholder="Enter job requirements" name="requirements" value={requirements} onChange={(e) => setRequirements(e.target.value)}/>
-                    <Button variant="contained" color="primary" onClick={addRequirements}>Add</Button>
-                    <ul>
-                        {requirementsList.map((requirements, index) => (
-                            <li key={index}>{requirements}</li>
-                        ))}
-                    </ul>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <Form.Control type="text" placeholder="Enter job requirements" name="requirements" value={requirements} onChange={(e) => setRequirements(e.target.value)}/>
+                        <Button sx={{ml: "12px"}} variant="contained" color="primary" onClick={addRequirements}>Add</Button>
+                    </Box>
+                    <List dense>
+                        {generate(requirementsList, "requirements")}
+                    </List>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
@@ -158,10 +181,12 @@ function AddJob(){
                     <Form.Label>Job Date End</Form.Label>
                     <Form.Control type="date" name="dateEnd" onChange={handleChange}/>
                 </Form.Group>
-
-                <Button variant="contained" color="primary" onClick={handleSubmit}>
-                    Submit
-                </Button>
+                        
+                <Box sx={{display: 'flex', justifyContent: "center", mt: "12px"}}>
+                    <Button sx={{pl: "64px", pr: "64px"}} variant="contained" color="success" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                </Box>
             </Form>
         </Container>
         </>

@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import Moment from 'react-moment';
 import axios from 'axios';
-import { Form, Button, Container, Row, Col, CloseButton, ListGroup } from 'react-bootstrap';
+import { Form, Container, Row, Col, CloseButton, ListGroup } from 'react-bootstrap';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import { Box, Button, Divider, IconButton, List, ListItem, ListItemText } from '@mui/material';
+
 
 function AddJob(props){
     const [job, setJob] = useState({
@@ -70,14 +73,12 @@ function AddJob(props){
     }
 
     useEffect(() => {
-        console.log(props.id);
         axios.get(`http://localhost:5000/jobs/view/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         })
         .then(res => {
-            console.log(res.data);
             setJob(res.data);
             setScopeList(res.data.scope);
             setRequirementsList(res.data.requirements);
@@ -93,17 +94,36 @@ function AddJob(props){
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(job);
-        console.log(scopeList);
-        console.log(requirementsList);
         axios.post("http://localhost:5000/jobs", job)
             .then(res => {
-                console.log(res);
                 window.location = "/admin/manage-job";
             })
             .catch(err => {
                 console.log(err);
             })
+    }
+
+    const handleDelete = (index, type) => {
+        if(type === "scope"){
+            setScopeList(scopeList.filter((_, i) => i !== index));
+            setJob({...job, scope: scopeList.filter((_, i) => i !== index)});
+        }else if(type === "requirements"){
+            setRequirementsList(requirementsList.filter((_, i) => i !== index));
+            setJob({...job, requirements: requirementsList.filter((_, i) => i !== index)});
+        }
+    }
+
+    function generate(element, type) {
+        return element.map((value, index) => (
+                <><Divider /><ListItem
+                secondaryAction={<IconButton edge="end" aria-label="delete" onClick={() => handleDelete(index, type)} >
+                    <RemoveCircleIcon />
+                </IconButton>}
+            >
+                <ListItemText primary={value} />
+            </ListItem><Divider /></>
+            )
+        );
     }
 
 
@@ -134,34 +154,25 @@ function AddJob(props){
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Scope:</Form.Label>
-                    <ListGroup as="ol" numbered >
-                    {scopeList.map((scope, index) => (
-                        <ListGroup.Item key={index}>{scope} <CloseButton onClick={() => removeScope(index)} /></ListGroup.Item>
-                        ))}
-                    </ListGroup>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="Enter job scope" 
-                    name="scope" 
-                    value={scope} 
-                    onChange={(e) => setScope(e.target.value)}/>
-                    <Button variant="primary" onClick={addScope}>Add</Button>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <Form.Control type="text" placeholder="Enter job scope" name="scope" value={scope} onChange={(e) => setScope(e.target.value)}/>
+                        <Button sx={{ml: "12px"}} variant="contained" color="primary" onClick={addScope}>Add</Button>
+                    </Box>
+                    
+                    <List dense>
+                        {generate(scopeList, "scope")}
+                    </List>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Requirements:</Form.Label>
-                    <ListGroup as="ol" numbered>
-                    {scopeList.map((requirements, index) => (
-                        <ListGroup.Item key={index}>{requirements} <CloseButton onClick={() => removeRequirements(index)} /></ListGroup.Item>
-                        ))}
-                    </ListGroup>
-                    <Form.Control 
-                    type="text" 
-                    placeholder="Enter job requirements" 
-                    name="requirements" 
-                    value={requirements} 
-                    onChange={(e) => setRequirements(e.target.value)}/>
-                    <Button variant="primary" onClick={addRequirements}>Add</Button>
+                    <Box sx={{display: 'flex', flexDirection: 'row'}}>
+                        <Form.Control type="text" placeholder="Enter job requirements" name="requirements" value={requirements} onChange={(e) => setRequirements(e.target.value)}/>
+                        <Button sx={{ml: "12px"}} variant="contained" color="primary" onClick={addRequirements}>Add</Button>
+                    </Box>
+                    <List dense>
+                        {generate(requirementsList, "requirements")}
+                    </List>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
@@ -239,7 +250,7 @@ function AddJob(props){
                     // onFocus={(e) => e.target.type = "date"}
                     // onBlur={(e) => e.target.type = "text"}
                     name="dateStart" 
-                    value={job?.dateStart}
+                    value={new Date(job?.dateStart).toISOString().slice(0, 10)}
                     onChange={handleChange}/>
                 </Form.Group>
 
@@ -251,13 +262,15 @@ function AddJob(props){
                     // onBlur={(e) => e.target.type = "text"}
                     name="dateEnd"
                     placeholder={<Moment format="DD/MM/YYYY">{job?.dateEnd}</Moment> }
-                    value={job?.dateEnd}
+                    value={new Date(job?.dateEnd).toISOString().slice(0, 10)}
                     onChange={handleChange}/>
                 </Form.Group>
 
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
-                    Submit
-                </Button>
+                <Box sx={{display: 'flex', justifyContent: "center", mt: "12px"}}>
+                    <Button sx={{pl: "64px", pr: "64px"}} variant="contained" color="success" onClick={handleSubmit}>
+                        Submit
+                    </Button>
+                </Box>
             </Form>
         </Container>
         </>
