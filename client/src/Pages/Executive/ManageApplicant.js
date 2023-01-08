@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+// import axios from "axios";
 import Navbar from "../../Components/Navbar";
 import ShortlistTable from "../../Components/Executive/ShortlistTable";
 import { Typography } from "@mui/material";
@@ -8,22 +8,22 @@ function ShortlistApplicant() {
   const [applicants, setApplicant] = useState([]);
   // const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    axios
-      .get("http://localhost:5000/applicants", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("authToken")}`,
-        },
-      })
-      .then((res) => {
-        console.log(res.data);
-        setApplicant(res.data);
-        // setIsLoading(false);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  }, []);
+  // useEffect(() => {
+  //   axios
+  //     .get("http://localhost:5000/applicants", {
+  //       headers: {
+  //         Authorization: `Bearer ${localStorage.getItem("authToken")}`,
+  //       },
+  //     })
+  //     .then((res) => {
+  //       console.log(res.data);
+  //       setApplicant(res.data);
+  //       // setIsLoading(false);
+  //     })
+  //     .catch((err) => {
+  //       console.log(err);
+  //     });
+  // }, []);
 
   return (
     <>

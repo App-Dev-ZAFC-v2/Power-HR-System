@@ -49,7 +49,7 @@ function ViewApplication() {
   const [jobs, setJobs] = useState([]);
   const [job, setJob] = useState({});
 
-  useEffect(() => {
+  useEffect(() => { 
     axios
       .get(`http://localhost:5000/applications/byapplicant/${applicantId}`)
       .then((res) => {

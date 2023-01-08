@@ -32,7 +32,11 @@ import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
 
+
 import ManageAnalytics from "./Pages/Executive/Analytics";
+
+import ReviewEmployee from "./Pages/Executive/ReviewFeedback";
+
 
 
 function App() {
@@ -75,7 +79,13 @@ function App() {
         />
 
         <Route path="/executive/manage-applicant" element={<ShortlistApplicant />} />
+
         <Route path="/executive/analytics" element={<ManageAnalytics />} />
+
+
+        <Route path="/executive/review-feedback" element={<ReviewEmployee />} />
+
+
         
       </Routes>
     </div>
