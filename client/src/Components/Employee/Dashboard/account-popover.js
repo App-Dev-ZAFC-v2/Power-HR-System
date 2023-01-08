@@ -1,4 +1,3 @@
-import { useContext } from "react";
 // import Router from 'next/router';
 import PropTypes from "prop-types";
 import { Box, MenuItem, MenuList, Popover, Typography } from "@mui/material";
@@ -8,15 +7,11 @@ import { useNavigate } from "react-router-dom";
 export const AccountPopover = (props) => {
   const { anchorEl, onClose, open, ...other } = props;
   const navigate = useNavigate();
-  const applicant = useSelector((state) => state.applicants.applicant);
+  const employee = useSelector((state) => state.employees.employee);
 
   const HandleSignOut = async () => {
     localStorage.removeItem("authToken");
     navigate("/");
-  };
-
-  const HandleEdit = async () => {
-    navigate("/profile");
   };
 
   return (
@@ -41,7 +36,7 @@ export const AccountPopover = (props) => {
       >
         <Typography variant="overline">Account</Typography>
         <Typography color="text.secondary" variant="body2">
-          {applicant?.name}
+          {employee?.name}
         </Typography>
       </Box>
       <MenuList
@@ -57,7 +52,6 @@ export const AccountPopover = (props) => {
           },
         }}
       >
-        <MenuItem onClick={HandleEdit}>Edit profile</MenuItem>
         <MenuItem onClick={HandleSignOut}>Sign out</MenuItem>
       </MenuList>
     </Popover>

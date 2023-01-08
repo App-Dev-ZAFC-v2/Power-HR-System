@@ -315,16 +315,28 @@ function QuestionPage(props) {
                 Thank you for your response!
               </Typography>
               {!form.once ? (
-                <Button
-                  onClick={() => {
-                    window.location.reload(true);
-                  }}
-                  variant="contained"
-                  color="success"
-                  sx={{ mt: 2 }}
-                >
-                  New response
-                </Button>
+                <Grid>
+                  <Button
+                    onClick={() => {
+                      window.location.reload(true);
+                    }}
+                    variant="contained"
+                    color="success"
+                    sx={{ mt: 2 }}
+                  >
+                    New response
+                  </Button>
+                  <Button
+                    onClick={() => {
+                      window.location.href = "/form";
+                    }}
+                    variant="contained"
+                    color="error"
+                    sx={{ mt: 2, ml: 2 }}
+                  >
+                    Back to Feedback Survery List
+                  </Button>
+                </Grid>
               ) : (
                 ""
               )}

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import Navbar from "../../Components/Navbar";
+// import Navbar from "../../Components/Navbar";
 import {
   Grid,
   Box,
@@ -12,6 +12,7 @@ import {
   FormHelperText,
 } from "@mui/material";
 import Link from "@mui/material/Link";
+import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
 // import updateusername from "./updateusername";
 
 import axios from "axios";
@@ -85,172 +86,197 @@ function Profile() {
   };
 
   return (
-    <Grid container spacing={2}>
-      <Grid item xs={12}>
-        <Navbar />
-      </Grid>
-      {isLoading ? (
-        "Loading..."
-      ) : (
-        <>
-          <Grid
-            container
-            mt={5}
-            spacing={0}
-            direction="column"
-            alignItems="center"
-            justify="center"
-          >
-            <Card
-              sx={{ minWidth: 300, boxShadow: 8, borderRadius: 3, padding: 4 }}
-            >
-              <CardContent>
-                <Typography variant="h5" component="div" mt={3}>
-                  User Profile
-                </Typography>
-                <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={3}>
-                  <Box>
-                    <TextField
-                      id="outlined-read-only-input"
-                      label="Name"
-                      defaultValue={user?.name}
-                      margin="normal"
-                      InputProps={{
-                        readOnly: isRead,
-                      }}
-                      onChange={(e) => {
-                        setUser({ ...user, name: e.target.value });
-                      }}
-                    />
-                  </Box>
-                  <Box>
-                    <TextField
-                      id="outlined-flexible-read-only-input"
-                      label="Email"
-                      defaultValue={user?.email}
-                      margin="normal"
-                      InputProps={{
-                        readOnly: isRead,
-                      }}
-                      onChange={(e) => {
-                        setUser({ ...user, email: e.target.value });
-                      }}
-                    />
-                  </Box>
-                  <Box>
-                    <TextField
-                      id="outlined-read-only-input"
-                      label="Contact Number"
-                      defaultValue={user?.contact}
-                      margin="normal"
-                      InputProps={{
-                        readOnly: isRead,
-                      }}
-                      onChange={(e) => {
-                        setUser({ ...user, contact: e.target.value });
-                      }}
-                    />
-                  </Box>
-                  {user.position && (
-                    <Box>
-                      <TextField
-                        id="outlined-read-only-input"
-                        label="Position"
-                        defaultValue={user?.position}
-                        margin="normal"
-                        InputProps={{
-                          readOnly: isRead,
-                        }}
-                      />
-                    </Box>
-                  )}
-                </Typography>
-              </CardContent>
-              <CardActions>
-                {userType === 0 &&
-                  (isRead ? (
-                    <Button
-                      size="small"
-                      variant="contained"
-                      sx={{
-                        backgroundColor: "blue",
-                      }}
-                      onClick={() => setIsRead(false)}
-                    >
-                      Update Profile
-                    </Button>
-                  ) : (
-                    <>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="error"
-                        onClick={() => refreshPage()}
-                      >
-                        Cancel
+    <>
+      <DashboardLayout tab="Profile">
+        <Grid container spacing={2}>
+          <Grid item xs={12}></Grid>
+          {isLoading ? (
+            "Loading..."
+          ) : (
+            <>
+              <Grid
+                container
+                mt={5}
+                spacing={0}
+                direction="column"
+                alignItems="center"
+                justify="center"
+              >
+                <Card
+                  sx={{
+                    minWidth: 500,
+                    boxShadow: 8,
+                    borderRadius: 3,
+                    padding: 4,
+                  }}
+                >
+                  <CardContent>
+                    <Typography variant="h5" component="div">
+                      User Profile
+                    </Typography>
+                    <Typography sx={{ mb: 1.5 }} color="text.secondary" mt={3}>
+                      <Box>
+                        <TextField
+                          id="outlined-read-only-input"
+                          label="Name"
+                          defaultValue={user?.name}
+                          margin="normal"
+                          InputProps={{
+                            readOnly: isRead,
+                          }}
+                          onChange={(e) => {
+                            setUser({ ...user, name: e.target.value });
+                          }}
+                          fullWidth
+                        />
+                      </Box>
+                      <Box>
+                        <TextField
+                          id="outlined-flexible-read-only-input"
+                          label="Email"
+                          defaultValue={user?.email}
+                          margin="normal"
+                          InputProps={{
+                            readOnly: isRead,
+                          }}
+                          onChange={(e) => {
+                            setUser({ ...user, email: e.target.value });
+                          }}
+                          fullWidth
+                        />
+                      </Box>
+                      <Box>
+                        <TextField
+                          id="outlined-flexible-read-only-input"
+                          label="Resume link"
+                          margin="normal"
+                          defaultValue={"https://resume.com/"}
+                          InputProps={{
+                            readOnly: isRead,
+                          }}
+                          onChange={(e) => {
+                            setUser({ ...user, resume: e.target.value });
+                          }}
+                          fullWidth
+                        />
+                      </Box>
+                      <Box>
+                        <TextField
+                          id="outlined-read-only-input"
+                          label="Contact Number"
+                          defaultValue={user?.contact}
+                          margin="normal"
+                          InputProps={{
+                            readOnly: isRead,
+                          }}
+                          onChange={(e) => {
+                            setUser({ ...user, contact: e.target.value });
+                          }}
+                        />
+                      </Box>
+
+                      {user.position && (
+                        <Box>
+                          <TextField
+                            id="outlined-read-only-input"
+                            label="Position"
+                            defaultValue={user?.position}
+                            margin="normal"
+                            InputProps={{
+                              readOnly: isRead,
+                            }}
+                          />
+                        </Box>
+                      )}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {userType === 0 &&
+                      (isRead ? (
+                        <Button
+                          size="small"
+                          variant="contained"
+                          sx={{
+                            backgroundColor: "blue",
+                          }}
+                          onClick={() => setIsRead(false)}
+                        >
+                          Update Profile
+                        </Button>
+                      ) : (
+                        <>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="error"
+                            onClick={() => refreshPage()}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            size="small"
+                            variant="contained"
+                            color="success"
+                            onClick={handleSubmit}
+                          >
+                            Submit Update
+                          </Button>
+                        </>
+                      ))}
+                    <Grid>
+                      {success.fetchSuccess && (
+                        <FormHelperText
+                          severity="success"
+                          contained
+                          variant="filled"
+                        >
+                          {success.fetchSuccessMsg}
+                        </FormHelperText>
+                      )}
+                      {error.fetchError && (
+                        <FormHelperText error contained variant="filled">
+                          {error.fetchErrorMsg}
+                        </FormHelperText>
+                      )}
+                    </Grid>
+                  </CardActions>
+                </Card>
+              </Grid>
+              <Grid container mt={2} rowSpacing={1} direction="row">
+                <Grid item xs={6}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    ml={55}
+                  >
+                    {/* <Link href="/profile/update-username">
+                      <Button variant="contained" color="primary">
+                        Update Username
                       </Button>
-                      <Button
-                        size="small"
-                        variant="contained"
-                        color="success"
-                        onClick={handleSubmit}
-                      >
-                        Submit Update
-                      </Button>
-                    </>
-                  ))}
-                <Grid>
-                  {success.fetchSuccess && (
-                    <FormHelperText
-                      severity="success"
-                      contained
-                      variant="filled"
-                    >
-                      {success.fetchSuccessMsg}
-                    </FormHelperText>
-                  )}
-                  {error.fetchError && (
-                    <FormHelperText error contained variant="filled">
-                      {error.fetchErrorMsg}
-                    </FormHelperText>
-                  )}
+                    </Link> */}
+                  </Box>
                 </Grid>
-              </CardActions>
-            </Card>
-          </Grid>
-          <Grid container mt={2} rowSpacing={1} direction="row">
-            <Grid item xs={6}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                ml={55}
-              >
-                <Link href="/profile/update-username">
-                  <Button variant="contained" color="primary">
-                    Update Username
-                  </Button>
-                </Link>
-              </Box>
-            </Grid>
-            <Grid item xs={6}>
-              <Box
-                display="flex"
-                alignItems="center"
-                justifyContent="center"
-                mr={55}
-              >
-                <Link href="/profile/update-password">
-                  <Button variant="contained" color="primary">
-                    Update Password
-                  </Button>
-                </Link>
-              </Box>
-            </Grid>
-          </Grid>
-        </>
-      )}
-    </Grid>
+                {/* <Grid item xs={6}>
+                  <Box
+                    display="flex"
+                    alignItems="center"
+                    justifyContent="center"
+                    mr={55}
+                  >
+                    <Link href="/profile/update-password">
+                      <Button variant="contained" color="primary">
+                        Update Password
+                      </Button>
+                    </Link>
+                  </Box>
+                </Grid> */}
+              </Grid>
+            </>
+          )}
+        </Grid>
+      </DashboardLayout>
+    </>
   );
 }
 

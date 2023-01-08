@@ -27,7 +27,7 @@ export const DashboardNavbar = (props) => {
   const settingsRef = useRef(null);
   const [openAccountPopover, setOpenAccountPopover] = useState(false);
 
-  const applicant = useSelector((state) => state.applicants.applicant);
+  const employee = useSelector((state) => state.employees.employee);
 
   return (
     <>
@@ -83,7 +83,7 @@ export const DashboardNavbar = (props) => {
           <Avatar
             onClick={() => setOpenAccountPopover(true)}
             ref={settingsRef}
-            alt={applicant?.name}
+            alt={employee?.name}
             sx={{
               cursor: "pointer",
               height: 40,

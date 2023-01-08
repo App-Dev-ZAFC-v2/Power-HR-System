@@ -206,8 +206,11 @@ export default function ViewForm(props) {
 
   return (
     <>
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+      <TableContainer
+        component={Paper}
+        sx={{ minWidth: 200, maxWidth: 1000, boxShadow: 10 }}
+      >
+        <Table aria-label="simple table">
           <TableHead>
             <TableRow sx={{ borderColor: "grey.500" }}>
               <TableCell>Question Title</TableCell>
@@ -243,12 +246,12 @@ export default function ViewForm(props) {
                   {row.description}
                 </TableCell>
                 <TableCell align="center" sx={{ borderColor: "grey.300" }}>
-                  {status[index]}
+                  {status[index + page * rowsPerPage]}
                 </TableCell>
                 <TableCell align="center" sx={{ borderColor: "grey.300" }}>
                   <Button
                     variant="contained"
-                    color="success"
+                    color="primary"
                     size="small"
                     onClick={() => (window.location = "/form/" + row._id)}
                     width="100%"
