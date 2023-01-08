@@ -1,14 +1,14 @@
 import express from 'express'; // import express
 // import authenicate middleware
-import { AuthToken, AuthAdmin, AuthExecutive } from '../middleware/Auth.js';
+import { AuthToken, AuthAdmin, AuthExecutive, AuthAdminOrExecutive } from '../middleware/Auth.js';
 
 import { getEmployees, createEmployee, getEmployeeByID, updateEmployee, deleteEmployee, registerEmployee, removeEmployee, reactivateEmployee} from '../controllers/employee.js'; // import the getEmployees and createEmployee functions from the employee controller
 
 const router = express.Router(); // create a router
 
-router.get('/', AuthExecutive,  getEmployees);
+//router.get('/', AuthExecutive,  getEmployees); //find this culprit
 
-router.get('/', AuthAdmin, getEmployees);
+router.get('/', AuthAdminOrExecutive, getEmployees);
 
 router.get('/:id', AuthAdmin, getEmployeeByID);
 

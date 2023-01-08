@@ -66,3 +66,17 @@ export const AuthExecutive = (req, res, next) => {
         next();
     });
 }
+
+export const AuthAdminOrExecutive = (req, res, next) => {
+    const authHeader = req.headers['authorization'];
+    const token = authHeader && authHeader.split(' ')[1];
+    if(token == null) return res.sendStatus(401);
+    jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+        //send status with json
+        if(err) return res.status(403).json({message: 'You are not authorized to access this resource'});
+        // if(err) return res.sendStatus(403);
+        if(user.userType !== 1 && user.userType !== 3) return res.status(403).json({message: 'You are not logged in as an admin or executive'});
+        req.user = user;
+        next();
+    });
+}

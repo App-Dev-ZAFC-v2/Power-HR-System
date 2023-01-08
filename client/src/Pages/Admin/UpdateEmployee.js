@@ -5,6 +5,8 @@ import EditEmployee from '../../Components/Admin/Form/EditEmployee';
 import AddEmployee from '../../Components/Admin/Form/AddEmployee';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
+import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';
+import { Paper } from '@mui/material';
 
 function UpdateEmployee(){
     const{ id } = useParams();
@@ -41,24 +43,25 @@ function UpdateEmployee(){
 
     return (
         <>
-        <Navbar/>
-        <Container >
+        <DashboardLayout tab={id? "Update Employee" : "Add Employee"}>
+        <Container style={{marginTop: "24px"}} >
             <Row>
                 <Col className='m-auto' md={6}>
+                    <Paper elevation={12} style={{padding: "24px"}}>
                     {
                         id ? 
                         <>
-                        <h1>Update Employee</h1>
                         <EditEmployee id={id}/>
                         </> : 
                         <>
-                        <h1>Add Employee</h1>
                         <AddEmployee />
                         </>
                     }
+                    </Paper>
                 </Col>
             </Row>
         </Container>
+        </DashboardLayout>
         </>
     )           
 

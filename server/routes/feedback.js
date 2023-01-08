@@ -26,6 +26,6 @@ router.patch("/:id", updateFeedback);
 
 router.delete("/:id", deleteFeedback);
 
-router.delete('/employee', getEmployeeWithFeedback);
+// router.delete('/employee', getEmployeeWithFeedback);
 
 export default router; // export the router

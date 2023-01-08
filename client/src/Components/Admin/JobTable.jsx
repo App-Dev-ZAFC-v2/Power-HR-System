@@ -524,6 +524,8 @@ import Paper from "@mui/material/Paper";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Switch from "@mui/material/Switch";
 import { visuallyHidden } from "@mui/utils";
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 // import { Button } from "react-bootstrap";
 // import { Typography } from "@mui/material";
 // import Collapse from "@mui/material/Collapse";
@@ -532,11 +534,10 @@ import { visuallyHidden } from "@mui/utils";
 // import DialogContent from "@mui/material/DialogContent";
 // import DialogContentText from "@mui/material/DialogContentText";
 // import DialogTitle from "@mui/material/DialogTitle";
-import { Collapse, IconButton, Typography } from "@mui/material";
+import { Button, Collapse, IconButton, Tooltip, Typography } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import Moment from 'react-moment';
-import { Button } from "react-bootstrap";
 // import ApplicationTable from "./ApplicationTable";
 // import { useParams } from "react-router-dom";
 
@@ -682,7 +683,6 @@ export default function JobTable() {
         }
     })
     .then(res => {
-        console.log(res.data);
         setRows(res.data);
         setIsLoading(false);
     })
@@ -699,7 +699,6 @@ const handleDelete = (id) => {
           }
       })
           .then(res => {
-              console.log(res);
               // remove the deleted employee from the table
               const newRows = rows.filter(row => row.id !== id);
               setRows([...newRows]);
@@ -747,7 +746,7 @@ const handleDelete = (id) => {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper elevation={12} sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
             sx={{ minWidth: 750, border: "float" }}
@@ -802,8 +801,16 @@ const handleDelete = (id) => {
                          <Moment format="DD/MM/YYYY">{row?.dateEnd}</Moment>
                        </TableCell>
                        <TableCell align="left">
-                         <Button variant="primary" href={`/admin/update-job/${row?._id}`} >Edit</Button>
-                         <Button variant='danger' onClick={() => handleDelete(row?._id)}>Delete</Button>
+                        <Tooltip title="Edit">
+                            <IconButton color="primary" aria-label="edit" href={`/admin/update-employee/${row?._id}`}>
+                              <EditIcon />
+                            </IconButton>
+                          </Tooltip>
+                          <Tooltip title="Delete">
+                            <IconButton color="error" aria-label="delete" onClick={() => handleDelete(row?._id)}>
+                              <DeleteIcon />
+                            </IconButton>
+                          </Tooltip>
                        </TableCell>
                       </TableRow>
                       <TableRow>
@@ -888,10 +895,6 @@ const handleDelete = (id) => {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }

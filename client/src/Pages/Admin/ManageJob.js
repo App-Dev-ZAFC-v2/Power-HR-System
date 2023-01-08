@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Navbar from '../../Components/Navbar';
 import JobTable from '../../Components/Admin/JobTable';
-import {Button} from 'react-bootstrap';
-import { Typography } from '@mui/material';
+import {  Button, Container, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
+import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';
 
 function ManageJob() {
     const [jobs, setJobs] = useState([]);
@@ -16,7 +16,6 @@ function ManageJob() {
             }
         })
         .then(res => {
-            console.log(res.data);
             setJobs(res.data);
             setIsLoading(false);
         })
@@ -27,15 +26,16 @@ function ManageJob() {
 
     return (
         <>
-        <Navbar/>
-        <div className="container"><br></br>
-            <Typography align='center'><h1>Manage Job</h1></Typography>
-            <Typography align='center' ><h6>Here you can add,update and delete jobs for the applicant.</h6></Typography>
-            <br></br>
-            <Button variant="primary" href="/admin/update-job">Add Job</Button>
-            <br></br><br></br>
+        <DashboardLayout tab="Manage Job">
+        <Container style={{marginTop: "24px", padding: "0px"}}>
+            <Button variant="contained" color='primary' href="/admin/update-job" sx={{mb: "12px"}}>
+                <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+                    Add Job
+                </Typography>
+            </Button>
             <JobTable {...jobs}/>
-        </div>
+        </Container>
+        </DashboardLayout>
         </>
     )
 

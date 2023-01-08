@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
 
-import { Form, Button, Container, Row, Col } from 'react-bootstrap';
+import { Form, Container, Row, Col } from 'react-bootstrap';
+import { Button } from '@mui/material';
 
 function AddJob(){
     const [job, setJob] = useState({
@@ -89,7 +90,7 @@ function AddJob(){
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Scope</Form.Label>
                     <Form.Control type="text" placeholder="Enter job scope" name="scope" value={scope} onChange={(e) => setScope(e.target.value)}/>
-                    <Button variant="primary" onClick={addScope}>Add</Button>
+                    <Button variant="contained" color="primary" onClick={addScope}>Add</Button>
                     <ul>
                         {scopeList.map((scope, index) => (
                             <li key={index}>{scope}</li>
@@ -100,7 +101,7 @@ function AddJob(){
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Requirements</Form.Label>
                     <Form.Control type="text" placeholder="Enter job requirements" name="requirements" value={requirements} onChange={(e) => setRequirements(e.target.value)}/>
-                    <Button variant="primary" onClick={addRequirements}>Add</Button>
+                    <Button variant="contained" color="primary" onClick={addRequirements}>Add</Button>
                     <ul>
                         {requirementsList.map((requirements, index) => (
                             <li key={index}>{requirements}</li>
@@ -158,7 +159,7 @@ function AddJob(){
                     <Form.Control type="date" name="dateEnd" onChange={handleChange}/>
                 </Form.Group>
 
-                <Button variant="primary" type="submit" onClick={handleSubmit}>
+                <Button variant="contained" color="primary" onClick={handleSubmit}>
                     Submit
                 </Button>
             </Form>
