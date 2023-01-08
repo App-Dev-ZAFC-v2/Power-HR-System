@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import { Button } from 'react-bootstrap';
 import axios from 'axios';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../Components/Old Components/Navbar';
 import Form from 'react-bootstrap/Form';
 
 

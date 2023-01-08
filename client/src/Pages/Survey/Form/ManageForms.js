@@ -2,7 +2,7 @@ import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, D
 import DeleteIcon from '@mui/icons-material/Delete';
 import photo from "../../../Assets/BackgroundProfile/Cloudy.png";
 import icon from "../../../Assets/addIcon.png";
-import Navbar from "../../../Components/Navbar";
+import Navbar from "../../../Components/Old Components/Navbar";
 import React, { useEffect, useCallback, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { deleteForm, createForm, getFormsByUser, getFormsByCollaborator } from "../../../Redux/slices/form";

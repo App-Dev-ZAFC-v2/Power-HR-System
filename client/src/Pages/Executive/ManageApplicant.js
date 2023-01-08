@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 // import axios from "axios";
-import Navbar from "../../Components/Navbar";
+import Navbar from "../../Components/Old Components/Navbar";
 import ShortlistTable from "../../Components/Executive/ShortlistTable";
 import { Typography } from "@mui/material";
 

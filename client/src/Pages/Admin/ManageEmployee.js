@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import axios from 'axios';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../Components/Old Components/Navbar';
 import EmployeesTable from '../../Components/Admin/EmployeesTable';
 import { Table } from 'react-bootstrap';
 import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';

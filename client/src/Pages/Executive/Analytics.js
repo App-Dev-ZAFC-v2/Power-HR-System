@@ -1,6 +1,6 @@
 // import React, { useState, useEffect } from 'react';
 import React from 'react';
-import Navbar from "../../Components/Navbar";
+import Navbar from "../../Components/Old Components/Navbar";
 import { Grid, Paper, Typography } from "@mui/material";
 import BarChart from "../../Components/Charts/BarChart";
 import DoughnutChart from "../../Components/Charts/DoughnutChart";

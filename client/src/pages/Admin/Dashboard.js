@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../Components/Old Components/Navbar';
 import { Button } from 'react-bootstrap';
 import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';
 

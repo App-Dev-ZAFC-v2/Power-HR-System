@@ -17,8 +17,8 @@ import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
 import Profile from "./Pages/User/Profile";
 
-import ManageFeedback from "./Pages/Admin/ManageFeedback";
-import AddFeedback from "./Pages/Admin/AddFeedback";
+import ManageFeedback from "./Pages/Old Pages/ManageFeedback";
+import AddFeedback from "./Pages/Old Pages/AddFeedback";
 
 import UpdateUsername from "./Pages/User/Pages/updateusername";
 import UpdatePassword from "./Pages/User/Pages/updatepassword";
@@ -58,8 +58,8 @@ function App() {
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
         <Route path="/admin/update-employee/:id" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
-        <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
-        <Route path="/admin/add-feedback" element={<AddFeedback />} />
+        {/* <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
+        <Route path="/admin/add-feedback" element={<AddFeedback />} /> */}
         <Route path="/admin/manage-forms" element={<ManageForms />} />
 
         <Route path="/form/edit-form/:id" element={<EditForm />} />

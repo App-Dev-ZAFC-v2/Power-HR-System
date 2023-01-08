@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { useParams } from "react-router-dom";
 
-import Navbar from "../../../Components/Navbar";
+import Navbar from "../../../Components/Old Components/Navbar";
 import { useDispatch, useSelector } from "react-redux";
 import { getFormByID } from "../../../Redux/slices/form";
 import {

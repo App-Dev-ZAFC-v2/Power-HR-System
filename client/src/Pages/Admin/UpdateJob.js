@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Navbar from '../../Components/Navbar';
+import Navbar from '../../Components/Old Components/Navbar';
 import EditJob from '../../Components/Admin/Form/EditJob';
 import AddJob from '../../Components/Admin/Form/AddJob';
 import { Form, Button, Container, Row, Col } from 'react-bootstrap';

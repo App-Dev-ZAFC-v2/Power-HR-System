@@ -1,5 +1,5 @@
 import React from "react";
-import Navbar from "../../Components/Navbar";
+import Navbar from "../../Components/Old Components/Navbar";
 import ProfileCard from "../../Components/ProfileCard";
 import Container from "@mui/material/Container";
 import Welcome from "../../Components/Welcome";

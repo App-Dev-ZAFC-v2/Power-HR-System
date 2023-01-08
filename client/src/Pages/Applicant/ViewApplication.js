@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-import Navbar from "../../Components/Navbar";
+import Navbar from "../../Components/Old Components/Navbar";
 import JobView from "../../Components/Jobs/JobView";
 
 import {

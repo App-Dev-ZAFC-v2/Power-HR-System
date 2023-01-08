@@ -1,11 +1,11 @@
 import { AppBar, Box, Toolbar, IconButton, Typography, Menu, Container, Avatar, Button, Tooltip, MenuItem, Link, Badge, Paper, Divider } from "@mui/material";
-import Logo from "../Assets/Logo.png";
+import Logo from "../../Assets/Logo.png";
 import { useState, useEffect } from "react";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useDispatch, useSelector } from "react-redux";
-import { getApplicantByID } from "../Redux/slices/applicant";
-import { getAdminByID, updateAdmin, updateCurrentAdmin } from "../Redux/slices/admin";
-import { getEmployeeByID } from "../Redux/slices/employee";
+import { getApplicantByID } from "../../Redux/slices/applicant";
+import { getAdminByID, updateAdmin, updateCurrentAdmin } from "../../Redux/slices/admin";
+import { getEmployeeByID } from "../../Redux/slices/employee";
 import NotificationsIcon from '@mui/icons-material/Notifications';
 
 function ResponsiveAppBar() {
