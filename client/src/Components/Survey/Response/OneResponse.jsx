@@ -16,8 +16,8 @@ function OneResponse(prop){
         //if yes, push to response to listResponse
         var temp = [];
         if(response){
-            response.forEach((res) => {
-                questions.forEach((q) => {
+            response?.forEach((res) => {
+                questions?.forEach((q) => {
                     if(res.questionID === q._id){
                         temp.push({response: res, question: q})
                     }
