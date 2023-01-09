@@ -174,12 +174,12 @@ function AddJob(){
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Date Start</Form.Label>
-                    <Form.Control type="date" name="dateStart" onChange={handleChange}/>
+                    <Form.Control type="date" name="dateStart" defaultValue={new Date(job?.dateStart).toISOString().slice(0, 10)} onChange={handleChange}/>
                 </Form.Group>
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Date End</Form.Label>
-                    <Form.Control type="date" name="dateEnd" onChange={handleChange}/>
+                    <Form.Control type="date" name="dateEnd" defaultValue={new Date(job?.dateEnd).toISOString().slice(0, 10)} onChange={handleChange}/>
                 </Form.Group>
                         
                 <Box sx={{display: 'flex', justifyContent: "center", mt: "12px"}}>
