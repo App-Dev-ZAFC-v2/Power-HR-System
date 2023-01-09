@@ -1,7 +1,7 @@
 // import React, { useState, useEffect } from 'react';
 import React from 'react';
 import Navbar from "../../Components/Old Components/Navbar";
-import { Grid, Paper, Typography } from "@mui/material";
+import { Box, Card, CardContent, Grid, Paper, Typography } from "@mui/material";
 import BarChart from "../../Components/Charts/BarChart";
 import DoughnutChart from "../../Components/Charts/DoughnutChart";
 import PieChart from "../../Components/Charts/PieChart";
@@ -60,27 +60,34 @@ function ManageAnalytics() {
 
     <DashboardLayout tab="Analytics">
     <Container maxWidth="lg">
-      <Grid container spacing={2} mt={5}>
-        <Grid item md={6} xs={12}>
+      <Grid container spacing={2} mt={3}>
+        <Grid item sm={6} xs={12}>
           <Paper elevation={12}>
-            <BarChart chartData  />
+            <CardContent>
+              <BarChart chartData  />
+            </CardContent>
           </Paper>
         </Grid>
 
-        <Grid item md={6}  xs={12}>
+        <Grid item sm={6} xs={12}>
           <Paper elevation={12}>
-            <LineChart />
-          </Paper>
-        </Grid>
+            <CardContent>
+              <LineChart />
+            </CardContent>
+            </Paper>
         </Grid>
 
-        <br></br>
-
-        <Grid item md={6}  xs={12}>
-          <Paper elevation={12}>
-            <DoughnutChart />
-          </Paper>
+        <Grid item sm={12} xs={12}>
+          <Box sx={{display: 'flex', justifyContent: 'center', width: "100%"}}>
+            <Paper elevation={12}>
+                <CardContent>
+                  <DoughnutChart />
+              </CardContent>
+              </Paper>
+            </Box>
+          </Grid>
         </Grid>
+        
     </Container>
     </DashboardLayout>
     </>

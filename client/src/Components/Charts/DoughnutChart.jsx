@@ -8,6 +8,7 @@ import {
     Tooltip,
     Legend
   } from "chart.js";
+import { Box } from "@mui/material";
   
 
 
@@ -61,15 +62,7 @@ export const options = {
 
 function DoughnutChart() {
     return (
-        <div>
-            <Doughnut data={data} width={10} height={50} options={options}
-            />
-            <div
-        
-            >
-            </div>
-        </div>
-    
+        <Doughnut data={data} options={options}/>
     );
 
   }
