@@ -60,26 +60,15 @@ function ManageAnalytics() {
 
     <DashboardLayout tab="Analytics">
     <Container maxWidth="lg">
-      <br></br>
-    <Typography align="center">
-        <h1>Employee Analytics</h1>
-      </Typography>
-      <Typography align="center">
-        <h6>
-         This page shows the active and inactive employees in this company as well as.....
-
-        </h6>
-      </Typography>
       <Grid container spacing={2} mt={5}>
-        
         <Grid item md={6} xs={12}>
-          <Paper>
+          <Paper elevation={12}>
             <BarChart chartData  />
           </Paper>
         </Grid>
 
         <Grid item md={6}  xs={12}>
-          <Paper>
+          <Paper elevation={12}>
             <LineChart />
           </Paper>
         </Grid>
@@ -88,10 +77,9 @@ function ManageAnalytics() {
         <br></br>
 
         <Grid item md={6}  xs={12}>
-          <Paper>
+          <Paper elevation={12}>
             <DoughnutChart />
           </Paper>
-          
         </Grid>
     </Container>
     </DashboardLayout>
