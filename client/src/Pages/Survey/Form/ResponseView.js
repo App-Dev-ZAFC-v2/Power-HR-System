@@ -1,9 +1,8 @@
 import Response from "../../../Components/Survey/Response/Response";
 
-function Response(){
+export default function ResponseView(){
     return(
         <Response/>
     )
 }
 
-export default Response;
