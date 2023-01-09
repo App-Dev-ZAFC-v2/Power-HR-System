@@ -26,7 +26,7 @@ function OneResponse(prop){
         }
         setListResponse(temp)
         setLoad(false)
-    },[index])
+    },[index, response, questions])
         
 
 
