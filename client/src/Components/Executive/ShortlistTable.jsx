@@ -166,7 +166,7 @@ export default function ShortlistTable() {
 
   return (
     <Box sx={{ width: "100%" }}>
-      <Paper sx={{ width: "100%", mb: 2 }}>
+      <Paper elevation={12} sx={{ width: "100%", mb: 2 }}>
         <TableContainer>
           <Table
             sx={{ minWidth: 750, border: "float" }}
@@ -217,9 +217,10 @@ export default function ShortlistTable() {
                           style={{
                             paddingBottom: 0,
                             paddingTop: 0,
-                            backgroundColor: "black",
                             color: "white",
                           }}
+
+                          sx={{ bgcolor: "#374151"}}
                           colSpan={6}
                         >
                           <Collapse
@@ -261,10 +262,6 @@ export default function ShortlistTable() {
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
-      <FormControlLabel
-        control={<Switch checked={dense} onChange={handleChangeDense} />}
-        label="Dense padding"
-      />
     </Box>
   );
 }

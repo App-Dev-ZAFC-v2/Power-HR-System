@@ -27,6 +27,7 @@ import {
   Pagination,
 } from "@mui/material";
 import Moment from "react-moment";
+import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
 
 const options = [
   { value: "0", label: "All" },
@@ -190,7 +191,7 @@ function JobPage() {
 
   return (
     <>
-      <ResponsiveAppBar />
+      <DashboardLayout tab="Search Jobs">
       <Navbar bg="light" expand="lg">
         <Container fluid>
           <Navbar.Brand>Search</Navbar.Brand>
@@ -231,7 +232,7 @@ function JobPage() {
           </Navbar.Collapse>
         </Container>
       </Navbar>
-      <Container>
+      <Container style={{marginTop: "12px"}}>
         <Grid container spacing={2}>
           <Grid item xs={12} md={4}>
             <Typography variant="body2" gutterBottom mt={3}>
@@ -289,7 +290,7 @@ function JobPage() {
                 <Grid container spacing={2}>
                   <Grid item xs={12} md={6}>
                     {isApplied(job?._id) ? (
-                      <Button fullWidth disabled>
+                      <Button fullWidth disabled variant="contained">
                         Applied
                       </Button>
                     ) : (
@@ -334,6 +335,7 @@ function JobPage() {
           </Grid>
         </Grid>
       </Container>
+      </DashboardLayout>
     </>
   );
 }

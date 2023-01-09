@@ -7,6 +7,7 @@ import DoughnutChart from "../../Components/Charts/DoughnutChart";
 import PieChart from "../../Components/Charts/PieChart";
 import { Container } from '@mui/system';
 import LineChart from '../../Components/Charts/LineChart';
+import { DashboardLayout } from '../../Components/Executive/Dashboard/dashboard-layout';
 
 //import axios from 'axios';
 
@@ -57,8 +58,8 @@ function ManageAnalytics() {
   return (
     <>
 
-    <Navbar />
-    <Container maxWidth="lg">]
+    <DashboardLayout tab="Analytics">
+    <Container maxWidth="lg">
       <br></br>
     <Typography align="center">
         <h1>Employee Analytics</h1>
@@ -93,6 +94,7 @@ function ManageAnalytics() {
           
         </Grid>
     </Container>
+    </DashboardLayout>
     </>
   );
 }

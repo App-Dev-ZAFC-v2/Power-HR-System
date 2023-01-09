@@ -1,26 +1,31 @@
 // import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Old Components/Navbar";
-import { Typography } from "@mui/material";
+import { Container, Typography } from "@mui/material";
 import FormFeedback from "../../Components/Executive/FormFeedback";
+import { DashboardLayout } from "../../Components/Executive/Dashboard/dashboard-layout";
+import { useDispatch, useSelector } from "react-redux";
+import { useCallback, useEffect } from "react";
+import { getFormsByPublished } from "../../Redux/slices/form";
 
 function ReviewEmployee() {
 
+  const dispatch = useDispatch();
+  const forms = useSelector((state) => state.forms.form);
+
+  const retrieveForms = useCallback(() => {
+    dispatch(getFormsByPublished());
+  }, [dispatch]);
+
+  useEffect(() => {
+    retrieveForms();
+  }, [retrieveForms]);
+
   return (
-    <>
-      <Navbar />
-      <br></br>
-      <div className="container">
-        <Typography align="center">
-          <h1>Review Employee Survey Response</h1>
-        </Typography>
-        <Typography align="center">
-          <p>Basically display employee list - when select, pop up questions answered</p>
-        </Typography>
-        <br></br>
-        {/* <ShortlistTable {...applicants} /> */}
-        <FormFeedback />
-      </div>
-    </>
+      <DashboardLayout tab="Survey Response" >
+        <Container>
+          <FormFeedback />
+        </Container>
+      </DashboardLayout>
   );
 }
 

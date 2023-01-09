@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Old Components/Navbar";
 import ShortlistTable from "../../Components/Executive/ShortlistTable";
 import { Typography } from "@mui/material";
+import { DashboardLayout } from "../../Components/Executive/Dashboard/dashboard-layout";
 
 function ShortlistApplicant() {
   const [applicants, setApplicant] = useState([]);
@@ -27,21 +28,17 @@ function ShortlistApplicant() {
 
   return (
     <>
-      <Navbar />
+      <DashboardLayout tab="Manage Applicant">
       <br></br>
       <div className="container">
-        <Typography align="center">
-          <h1>Manage application</h1>
-        </Typography>
-        <Typography align="center">
-          <h6>
+        <Typography variant="h6" align="center">
             Applicants who applied the job offered may be shortlisted based on
             their qualification
-          </h6>
         </Typography>
         <br></br>
         <ShortlistTable {...applicants} />
       </div>
+      </DashboardLayout>
     </>
   );
 }

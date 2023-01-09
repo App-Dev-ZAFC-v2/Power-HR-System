@@ -3,6 +3,7 @@ import axios from "axios";
 
 import Navbar from "../../Components/Old Components/Navbar";
 import JobView from "../../Components/Jobs/JobView";
+import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
 
 import {
   Container,
@@ -14,6 +15,10 @@ import {
   Grid,
   Box,
   Modal,
+  Dialog,
+  DialogContent,
+  DialogActions,
+  Button,
 } from "@mui/material";
 
 const style = {
@@ -64,16 +69,14 @@ function ViewApplication() {
 
   const handleCardClick = (e) => {
     //get the job object from the jobs array
+    handleOpen();
     setJob(jobs.find((job) => job._id === e));
   };
 
   return (
     <>
-      <Navbar />
-      <Container maxWidth="lg">
-        <Typography variant="h4" component="h1" gutterBottom my={5}>
-          View Applications
-        </Typography>
+      <DashboardLayout tab="View Applications">
+      <Container style={{marginTop: "126px"}} maxWidth="lg">
         <Grid container spacing={3}>
           {Applications.map((application) => (
             <Card
@@ -117,14 +120,13 @@ function ViewApplication() {
             </Card>
           ))}
 
-          {jobs.map((job) => (
-            <Modal
+            {/* <Modal
               open={open}
               onClose={handleClose}
               aria-labelledby="modal-modal-title"
               aria-describedby="modal-modal-description"
             >
-              <Box sx={style}>
+              <Box>
                 <JobView job={job} />
 
                 {/* <Typography variant="body2" color="textSecondary" component="p">
@@ -133,11 +135,27 @@ function ViewApplication() {
                 <Typography variant="body2" color="textSecondary" component="p">
                   {job?.location}
                 </Typography> */}
-              </Box>
-            </Modal>
-          ))}
+              {/* </Box>
+            </Modal> */}
+
+          <Dialog
+            open={open}
+            onClose={handleClose}
+            aria-labelledby="draggable-dialog-title"
+          >
+            <DialogContent>
+              <JobView job={job} />
+            </DialogContent>
+            <DialogActions>
+              <Button autoFocus onClick={handleClose}>
+                Close
+              </Button>
+            </DialogActions>
+          </Dialog>
+
         </Grid>
       </Container>
+      </DashboardLayout>
     </>
   );
 }

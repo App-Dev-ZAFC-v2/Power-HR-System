@@ -38,14 +38,9 @@ const items = [
     title: "Manage Analytics",
   },
   {
-    href: "/executive/manage-applicant",
-    icon: <FactCheckIcon fontSize="small" />,
-    title: "Manage Applicant Status",
-  },
-  {
     href: "/executive/review-feedback",
     icon: <RateReviewIcon fontSize="small" />,
-    title: "Review Survey Responses",
+    title: "Review Survey",
   },
 ];
 
