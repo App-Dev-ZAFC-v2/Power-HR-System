@@ -12,7 +12,7 @@ function AddJob(){
         description: "",
         scope: [],
         requirements: [],
-        level: "",
+        level: "Entry",
         salary: {
             min: 0,
             max: 0
@@ -134,9 +134,9 @@ function AddJob(){
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Level</Form.Label>
-                    <Form.Control as="select" name="level" onChange={handleChange}>
+                    <Form.Control as="select" name="level" value={job?.level} onChange={handleChange}>
                         {levelList.map((level, index) => (
-                            <option key={index}>{level}</option>
+                            <option value={level} key={index}>{level}</option>
                         ))}
                     </Form.Control>
                 </Form.Group>
