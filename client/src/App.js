@@ -38,6 +38,7 @@ import ReviewEmployee from "./Pages/Executive/ReviewFeedback";
 
 import SurveyForm from "./Pages/Survey/Feedback/SurveyForm";
 import QuestionPage from "./Pages/Survey/Feedback/QuestionPage";
+import Response from "./Pages/Survey/Form/Response";
 
 function App() {
   return (
@@ -65,6 +66,7 @@ function App() {
         <Route path="/form/edit-form/:id" element={<EditForm />} />
         <Route path="/form" element={<SurveyForm />} />
         <Route path="/form/:id" element={<QuestionPage />} />
+        <Route path="/form/response/:id" element={<Response />} />
 
         <Route path="/profile/update-username" element={<UpdateUsername />} />
         <Route path="/profile/update-password" element={<UpdatePassword />} />

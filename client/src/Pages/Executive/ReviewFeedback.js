@@ -1,6 +1,6 @@
 // import React, { useEffect, useState } from "react";
 import Navbar from "../../Components/Old Components/Navbar";
-import { Container, Typography } from "@mui/material";
+import { Container, Grid, Typography } from "@mui/material";
 import FormFeedback from "../../Components/Executive/FormFeedback";
 import { DashboardLayout } from "../../Components/Executive/Dashboard/dashboard-layout";
 import { useDispatch, useSelector } from "react-redux";
@@ -22,8 +22,10 @@ function ReviewEmployee() {
 
   return (
       <DashboardLayout tab="Survey Response" >
-        <Container>
+        <Container maxWidth="lg">
+            <Grid container spacing={6} sx={{ mt: 0 }}>
           <FormFeedback />
+            </Grid>
         </Container>
       </DashboardLayout>
   );

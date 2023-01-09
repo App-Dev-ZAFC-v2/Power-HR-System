@@ -10,7 +10,7 @@ export default function BasicCard() {
   return forms?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
                         <Card elevation={12} sx={{height: "100%"}}>
-                            <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
+                            <CardActionArea key={index} onClick={() => window.location = '/form/response/' + form._id}>
                                 <CardContent>
                                     <Typography sx={{
                                         display: '-webkit-box',
