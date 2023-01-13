@@ -4,7 +4,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Authentication/Login/Login";
 import ApplicantRegister from "./Pages/Applicant/Register";
 //dashboard
-import AdminDashboard from "./Pages/Admin/Dashboard";
+import AdminDashboard from "./Pages/Admin/Dashboard.js";
 import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
 import ApplicantDashboard from "./Pages/Applicant/Dashboard";
