@@ -94,7 +94,7 @@ function AddJob(props){
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.post("http://localhost:5000/jobs", job)
+        axios.patch(`http://localhost:5000/jobs/${props.id}`, job)
             .then(res => {
                 window.location = "/admin/manage-job";
             })

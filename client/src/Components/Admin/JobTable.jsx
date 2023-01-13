@@ -693,19 +693,15 @@ export default function JobTable() {
 
 const handleDelete = (id) => {
       // console.log(id);
-      axios.patch(`http://localhost:5000/jobs/remove/${id}`, {
+      axios.delete(`http://localhost:5000/jobs/${id}`, {
           headers: {
               Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }
       })
           .then(res => {
               // remove the deleted employee from the table
-              const newRows = rows.filter(row => row.id !== id);
+              const newRows = rows.filter(row => row._id !== id);
               setRows([...newRows]);
-              //refresh the page
-              window.location.reload();
-  
-  
           })
           .catch(err => {
               console.log(err);
@@ -792,7 +788,7 @@ const handleDelete = (id) => {
                        <TableCell align="left">{row?.specializations}</TableCell>
                        <TableCell align="left">{row?.quota}</TableCell>
                        <TableCell align="left">
-                         <Moment format="DD/MM/YYYY">{row?.dateEnd}</Moment>
+                         <Moment format="DD/MM/YYYY">{row?.dateStart}</Moment>
                        </TableCell>
                        <TableCell align="left">
                          <Moment format="DD/MM/YYYY">{row?.dateEnd}</Moment>

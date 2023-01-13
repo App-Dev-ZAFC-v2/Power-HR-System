@@ -143,7 +143,6 @@ export const getJobByID = async (req, res) => {
 export const createJob = async (req, res) => {
     const job = req.body;
     const newJob = new Job(job);
-    console.log(newJob);
     try{
         if(newJob.dateEnd < newJob.dateStart){
             res.status(409).json({ message: "End date cannot be before start date" });

@@ -18,7 +18,7 @@ function AddJob(){
             max: 0
         },
         location: "",
-        specializations: "",
+        specializations: "Not Specified",
         quota: 0,
         dateStart: new Date(),
         dateEnd: new Date()
@@ -160,9 +160,9 @@ function AddJob(){
 
                 <Form.Group controlId="formBasicPassword">
                     <Form.Label>Job Specializations</Form.Label>
-                    <Form.Control as="select" name="specializations" onChange={handleChange}>
+                    <Form.Control as="select" name="specializations" value={job.specializations} onChange={handleChange}>
                         {specializationsList.map((specializations, index) => (
-                            <option key={index}>{specializations}</option>
+                            <option value={specializations} key={index}>{specializations}</option>
                         ))}
                     </Form.Control>
                 </Form.Group>
