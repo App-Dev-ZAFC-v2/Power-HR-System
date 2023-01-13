@@ -4,10 +4,10 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Authentication/Login/Login";
 import ApplicantRegister from "./Pages/Applicant/Register";
 //dashboard
+import AdminDashboard from "./Pages/Admin/Dashboard";
 import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
 import ApplicantDashboard from "./Pages/Applicant/Dashboard";
-import AdminDashboard from "./Pages/Admin/Dashboard";
 //profileupdate
 // import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import ManageJob from "./Pages/Admin/ManageJob";
