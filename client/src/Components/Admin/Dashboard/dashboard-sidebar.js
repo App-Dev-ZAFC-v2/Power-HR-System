@@ -8,8 +8,8 @@ import Groups2Icon from '@mui/icons-material/Groups2';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Logo from '../../../Assets/Logo.png';
-import { NavItem } from './nav-item';
-import { getAdminByID } from '../../../Redux/slices/admin';
+import { NavItem } from './nav-item.js';
+import { getAdminByID } from '../../../Redux/slices/admin.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 

@@ -1,4 +1,4 @@
-import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';
+import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout.js';
 
 function AdminDashboard() {
     return (
