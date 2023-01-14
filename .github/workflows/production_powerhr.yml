@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: react-app
-          path: release.zip
+          path: ./client/release.zip
 
   deploy:
     runs-on: ubuntu-latest
