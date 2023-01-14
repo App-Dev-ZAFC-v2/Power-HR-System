@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: react-app
-          path: ./client/release.zip
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -67,4 +67,4 @@ jobs:
           app-name: 'powerhr'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38651208828143D68849CF48A625637A }}
-          package: ./client/release.zip
+          package: release.zip
