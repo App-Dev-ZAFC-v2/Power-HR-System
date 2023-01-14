@@ -67,4 +67,4 @@ jobs:
           app-name: 'powerhr'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38651208828143D68849CF48A625637A }}
-          package: release.zip
+          package: ./client/release.zip
