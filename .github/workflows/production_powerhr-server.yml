@@ -36,7 +36,7 @@ jobs:
           
       # Zip artifacts to speed things up
       - name: Zip artifact for deployment
-        run: zip release.zip ./* -qr
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./server
+        working-directory: .
     needs: build
     environment:
       name: 'Production'
@@ -61,7 +61,7 @@ jobs:
           name: node-app
       
       - name: unzip artifact for deployment
-        run: unzip ./server.zip
+        run: unzip server.zip
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -70,4 +70,4 @@ jobs:
           app-name: 'powerhr-server'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_77487D62F0B049E49E445D7DBF96B540 }}
-          package: release.zip
+          package: server.zip
