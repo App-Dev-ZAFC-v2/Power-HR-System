@@ -32,12 +32,17 @@ jobs:
         run: |
           npm install
           npm run build --if-present
+          npm run test:ci --if-present
+          
+      # Zip artifacts to speed things up
+      - name: Zip artifact for deployment
+        run: zip release.zip ./client -qr
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: react-app
-          path: ./client
+          path: ./client/release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -62,4 +67,4 @@ jobs:
           app-name: 'powerhr'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_38651208828143D68849CF48A625637A }}
-          package: .
+          package: release.zip
