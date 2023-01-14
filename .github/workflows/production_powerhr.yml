@@ -8,10 +8,17 @@ on:
     branches:
       - production
   workflow_dispatch:
+  
+defaults:
+      run:
+        working-directory: ./client
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
 
     steps:
       - uses: actions/checkout@v2
@@ -35,6 +42,9 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./client
     needs: build
     environment:
       name: 'Production'
