@@ -8,13 +8,17 @@ on:
     branches:
       - production
   workflow_dispatch:
+  
+defaults:
+      run:
+        working-directory: ./server
 
 jobs:
   build:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: ./server
 
     steps:
       - uses: actions/checkout@v2
@@ -34,13 +38,13 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: ./server
 
   deploy:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: server
+        working-directory: ./server
     needs: build
     environment:
       name: 'Production'
