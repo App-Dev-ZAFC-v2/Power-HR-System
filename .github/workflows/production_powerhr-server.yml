@@ -59,9 +59,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-      
-      - name: unzip artifact for deployment
-        run: unzip server.zip
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
@@ -70,4 +67,4 @@ jobs:
           app-name: 'powerhr-server'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_77487D62F0B049E49E445D7DBF96B540 }}
-          package: .
+          package: server.zip
