@@ -20,6 +20,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: '18.x'
+          app_location: "/client"
 
       - name: npm install, build, and test
         run: |
