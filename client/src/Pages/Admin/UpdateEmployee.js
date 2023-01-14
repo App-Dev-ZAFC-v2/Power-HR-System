@@ -21,7 +21,7 @@ function UpdateEmployee(){
     //     // setValidated(true);
     //     try {
     //         console.log(employee);
-    //         axios.post('http://localhost:5000/employees/register/', employee, {
+    //         axios.post('https://powerhr-server.azurewebsites.net/employees/register/', employee, {
     //             headers: {
     //                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
     //             }

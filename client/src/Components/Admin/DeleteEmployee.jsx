@@ -5,7 +5,7 @@ import axios from 'axios';
 function DeleteEmployee(props) {
     const deleteEmployee = () => {
         console.log("in deleteEmployee");
-        axios.patch(`http://localhost:5000/employees/remove/${props.id}`, {
+        axios.patch(`https://powerhr-server.azurewebsites.net/employees/remove/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }

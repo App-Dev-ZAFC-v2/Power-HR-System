@@ -23,7 +23,7 @@ function AddFeedback(){
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log(feedback);
-        axios.post('http://localhost:5000/feedbacks/add', feedback)
+        axios.post('https://powerhr-server.azurewebsites.net/feedbacks/add', feedback)
         .then(res => {
             console.log(res.data);
             setIsLoading(false);

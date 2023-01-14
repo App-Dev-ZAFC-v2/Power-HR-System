@@ -248,7 +248,7 @@ export default function EmployeesTable() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/employees', {
+    axios.get('https://powerhr-server.azurewebsites.net/employees', {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -266,7 +266,7 @@ export default function EmployeesTable() {
 
   const handleDelete = (id) => {
     // console.log(id);
-    axios.patch(`http://localhost:5000/employees/remove/${id}`, {
+    axios.patch(`https://powerhr-server.azurewebsites.net/employees/remove/${id}`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }

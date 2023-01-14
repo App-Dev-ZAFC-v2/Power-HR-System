@@ -46,8 +46,8 @@ function Profile() {
 
   useEffect(() => {
     (userType === 0
-      ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-      : axios.get(`http://localhost:5000/employees/${detailId}/`)
+      ? axios.get(`https://powerhr-server.azurewebsites.net/applicants/${detailId}/`)
+      : axios.get(`https://powerhr-server.azurewebsites.net/employees/${detailId}/`)
     )
       .then((res) => {
         setUser(res.data);
@@ -66,7 +66,7 @@ function Profile() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/applicants/${detailId}/`, user, {
+      .put(`https://powerhr-server.azurewebsites.net/applicants/${detailId}/`, user, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

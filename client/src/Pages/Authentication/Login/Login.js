@@ -68,7 +68,7 @@ function Login() {
       password: values.password,
     };
     axios
-      .post(`http://localhost:5000/login`, loginData)
+      .post(`https://powerhr-server.azurewebsites.net/login`, loginData)
       .then((res) => {
         console.log(res);
         localStorage.setItem("authToken", res.data.token);

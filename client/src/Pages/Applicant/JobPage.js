@@ -101,7 +101,7 @@ function JobPage() {
     handlePageClick(active);
     // get the applied jobs
     axios
-      .get(`http://localhost:5000/applications/appliedby/${detailId}`)
+      .get(`https://powerhr-server.azurewebsites.net/applications/appliedby/${detailId}`)
       .then((res) => {
         setAppliedJob(res.data);
         console.log(res.data);
@@ -129,11 +129,11 @@ function JobPage() {
     // set the specializations value
     setSpecializations(specializations);
     console.log(
-      `http://localhost:5000/jobs?page=${e}&search=${search}&specializations=${spec}`
+      `https://powerhr-server.azurewebsites.net/jobs?page=${e}&search=${search}&specializations=${spec}`
     );
     axios
       .get(
-        `http://localhost:5000/jobs?page=${e}&search=${search}&specializations=${spec}`
+        `https://powerhr-server.azurewebsites.net/jobs?page=${e}&search=${search}&specializations=${spec}`
       )
       .then((res) => {
         setJobs(res.data.results);
@@ -174,7 +174,7 @@ function JobPage() {
     console.log(job?._id);
     console.log("apply");
     axios
-      .post(`http://localhost:5000/applications/${detailId}/apply/${job?._id}`)
+      .post(`https://powerhr-server.azurewebsites.net/applications/${detailId}/apply/${job?._id}`)
       .then((res) => {
         console.log(res.data);
         setAppliedJob([...appliedJob, job?._id]);

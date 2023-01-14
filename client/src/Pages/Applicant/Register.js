@@ -66,7 +66,7 @@ function ApplicantRegister() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post(`http://localhost:5000/applicants/register`, user)
+      .post(`https://powerhr-server.azurewebsites.net/applicants/register`, user)
       .then((res) => {
         console.log(res);
         setSuccess(true);
