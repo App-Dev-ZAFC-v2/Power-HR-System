@@ -36,7 +36,7 @@ jobs:
           
       # Zip artifacts to speed things up
       - name: Zip artifact for deployment
-        run: zip client.zip ./* -qr
+        run: zip client.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
@@ -48,7 +48,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./client
+        working-directory: .
     needs: build
     environment:
       name: 'Production'
