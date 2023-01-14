@@ -33,16 +33,12 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-          
-      # Zip artifacts to speed things up
-      - name: Zip artifact for deployment
-        run: zip -r server.zip ./* .env .deployment
         
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./server/server.zip
+          path: ./server
 
   deploy:
     runs-on: ubuntu-latest
@@ -59,12 +55,6 @@ jobs:
         uses: actions/download-artifact@v2
         with:
           name: node-app
-          
-      - name: unzip artifact for deployment
-        run: unzip server.zip
-        
-      - name: remove zip artifact for deployment
-        run: rm server.zip
 
       - name: 'Deploy to Azure Web App'
         id: deploy-to-webapp
