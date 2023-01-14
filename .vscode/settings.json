@@ -1,0 +1,8 @@
+{
+    "appService.zipIgnorePattern": [
+        "node_modules{,/**}",
+        ".vscode{,/**}"
+    ],
+    "appService.defaultWebAppToDeploy": "/subscriptions/aad1f8eb-f6a0-4670-a5d9-2f04fa3e29b4/AppServices/subscriptions/aad1f8eb-f6a0-4670-a5d9-2f04fa3e29b4/resourceGroups/powerHR/providers/Microsoft.Web/sites/powerhr-server",
+    "appService.deploySubpath": "server"
+}
