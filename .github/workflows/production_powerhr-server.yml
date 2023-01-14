@@ -43,7 +43,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: ./server/release.zip
+          path: release.zip
 
   deploy:
     runs-on: ubuntu-latest
@@ -68,4 +68,4 @@ jobs:
           app-name: 'powerhr-server'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_77487D62F0B049E49E445D7DBF96B540 }}
-          package: ./server/release.zip
+          package: release.zip
