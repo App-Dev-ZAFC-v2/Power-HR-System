@@ -35,7 +35,7 @@ jobs:
           npm run test:ci --if-present
       
       - name: Zip artifact for deployment
-        run: zip client.zip ./* -r
+        run: zip -r client.zip ./* .deployment
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
