@@ -32,7 +32,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          export NODE_OPTIONS="--max_old_space_size=1024"
+          export NODE_OPTIONS="--max_old_space_size=4096"
           npm run build --if-present
           npm run test:ci --if-present
       
@@ -66,7 +66,7 @@ jobs:
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         env:
-          NODE_OPTIONS: "--max_old_space_size=1024"
+          NODE_OPTIONS: "--max_old_space_size=4096"
         with:
           app-name: 'powerhr'
           slot-name: 'Production'
