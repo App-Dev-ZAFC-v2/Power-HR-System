@@ -1,17 +1,24 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy Node.js app to Azure Web App - powerhr-server
+name: powerhr-server
 
 on:
   push:
     branches:
       - production
   workflow_dispatch:
+  
+defaults:
+      run:
+        working-directory: ./server
 
 jobs:
   build:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./server
 
     steps:
       - uses: actions/checkout@v2
@@ -26,15 +33,22 @@ jobs:
           npm install
           npm run build --if-present
           npm run test --if-present
-
+          
+      # Zip artifacts to speed things up
+      - name: Zip artifact for deployment
+        run: zip server.zip ./* .env .deployment -r
+        
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
           name: node-app
-          path: .
+          path: ./server/server.zip
 
   deploy:
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .
     needs: build
     environment:
       name: 'Production'
