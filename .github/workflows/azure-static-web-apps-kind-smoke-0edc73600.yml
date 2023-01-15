@@ -1,4 +1,4 @@
-name: powerHR-client
+name: powerhr-client
 
 on:
   push:
