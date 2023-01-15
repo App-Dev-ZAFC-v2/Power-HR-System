@@ -1,24 +1,17 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: powerhr-client
+name: Build and deploy Node.js app to Azure Web App - powerhr
 
 on:
   push:
     branches:
       - production
   workflow_dispatch:
-  
-defaults:
-      run:
-        working-directory: ./client
-        
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./client
 
     steps:
       - uses: actions/checkout@v2
@@ -31,24 +24,17 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm install
-          export NODE_OPTIONS="--max_old_space_size=4096"
           npm run build --if-present
-          npm run test:ci --if-present
-      
-      - name: Zip artifact for deployment
-        run: zip -r client.zip ./* .deployment
+          npm run test --if-present
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v2
         with:
-          name: react-app
-          path: ./client/client.zip
+          name: node-app
+          path: .
 
   deploy:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: .
     needs: build
     environment:
       name: 'Production'
@@ -58,15 +44,13 @@ jobs:
       - name: Download artifact from build job
         uses: actions/download-artifact@v2
         with:
-          name: react-app
+          name: node-app
 
       - name: 'Deploy to Azure Web App'
-        env:
-          NODE_OPTIONS: "--max_old_space_size=4096"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
           app-name: 'powerhr'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_416CE53124104F2CB1F450212B1AE459 }}
-          package: client.zip
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_6380DEB4EECA4260921A42EC9404D2BF }}
+          package: .
