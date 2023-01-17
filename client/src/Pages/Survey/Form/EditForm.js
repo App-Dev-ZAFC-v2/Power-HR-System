@@ -317,7 +317,7 @@ function EditForm(){
                             <Box sx={{pl: 4, pt: 4, pb:4, borderBottom: 1 }}>
                                 <Typography variant='h6'>Form</Typography>
                                 <Typography variant='h7'>Manage form setting</Typography>
-                                <Box sx={{ display: 'flex', justifyContent: 'space-between', pl: 4, pt: 2}}>
+                                <Box sx={{ display: 'flex', justifyContent: 'space-between', flexWrap: 'wrap', pl: 4, pt: 2}}>
                                     <Box>
                                         <Typography variant='h6'>Collaborators</Typography>
                                         <Typography variant='h7'>Add others people to edit this form</Typography>

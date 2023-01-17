@@ -1,6 +1,6 @@
 import {Box, Button, Card, CardActionArea, CardActions, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, CardContent, CardMedia, Grid, Typography, useMediaQuery, useTheme, Container, TextField, LinearProgress, Paper } from "@mui/material";
 import DeleteIcon from '@mui/icons-material/Delete';
-import photo from "../../../Assets/BackgroundProfile/Cloudy.png";
+import photo from "../../../Assets/BackgroundProfile/form.jpg";
 import icon from "../../../Assets/addIcon.png";
 import Navbar from "../../../Components/Old Components/Navbar";
 import React, { useEffect, useCallback, useState } from "react";
@@ -144,7 +144,7 @@ const ManageForms = () => {
                         </CardActionArea>
                     </Card> */}
                     <Box sx={{ height: "100%", display: "flex", justifyContent: "center", alignItems: "center", cursor: "pointer"}} onClick={() => handleClickOpen("create")}>
-                        <Paper elevation={12} sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center"}}>
+                        <Paper elevation={12} sx={{ width: "100%", height: "100%", display: "flex", justifyContent: "center", alignItems: "center", borderRadius: "24px", p:10}}>
                             <Box component="img" src={icon} height={64}/>
                         </Paper>
                     </Box>
@@ -174,14 +174,15 @@ const ManageForms = () => {
                 </Grid>
                 {forms?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
-                        <Card elevation={12} sx={{height: "100%"}}>
+                        <Card elevation={12} sx={{height: "100%", borderRadius: "24px"}}>
                             <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
+                                <Paper elevation={0} sx={{p:"24px"}}>
                                 <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={photo}
+                                    sx={{backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", height: "120px", borderRadius: "12px"}}
+                                    style={{backgroundImage: `url(${photo})`}}
                                     alt={form.name} />
-                                <CardContent>
+                                    </Paper>
+                                <CardContent sx={{pt:0, pb:0}}>
                                     <Typography sx={{
                                         display: '-webkit-box',
                                         overflow: 'hidden',
@@ -201,7 +202,7 @@ const ManageForms = () => {
                                 </CardContent>
                             </CardActionArea>
                             <CardActions>
-                                <Button size="small" color="primary" startIcon={<DeleteIcon />} onClick={() => handleClickOpen("delete", index)}>
+                                <Button size="small" color="error" startIcon={<DeleteIcon />} onClick={() => handleClickOpen("delete", index)}>
                                     Delete
                                 </Button>
                             </CardActions>
@@ -212,14 +213,16 @@ const ManageForms = () => {
 
                 {formsCollab?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
-                        <Card>
-                            <CardActionArea onClick={() => window.location = '/form/edit-form/' + form._id}>
+                        <Card elevation={12} sx={{height: "100%", borderRadius: "24px"}}>
+                            <Paper sx={{p:24}}>
+                            <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
+                                <Paper elevation={0} sx={{p:"24px"}}>
                                 <CardMedia
-                                    component="img"
-                                    height="140"
-                                    image={photo}
+                                    sx={{backgroundSize: "cover", backgroundPosition: "center", backgroundRepeat: "no-repeat", height: "120px", borderRadius: "12px"}}
+                                    style={{backgroundImage: `url(${photo})`}}
                                     alt={form.name} />
-                                <CardContent>
+                                    </Paper>
+                                <CardContent sx={{pt:0, pb:0}}>
                                     <Typography sx={{
                                         display: '-webkit-box',
                                         overflow: 'hidden',
@@ -239,12 +242,13 @@ const ManageForms = () => {
                                 </CardContent>
                             </CardActionArea>
                             <CardActions>
-                                <Box sx={{p:"5px"}}>
+                                <Box sx={{p:"5px", borderRadius: "20px"}}>
                                     <Typography variant="body2" color="text.secondary">
                                         Collaboration with {admins.admin.find(admin => admin._id === form.createdBy)?.name}
                                     </Typography>
                                 </Box>
                             </CardActions>
+                            </Paper>
                         </Card>
 
                     </Grid>
