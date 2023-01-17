@@ -189,7 +189,7 @@ export default function ViewForm() {
       temp.push(checkStatus(row._id));
     });
     setStatus(temp);
-  }, [form]);
+  }, [form, response]);
 
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - form?.length) : 0;
