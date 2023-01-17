@@ -71,8 +71,6 @@ function SearchBar() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log(searchValue);
-        console.log(selectedOption);
         // map over the selectedOption array and return the value of each object
         // then join them into a string separated by commas
         

@@ -61,7 +61,7 @@ export const DashboardSidebar = (props) => {
 
   useEffect(() => {
     dispatch(getAdminByID(detailId));
-  }, [dispatch, detailId]);
+  }, [detailId]);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");

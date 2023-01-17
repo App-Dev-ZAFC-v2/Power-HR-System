@@ -13,7 +13,6 @@ function JobList() {
             .then(res => {
                 setJobs(res.data);
                 setLoading(false);
-                console.log(res.data);
             })
             .catch(err => {
                 console.log(err);

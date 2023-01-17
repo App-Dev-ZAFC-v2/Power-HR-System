@@ -46,7 +46,6 @@ function Profile() {
     )
       .then((res) => {
         setUser(res.data);
-        console.log(res.data);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -67,7 +66,6 @@ function Profile() {
         },
       })
       .then((res) => {
-        console.log(res);
         setIsRead(true);
         return setSuccess({
           ...success,

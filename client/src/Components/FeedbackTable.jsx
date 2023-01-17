@@ -236,7 +236,6 @@ export default function FeedbackTable() {
         }
     })
     .then(res => {
-        console.log(res.data);
         setRows(res.data);
         setIsLoading(false);
     })
@@ -252,7 +251,6 @@ const handleDelete = (id) => {
         }
     })
     .then(res => {
-        console.log(res.data);
         setRows(rows.filter(row => row._id !== id));
     })
     .catch(err => {

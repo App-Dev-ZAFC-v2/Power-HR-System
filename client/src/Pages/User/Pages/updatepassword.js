@@ -60,7 +60,6 @@ function ProfilePassword() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(password);
     axios
       .post(`https://powerhr-server.azurewebsites.net/users/changepassword`, password, {
         headers: {
@@ -68,7 +67,6 @@ function ProfilePassword() {
         },
       })
       .then((res) => {
-        console.log(res);
         setIsRead(true);
         return setSuccess({
           ...success,

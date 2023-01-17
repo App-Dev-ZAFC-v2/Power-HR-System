@@ -68,7 +68,6 @@ function ApplicantRegister() {
     axios
       .post(`https://powerhr-server.azurewebsites.net/applicants/register`, user)
       .then((res) => {
-        console.log(res);
         setSuccess(true);
         window.alert("You have successfully registered!");
         // go to login page

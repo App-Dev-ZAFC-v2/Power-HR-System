@@ -29,14 +29,12 @@ function EditEmployee(props){
     }
 
     useEffect(() => {
-        console.log(props.id);
         axios.get(`https://powerhr-server.azurewebsites.net/employees/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         })
         .then(res => {
-            console.log(res.data);
             setEmployee(res.data);
             setIsLoading(false);
         })

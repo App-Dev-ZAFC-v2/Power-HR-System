@@ -41,7 +41,6 @@ function Login() {
   // ]);
 
   const [userTypeIndex] = useState(2);
-  console.log(userTypeIndex);
 
   const [error, setError] = useState({
     email: false,
@@ -70,7 +69,6 @@ function Login() {
     axios
       .post(`https://powerhr-server.azurewebsites.net/login`, loginData)
       .then((res) => {
-        console.log(res);
         localStorage.setItem("authToken", res.data.token);
         // get the user type from the token
         const userType = res.data.token.split(".")[1];

@@ -166,10 +166,6 @@ export default function AppTable(props) {
     // console.log("inside", combined.props1.applicants);
 
     setRows(applicants, quota, job_id);
-    // console.log("quota", quota.quota);
-    console.log("inside", applicants);
-    console.log("quota", quota);
-    console.log("job_id", job_id);
 
   }, [applicants, job_id, quota]);
 
@@ -220,8 +216,6 @@ export default function AppTable(props) {
       })
       .then((res) => {
         
-        // console.log(index);
-        console.log(res.data); 
         
         if(status === "Shortlisted"){
           handleQuota(currentQuota - 1, id);
@@ -232,7 +226,6 @@ export default function AppTable(props) {
         window.alert("Application is updated.");
         window.location.href = `/executive/manage-applicant`;
 
-        console.log("status",status);
       })
       .catch((err) => {
         console.log(err);
@@ -243,9 +236,6 @@ export default function AppTable(props) {
     axios
       .patch(`https://powerhr-server.azurewebsites.net/jobs/${id}`, {
         quota: latestQuota,
-      })
-      .then((res) => {
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -259,7 +249,6 @@ export default function AppTable(props) {
       .then((res) => {
         // console.log(status);
         // console.log(index);
-        console.log(res.data);
         window.alert("Application is deleted.");
         window.location.href = `/executive/manage-applicant`;
       })

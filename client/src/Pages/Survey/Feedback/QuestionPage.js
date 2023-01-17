@@ -82,7 +82,6 @@ function QuestionPage(props) {
       }
 
       if (rfeedback._id === undefined) {
-        console.log("create");
         var tempFeedback = {
           response: temp,
           employeeID: employeeID,
@@ -124,7 +123,6 @@ function QuestionPage(props) {
       });
     }
     // setFeedback(temp);
-    console.log(temp);
     var tempFeedback = {
       response: temp,
       employeeID: employeeID,

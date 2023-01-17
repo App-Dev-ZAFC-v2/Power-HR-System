@@ -136,9 +136,7 @@ export const changePassword = async (req, res) => {
   try {
     const { id } = req.params;
     const { oldpassword, newpassword } = req.body;
-    console.log("1");
     const user = await User.findById(id);
-    console.log("2");
     const isPasswordCorrect = await bcrypt.compare(oldpassword, user.password);
 
     if (!isPasswordCorrect) {

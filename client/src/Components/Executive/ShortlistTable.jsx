@@ -125,7 +125,6 @@ export default function ShortlistTable() {
     axios
       .get("https://powerhr-server.azurewebsites.net/applications/jobs")
       .then((res) => {
-        console.log(res.data);
         setRows(res.data);
       })
       .catch((err) => {

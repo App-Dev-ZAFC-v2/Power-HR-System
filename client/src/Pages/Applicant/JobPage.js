@@ -81,7 +81,6 @@ function JobPage() {
 
   const handleSearch = (e) => {
     e.preventDefault();
-    console.log(searchValue);
     if (selectedOption !== null) {
       const newSpec = selectedOption
         .map((option) => {
@@ -104,7 +103,6 @@ function JobPage() {
       .get(`https://powerhr-server.azurewebsites.net/applications/appliedby/${detailId}`)
       .then((res) => {
         setAppliedJob(res.data);
-        console.log(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -120,17 +118,13 @@ function JobPage() {
     setActive(e);
     // get url params
     const urlParams = new URLSearchParams(window.location.search);
-    console.log(urlParams);
     const search = urlParams.get("search") || "";
     const spec = urlParams.get("specializations") || "";
-    console.log(spec);
     // set the search value
     setSearchValue(search);
     // set the specializations value
     setSpecializations(specializations);
-    console.log(
-      `https://powerhr-server.azurewebsites.net/jobs?page=${e}&search=${search}&specializations=${spec}`
-    );
+
     axios
       .get(
         `https://powerhr-server.azurewebsites.net/jobs?page=${e}&search=${search}&specializations=${spec}`
@@ -144,7 +138,7 @@ function JobPage() {
           end: res.data.end,
         });
         // setLoading(false);
-        console.log(res.data);
+        
       })
       .catch((err) => {
         console.log(err);
@@ -171,12 +165,9 @@ function JobPage() {
   // }
 
   const handleApply = (e) => {
-    console.log(job?._id);
-    console.log("apply");
     axios
       .post(`https://powerhr-server.azurewebsites.net/applications/${detailId}/apply/${job?._id}`)
       .then((res) => {
-        console.log(res.data);
         setAppliedJob([...appliedJob, job?._id]);
       })
       .catch((err) => {
