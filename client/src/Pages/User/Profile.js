@@ -13,12 +13,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
-// import updateusername from "./updateusername";
-// import photo from "../../Assets/naim.jpeg";
-// import photo from "../../Assets/qiqi.jpeg";
-// import photo from "../../Assets/brendan.jpeg";
-// import photo from "../../Assets/aniq.JPG";
-import photo from "../../Assets/dzak.jpg";
+import photo from "../../Assets/default.png";
 import axios from "axios";
 
 function Profile() {
