@@ -28,9 +28,9 @@ const items = [
     title: "Dashboard",
   },
   {
-    href: "/executive/manage-applicant",
+    href: "/executive/manage-application",
     icon: <Groups2Icon fontSize="small" />,
-    title: "Manage Applicant",
+    title: "Manage Application",
   },
   {
     href: "/executive/analytics",

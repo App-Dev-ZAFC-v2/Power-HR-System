@@ -24,7 +24,7 @@ import JobPage from "./Pages/Applicant/JobPage";
 // import AddJob from "./Pages/Admin/AddJob";
 import ViewApplication from "./Pages/Applicant/ViewApplication";
 
-import ShortlistApplicant from "./Pages/Executive/ManageApplicant";
+import ManageApplication from "./Pages/Executive/ManageApplication";
 
 import ManageForms from "./Pages/Survey/Form/ManageForms";
 import EditForm from "./Pages/Survey/Form/EditForm";
@@ -75,8 +75,8 @@ function App() {
         />
 
         <Route
-          path="/executive/manage-applicant"
-          element={<ShortlistApplicant />}
+          path="/executive/manage-application"
+          element={<ManageApplication />}
         />
 
         <Route path="/executive/analytics" element={<ManageAnalytics />} />

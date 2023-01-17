@@ -28,7 +28,7 @@ function ShortlistApplicant() {
 
   return (
     <>
-      <DashboardLayout tab="Manage Applicant">
+      <DashboardLayout tab="Manage Application">
       <br></br>
       <div className="container">
         <Typography variant="h6" align="center">
