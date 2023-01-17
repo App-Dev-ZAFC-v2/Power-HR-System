@@ -90,8 +90,8 @@ function ApplicantRegister() {
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
-            border: "1px solid black",
-            borderRadius: "10px",
+            boxShadow: 10,
+            borderRadius: 3,
             padding: "20px",
             marginTop: "10vh",
           }}
