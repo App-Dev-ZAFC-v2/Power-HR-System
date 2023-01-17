@@ -68,6 +68,9 @@ export const DashboardSidebar = (props) => {
   const employee = useSelector((state) => state.employees.employee);
 
   useEffect(() => {
+    if(detailId === undefined){
+      return;
+    }
     dispatch(getEmployeeByID(detailId));
   }, [detailId]);
 

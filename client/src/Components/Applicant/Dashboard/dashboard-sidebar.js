@@ -60,6 +60,9 @@ export const DashboardSidebar = (props) => {
   const applicant = useSelector((state) => state.applicants.applicant);
 
   useEffect(() => {
+    if(detailId === undefined){
+      return;
+    }
     dispatch(getApplicantByID(detailId));
   }, [detailId]);
 

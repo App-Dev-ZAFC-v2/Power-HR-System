@@ -60,6 +60,9 @@ export const DashboardSidebar = (props) => {
   const admin = useSelector((state) => state.admins.currentAdmin);
 
   useEffect(() => {
+    if(detailId === undefined){
+      return;
+    }
     dispatch(getAdminByID(detailId));
   }, [detailId]);
 
