@@ -214,7 +214,6 @@ const ManageForms = () => {
                 {formsCollab?.map((form, index) => (
                     <><Grid item xs={12} sm={6} md={3} key={index}>
                         <Card elevation={12} sx={{height: "100%", borderRadius: "24px"}}>
-                            <Paper sx={{p:24}}>
                             <CardActionArea key={index} onClick={() => window.location = '/form/edit-form/' + form._id}>
                                 <Paper elevation={0} sx={{p:"24px"}}>
                                 <CardMedia
@@ -248,7 +247,6 @@ const ManageForms = () => {
                                     </Typography>
                                 </Box>
                             </CardActions>
-                            </Paper>
                         </Card>
 
                     </Grid>
