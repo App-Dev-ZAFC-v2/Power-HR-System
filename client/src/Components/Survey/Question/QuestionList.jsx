@@ -267,7 +267,7 @@ function QuestionList(){
                                                             <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                                         </div>
                                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '-15px', width: '100%' }}>
-                                                            <Grid container>
+                                                            <Grid container spacing={1}>
                                                                 <Grid item sm={8} xs={12} >
                                                                     <TextField
                                                                         fullWidth={true}
