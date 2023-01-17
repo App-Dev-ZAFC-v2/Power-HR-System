@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Box, Button, Divider, Drawer, Link, Typography, useMediaQuery } from '@mui/material';
 import OpenInNewIcon from '@mui/icons-material/OpenInNew';
@@ -8,8 +8,8 @@ import Groups2Icon from '@mui/icons-material/Groups2';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import DescriptionIcon from '@mui/icons-material/Description';
 import Logo from '../../../Assets/Logo.png';
-import { NavItem } from './nav-item';
-import { getAdminByID } from '../../../Redux/slices/admin';
+import { NavItem } from './nav-item.js';
+import { getAdminByID } from '../../../Redux/slices/admin.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -45,14 +45,26 @@ export const DashboardSidebar = (props) => {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("authToken");
-  const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
+  const [detailId, setDetailId] = useState();
+  
+
+  useEffect(() =>{
+    if(token === null || token === undefined || token === ""){
+      window.location.href = "/login";
+      return;
+    }
+    setDetailId(JSON.parse(atob(token.split(".")[1])).detailId);
+  },[])
 
   const dispatch = useDispatch();
   const admin = useSelector((state) => state.admins.currentAdmin);
 
   useEffect(() => {
+    if(detailId === undefined){
+      return;
+    }
     dispatch(getAdminByID(detailId));
-  }, [dispatch, detailId]);
+  }, [detailId]);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");

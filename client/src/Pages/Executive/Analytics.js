@@ -15,7 +15,7 @@ function ManageAnalytics() {
   // const [chartData, setChartData] = useState({});
 
   // useEffect(() => {
-  //    axios.get('http://localhost:5000/', {
+  //    axios.get('https://powerhr-server.azurewebsites.net/', {
   //     headers: {
   //       Authorization: `Bearer ${localStorage.getItem("authToken")}`,
   //     },

@@ -265,7 +265,7 @@
 //   const [open, setOpen] = useState(false);
 
 //   useEffect(() => {
-//     axios.get('http://localhost:5000/jobs/all', {
+//     axios.get('https://powerhr-server.azurewebsites.net/jobs/all', {
 //         headers: {
 //             Authorization: `Bearer ${localStorage.getItem('authToken')}`
 //         }
@@ -284,7 +284,7 @@
 
 //   const handleDelete = (id) => {
 //     // console.log(id);
-//     axios.patch(`http://localhost:5000/jobs/remove/${id}`, {
+//     axios.patch(`https://powerhr-server.azurewebsites.net/jobs/remove/${id}`, {
 //         headers: {
 //             Authorization: `Bearer ${localStorage.getItem('authToken')}`
 //         }
@@ -677,7 +677,7 @@ export default function JobTable() {
   // ).detailId;
 
   useEffect(() => {
-    axios.get('http://localhost:5000/jobs/all', {
+    axios.get('https://powerhr-server.azurewebsites.net/jobs/all', {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('authToken')}`
         }
@@ -693,7 +693,7 @@ export default function JobTable() {
 
 const handleDelete = (id) => {
       // console.log(id);
-      axios.delete(`http://localhost:5000/jobs/${id}`, {
+      axios.delete(`https://powerhr-server.azurewebsites.net/jobs/${id}`, {
           headers: {
               Authorization: `Bearer ${localStorage.getItem('authToken')}`
           }

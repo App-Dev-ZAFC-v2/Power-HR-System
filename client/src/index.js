@@ -10,7 +10,7 @@ import { ThemeProvider } from "@mui/material/styles";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  //<React.StrictMode>
+  <React.StrictMode>
   <Provider store={store}>
     <Router>
     <ThemeProvider theme={theme}>
@@ -18,5 +18,5 @@ root.render(
     </ThemeProvider>
     </Router>
   </Provider>
-  //</React.StrictMode>
+  </React.StrictMode>
 );

@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
-const API_URL = "http://localhost:5000/forms/";
+const API_URL = "https://powerhr-server.azurewebsites.net/forms/";
 
 const initialState = {
     form: [],

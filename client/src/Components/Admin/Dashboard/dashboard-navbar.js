@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { AppBar, Avatar, Badge, Box, Divider, IconButton, Toolbar, Tooltip, Typography } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsIcon from "@mui/icons-material/Notifications";
-import { AccountPopover } from './account-popover';
+import { AccountPopover } from './account-popover.js';
 import { useSelector } from 'react-redux';
 
 const DashboardNavbarRoot = styled(AppBar)(({ theme }) => ({

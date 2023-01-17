@@ -13,12 +13,7 @@ import {
   CardMedia,
 } from "@mui/material";
 import { DashboardLayout } from "../../Components/Applicant/Dashboard/dashboard-layout";
-// import updateusername from "./updateusername";
-// import photo from "../../Assets/naim.jpeg";
-// import photo from "../../Assets/qiqi.jpeg";
-// import photo from "../../Assets/brendan.jpeg";
-// import photo from "../../Assets/aniq.JPG";
-import photo from "../../Assets/dzak.jpg";
+import photo from "../../Assets/default.png";
 import axios from "axios";
 
 function Profile() {
@@ -46,12 +41,11 @@ function Profile() {
 
   useEffect(() => {
     (userType === 0
-      ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-      : axios.get(`http://localhost:5000/employees/${detailId}/`)
+      ? axios.get(`https://powerhr-server.azurewebsites.net/applicants/${detailId}/`)
+      : axios.get(`https://powerhr-server.azurewebsites.net/employees/${detailId}/`)
     )
       .then((res) => {
         setUser(res.data);
-        console.log(res.data);
         setIsLoading(false);
       })
       .catch((err) => {
@@ -66,13 +60,12 @@ function Profile() {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:5000/applicants/${detailId}/`, user, {
+      .put(`https://powerhr-server.azurewebsites.net/applicants/${detailId}/`, user, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       })
       .then((res) => {
-        console.log(res);
         setIsRead(true);
         return setSuccess({
           ...success,

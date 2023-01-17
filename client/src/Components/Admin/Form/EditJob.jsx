@@ -73,7 +73,7 @@ function AddJob(props){
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/jobs/view/${props.id}`, {
+        axios.get(`https://powerhr-server.azurewebsites.net/jobs/view/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
@@ -94,7 +94,7 @@ function AddJob(props){
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        axios.patch(`http://localhost:5000/jobs/${props.id}`, job)
+        axios.patch(`https://powerhr-server.azurewebsites.net/jobs/${props.id}`, job)
             .then(res => {
                 window.location = "/admin/manage-job";
             })

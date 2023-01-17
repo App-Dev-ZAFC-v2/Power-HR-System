@@ -59,9 +59,8 @@ function AddJob(){
         //     scope: scopeList,
         //     requirements: requirementsList
         // });
-        axios.post("http://localhost:5000/jobs", job)
+        axios.post("https://powerhr-server.azurewebsites.net/jobs", job)
             .then(res => {
-                console.log(res);
                 window.location = "/admin/manage-job";
             })
             .catch(err => {

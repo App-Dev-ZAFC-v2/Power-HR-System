@@ -1,31 +1,38 @@
-import React, {useState, useEffect} from 'react';
-import Navbar from '../../Components/Old Components/Navbar';
-import { Button } from 'react-bootstrap';
-import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout';
+import {useEffect, useState} from "react";
+import ProfileCard from "../../Components/Dashboard/ProfileCard";
+import Welcome from "../../Components/Dashboard/Welcome";
+import Container from "@mui/material/Container";
+import { Grid, Typography } from "@mui/material";
+import { DashboardLayout } from '../../Components/Admin/Dashboard/dashboard-layout.js';
 
 function AdminDashboard() {
-    const [users, setUsers] = useState([]);
-    // const [tok, setTok] = useState(localStorage.getItem('authToken'));
+    const [hour, setHour] = useState(0);
 
-    // take the token from local storage
-    const token = localStorage.getItem('authToken');
-    // get the username from the token
-    const username = JSON.parse(atob(token.split('.')[1])).username;
-
+    useEffect(() => {
+        const date = new Date();
+        setHour(date.getHours());
+    }, []);
     return (
-        <>
-        {/* <Navbar/> */}
         <DashboardLayout tab="Dashboard">
-            {/* <div>admin dashboard</div>
-            <div>username: {username}</div>
-            <Button variant="primary" onClick={() => window.location = '/admin/manage-employee'}>Manage Employee</Button>
-            <br></br>
-            <Button variant="primary" onClick={() => window.location = '/admin/manage-job'}>Manage Job</Button>
-            <Button variant="primary" onClick={() => window.location = '/admin/manage-feedback'}>Manage Feedback</Button>
-            <Button variant="primary" onClick={() => window.location = '/admin/manage-forms'}>Manage Survey</Button> */}
-        </DashboardLayout>
-        </>
+        <Container maxWidth="lg">
+          <Grid container spacing={2} mt={3} mb={3}>
+            <Grid item xs={12}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                {hour < 12 && "Good Morning"}
+                {hour >= 12 && hour < 17 && "Good Afternoon"}
+                {hour >= 17 && "Good Evening"}
+              </Typography>
+            </Grid>
+            <Grid item xs={12}>
+              <Welcome />
+            </Grid>
+            <Grid item md={4} sm={5} xs={12}>
+              <ProfileCard />
+            </Grid>
+          </Grid>
+        </Container>
+      </DashboardLayout>
     )
     }
 
-export default AdminDashboard
+export default AdminDashboard;

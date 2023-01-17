@@ -43,7 +43,6 @@ function FormCardCreate() {
         
         if(form.name !==""){
             formAPI.createForm(form).then((newForm) => {
-                console.log(newForm);
                 window.open('/form/edit-form/' + newForm._id);
             })
             handleClose();
@@ -52,7 +51,7 @@ function FormCardCreate() {
 
     return (
               <Grid item  xs={12} sm={6} md={3} >
-                    <Card sx={{ height: 308.34}}>
+                    <Card sx={{ height: 308.34, borderRadius: "24px"}}>
                         <CardActionArea sx={{p:0, m:0, height: 308.34}} onClick={handleClickOpen}>
                             <Box display="flex" justifyContent="center" alignItems="center" minHeight="30vh">
                                 <Box component="img" src={icon} height={64}/>

@@ -151,9 +151,8 @@ function createData(title, description) {
 
 //define form data
 
-export default function ViewForm(props) {
-  const form = props.dataform;
-  const { id } = useParams();
+export default function ViewForm() {
+  const form = useSelector((state) => state.forms.form);
   const response = useSelector((state) => state.responses.feedback);
   const dispatch = useDispatch();
   const loading = useSelector((state) => state.responses.loading);
@@ -166,7 +165,7 @@ export default function ViewForm(props) {
 
   useEffect(() => {
     dispatch(getResponseByEmployeeID(detailId));
-  }, [dispatch, id]);
+  }, [detailId]);
 
   function checkStatus(id) {
     //if id not match with in response id, return "Not Filled"

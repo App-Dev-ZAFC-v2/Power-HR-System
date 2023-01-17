@@ -4,22 +4,19 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Login from "./Pages/Authentication/Login/Login";
 import ApplicantRegister from "./Pages/Applicant/Register";
 //dashboard
+import AdminDashboard from "./Pages/Admin/Dashboard";
 import EmployeeDashboard from "./Pages/Employee/Dashboard";
 import ExecutiveDashboard from "./Pages/Executive/Dashboard";
 import ApplicantDashboard from "./Pages/Applicant/Dashboard";
-import AdminDashboard from "./Pages/Admin/Dashboard";
+
 //profileupdate
-// import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import ManageJob from "./Pages/Admin/ManageJob";
 import UpdateJob from "./Pages/Admin/UpdateJob";
+
 //profile update
 import ManageEmployee from "./Pages/Admin/ManageEmployee";
 import UpdateEmployee from "./Pages/Admin/UpdateEmployee";
 import Profile from "./Pages/User/Profile";
-
-import ManageFeedback from "./Pages/Old Pages/ManageFeedback";
-import AddFeedback from "./Pages/Old Pages/AddFeedback";
-
 import UpdateUsername from "./Pages/User/Pages/updateusername";
 import UpdatePassword from "./Pages/User/Pages/updatepassword";
 
@@ -51,7 +48,6 @@ function App() {
         <Route path="/executive/dashboard" element={<ExecutiveDashboard />} />
         <Route path="/applicant/dashboard" element={<ApplicantDashboard />} />
         <Route path="/admin/dashboard" element={<AdminDashboard />} />
-        {/* <Route path="/admin/manage-employee" element={<ManageEmployee />} /> */}
         <Route path="/admin/manage-job" element={<ManageJob />} />
         <Route path="/admin/update-job" element={<UpdateJob />} />
         <Route path="/admin/update-job/:id" element={<UpdateJob />} />
@@ -59,8 +55,6 @@ function App() {
         <Route path="/admin/update-employee" element={<UpdateEmployee />} />
         <Route path="/admin/update-employee/:id" element={<UpdateEmployee />} />
         <Route path="/profile" element={<Profile />} />
-        {/* <Route path="/admin/manage-feedback" element={<ManageFeedback />} />
-        <Route path="/admin/add-feedback" element={<AddFeedback />} /> */}
         <Route path="/admin/manage-forms" element={<ManageForms />} />
 
         <Route path="/form/edit-form/:id" element={<EditForm />} />

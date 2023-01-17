@@ -29,14 +29,12 @@ function EditEmployee(props){
     }
 
     useEffect(() => {
-        console.log(props.id);
-        axios.get(`http://localhost:5000/employees/${props.id}`, {
+        axios.get(`https://powerhr-server.azurewebsites.net/employees/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         })
         .then(res => {
-            console.log(res.data);
             setEmployee(res.data);
             setIsLoading(false);
         })
@@ -57,7 +55,7 @@ function EditEmployee(props){
         if(form.checkValidity() === true){
             e.preventDefault();
             setInvalid(false);
-        axios.patch(`http://localhost:5000/employees/${props.id}`, employee, {
+        axios.patch(`https://powerhr-server.azurewebsites.net/employees/${props.id}`, employee, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }

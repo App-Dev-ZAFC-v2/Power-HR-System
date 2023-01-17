@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Box } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { DashboardNavbar } from './dashboard-navbar';
-import { DashboardSidebar } from './dashboard-sidebar';
+import { DashboardNavbar } from './dashboard-navbar.js';
+import { DashboardSidebar } from './dashboard-sidebar.js';
 
 const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -14,9 +14,39 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
   }
 }));
 
+function checkUser(){
+  const token = localStorage.getItem("authToken");
+  if(token === null || token === undefined || token === ""){
+    window.location.href = "/login";
+    return;
+  }
+  const userType = JSON.parse(atob(token.split(".")[1])).userType;
+
+  switch(userType){
+    case 0:
+      window.location.href = "/applicant/dashboard";
+      break;
+    case 1:
+      break;
+    case 2:
+      window.location.href = "/employee/dashboard";
+      break;
+    case 3:
+      window.location.href = "/executive/dashboard";
+      break;
+    default:
+      window.location.href = "/login";
+      break;
+  } 
+}
+
 export const DashboardLayout = (props) => {
   const { children, tab } = props;
-  const [isSidebarOpen, setSidebarOpen] = useState(true);
+  const [isSidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    checkUser();
+  }, []);
 
   return (
     <>

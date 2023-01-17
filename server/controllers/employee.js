@@ -81,9 +81,7 @@ export const registerEmployee = async (req, res) => {
         if (newUser == null) {
             return;
         }
-        console.log("before employee");
         const result = await Employee.create({ user: newUser._id, name, email, contact, position, executiveRole });
-        console.log("after employee: " + result);
         res.status(200).json({ result });
     }
     catch(error){

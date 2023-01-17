@@ -40,7 +40,7 @@ function AddEmployee(){
         if(form.checkValidity() === true){
             e.preventDefault();
             setInvalid(false);
-            axios.post('http://localhost:5000/employees/register/', employee, {
+            axios.post('https://powerhr-server.azurewebsites.net/employees/register/', employee, {
                 headers: {
                     Authorization: `Bearer ${localStorage.getItem('authToken')}`
                 }

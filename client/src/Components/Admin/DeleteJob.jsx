@@ -4,14 +4,12 @@ import axios from 'axios';
 
 function DeleteJob(props) {
     const deleteJob = () => {
-        console.log("in deleteJob");
-        axios.delete(`http://localhost:5000/jobs/${props.id}`, {
+        axios.delete(`https://powerhr-server.azurewebsites.net/jobs/${props.id}`, {
             headers: {
                 Authorization: `Bearer ${localStorage.getItem('authToken')}`
             }
         })
             .then(res => {
-                console.log(res);
                 // reload the page
                 window.location.reload();
             })

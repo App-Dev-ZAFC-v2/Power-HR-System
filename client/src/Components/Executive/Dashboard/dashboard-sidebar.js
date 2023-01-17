@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 import {
   Box,
@@ -53,14 +53,26 @@ export const DashboardSidebar = (props) => {
   const navigate = useNavigate();
 
   const token = localStorage.getItem("authToken");
-  const detailId = JSON.parse(atob(token.split(".")[1])).detailId;
+  const [detailId, setDetailId] = useState();
+  
+
+  useEffect(() =>{
+    if(token === null || token === undefined || token === ""){
+      window.location.href = "/login";
+      return;
+    }
+    setDetailId(JSON.parse(atob(token.split(".")[1])).detailId);
+  },[])
 
   const dispatch = useDispatch();
   const employee = useSelector((state) => state.employees.employee);
 
   useEffect(() => {
+    if(detailId === undefined){
+      return;
+    }
     dispatch(getEmployeeByID(detailId));
-  }, [dispatch, detailId]);
+  }, [detailId]);
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");

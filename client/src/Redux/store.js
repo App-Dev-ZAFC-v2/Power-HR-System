@@ -15,5 +15,6 @@ const reducer = {
 
 export const store = configureStore({
     reducer: reducer,
-    devTools: true,
+    //TODO: turn off devTools for production
+    devTools: false,
 });

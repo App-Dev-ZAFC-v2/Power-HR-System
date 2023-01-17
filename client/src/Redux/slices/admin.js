@@ -1,6 +1,6 @@
 import {createSlice, createAsyncThunk} from '@reduxjs/toolkit';
 import axios from 'axios';
-const API_URL = "http://localhost:5000/admins/";
+const API_URL = "https://powerhr-server.azurewebsites.net/admins/";
 
 const initialState = {
     admin: [],

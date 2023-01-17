@@ -41,8 +41,8 @@ function ProfilePassword() {
 
   // useEffect(() => {
   //   (userType === 0
-  //     ? axios.get(`http://localhost:5000/applicants/${detailId}/`)
-  //     : axios.get(`http://localhost:5000/employees/${detailId}/`)
+  //     ? axios.get(`https://powerhr-server.azurewebsites.net/applicants/${detailId}/`)
+  //     : axios.get(`https://powerhr-server.azurewebsites.net/employees/${detailId}/`)
   //   )
   //     .then((res) => {
   //       setUser(res.data);
@@ -60,15 +60,13 @@ function ProfilePassword() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(password);
     axios
-      .post(`http://localhost:5000/users/changepassword`, password, {
+      .post(`https://powerhr-server.azurewebsites.net/users/changepassword`, password, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem("authToken")}`,
         },
       })
       .then((res) => {
-        console.log(res);
         setIsRead(true);
         return setSuccess({
           ...success,

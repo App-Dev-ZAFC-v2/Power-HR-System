@@ -1,47 +1,37 @@
-import React from "react";
-import Navbar from "../../Components/Old Components/Navbar";
-import ProfileCard from "../../Components/ProfileCard";
+import {useEffect, useState} from "react";
+import ProfileCard from "../../Components/Dashboard/ProfileCard";
+import Welcome from "../../Components/Dashboard/Welcome";
 import Container from "@mui/material/Container";
-import Welcome from "../../Components/Welcome";
-import { Button } from "react-bootstrap";
-
-import { Grid } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
 import { DashboardLayout } from "../../Components/Executive/Dashboard/dashboard-layout";
 
 function ExecutiveDashboard() {
+  const [hour, setHour] = useState(0);
+
+  useEffect(() => {
+    const date = new Date();
+    setHour(date.getHours());
+  }, []);
   return (
-    <>
-      <DashboardLayout tab="Dashboard">
+    <DashboardLayout tab="Dashboard">
         <Container maxWidth="lg">
-          <Grid
-            container
-            spacing={2}
-            mt={3}
-            sx={{ display: { xs: "none", md: "flex" } }}
-          >
-            <Grid item xs={4} sx={{ display: { xs: "none", md: "flex" } }}>
-              <ProfileCard />
+          <Grid container spacing={2} mt={3} mb={3}>
+            <Grid item xs={12}>
+              <Typography variant="h4" component="h1" gutterBottom>
+                {hour < 12 && "Good Morning"}
+                {hour >= 12 && hour < 17 && "Good Afternoon"}
+                {hour >= 17 && "Good Evening"}
+              </Typography>
             </Grid>
-            <Grid item xs>
+            <Grid item xs={12}>
               <Welcome />
             </Grid>
-          </Grid>
-          <Grid
-            mt={3}
-            container
-            spacing={2}
-            direction="column"
-            alignItems="center"
-            justify="center"
-            sx={{ display: { xs: "flex", md: "none" } }}
-          >
-            <Grid item sx={{ display: { xs: "flex", md: "none" } }}>
+            <Grid item md={4} sm={5} xs={12}>
               <ProfileCard />
             </Grid>
           </Grid>
         </Container>
       </DashboardLayout>
-    </>
   );
 }
 
