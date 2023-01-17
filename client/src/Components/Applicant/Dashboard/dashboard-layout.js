@@ -16,6 +16,10 @@ const DashboardLayoutRoot = styled('div')(({ theme }) => ({
 
 function checkUser(){
   const token = localStorage.getItem("authToken");
+  if(token === null || token === undefined || token === ""){
+    window.location.href = "/login";
+    return;
+  }
   const userType = JSON.parse(atob(token.split(".")[1])).userType;
 
   switch(userType){

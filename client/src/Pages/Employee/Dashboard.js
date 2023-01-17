@@ -15,7 +15,7 @@ function EmployeeDashboard() {
   return (
     <DashboardLayout tab="Dashboard">
         <Container maxWidth="lg">
-          <Grid container spacing={2} mt={3}>
+          <Grid container spacing={2} mt={3} mb={3}>
             <Grid item xs={12}>
               <Typography variant="h4" component="h1" gutterBottom>
                 {hour < 12 && "Good Morning"}
@@ -26,7 +26,7 @@ function EmployeeDashboard() {
             <Grid item xs={12}>
               <Welcome />
             </Grid>
-            <Grid item xs={4}>
+            <Grid item md={4} sm={5} xs={12}>
               <ProfileCard />
             </Grid>
           </Grid>
