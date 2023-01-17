@@ -267,8 +267,8 @@ function QuestionList(){
                                                             <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                                         </div>
                                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '-15px', width: '100%' }}>
-                                                            <Grid container spacing={1}>
-                                                                <Grid item md={8} xs={12} >
+                                                            <Grid container>
+                                                                <Grid item sm={8} xs={12} >
                                                                     <TextField
                                                                         fullWidth={true}
                                                                         placeholder="Question Text"
@@ -279,7 +279,7 @@ function QuestionList(){
                                                                         sx={{ mt: 1, mb: 1, mr: 1 }}
                                                                         onChange={(e) => { handleQuestionText(e.target.value, i); } } />
                                                                 </Grid>
-                                                                <Grid item xs>
+                                                                <Grid item sm={4} xs={12}>
                                                                     <FormControl sx={{ mt: 1, mb: 1, mr: 1, width: "100%"}}>
                                                                         <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => { handleQuestionType(e.target.value, i); } }>
                                                                             <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{ mr: "6px" }} /> Short answer</MenuItem>
