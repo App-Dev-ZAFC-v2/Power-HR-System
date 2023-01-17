@@ -26,7 +26,7 @@ export default function SurveyForm() {
         {/* <Navbar /> */}
         <Container maxWidth="lg" sx={{ mt: 2 }}>
           <Grid container spacing={4} sx={{ ml: 1, mt: 2 }}>
-            <ViewFormCard dataform={forms} />
+            <ViewFormCard />
           </Grid>
         </Container>
       </DashboardLayout>

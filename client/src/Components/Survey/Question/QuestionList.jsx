@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from 'react-redux';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { deleteQuestion, setSaving, updateForm } from '../../../Redux/slices/form';
-import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton, Stack, Switch, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Box, Paper } from '@mui/material';
+import { Accordion, AccordionActions, AccordionDetails, AccordionSummary, Divider, FormControl, MenuItem, Select, TextField, IconButton, Stack, Switch, Typography, Dialog, DialogTitle, DialogContent, DialogContentText, DialogActions, Button, Box, Paper, Grid } from '@mui/material';
 import DragIndicatorIcon from '@mui/icons-material/DragIndicator';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
@@ -267,29 +267,33 @@ function QuestionList(){
                                                             <DragIndicatorIcon style={{ color: '#DAE0E2' }} fontSize="small" />
                                                         </div>
                                                         <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', marginTop: '-15px', width: '100%' }}>
-                                                            <div style={{ display: 'flex', width: '100%', justifyContent: 'space-between' }}>
-                                                                <TextField
-                                                                    fullWidth={true}
-                                                                    placeholder="Question Text"
-                                                                    rowsmax={20}
-                                                                    multiline={true}
-                                                                    value={q.questionText}
-                                                                    variant="filled"
-                                                                    sx={{ mt: 1, mb: 1, mr: 1 }}
-                                                                    onChange={(e) => { handleQuestionText(e.target.value, i); } } />
-                                                                <FormControl sx={{ m: 1, minWidth: 230 }}>
-                                                                    <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => { handleQuestionType(e.target.value, i); } }>
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{ mr: "6px" }} /> Short answer</MenuItem>
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Paragraph"}> <SubjectIcon sx={{ mr: "6px" }} /> Paragraph</MenuItem>
-                                                                        <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Multiple Choice"}> <RadioButtonCheckedIcon sx={{ mr: "6px" }} /> Multiple choice</MenuItem>
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Checkboxes"}> <CheckBoxIcon sx={{ mr: "6px" }} /> Checkboxes</MenuItem>
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Drop-down"}> <ArrowDropDownCircleIcon sx={{ mr: "6px" }} /> Drop-down</MenuItem>
-                                                                        <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
-                                                                        <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Linear Scale"}> <LinearScaleIcon sx={{ mr: "6px" }} /> Linear scale</MenuItem>
-                                                                    </Select>
-                                                                </FormControl>
-                                                            </div>
+                                                            <Grid container spacing={1}>
+                                                                <Grid item md={8} xs={12} >
+                                                                    <TextField
+                                                                        fullWidth={true}
+                                                                        placeholder="Question Text"
+                                                                        rowsmax={20}
+                                                                        multiline={true}
+                                                                        value={q.questionText}
+                                                                        variant="filled"
+                                                                        sx={{ mt: 1, mb: 1, mr: 1 }}
+                                                                        onChange={(e) => { handleQuestionText(e.target.value, i); } } />
+                                                                </Grid>
+                                                                <Grid item xs>
+                                                                    <FormControl sx={{ mt: 1, mb: 1, mr: 1, width: "100%"}}>
+                                                                        <Select value={q.questionType} displayEmpty inputProps={{ 'aria-label': 'Without label' }} onChange={(e) => { handleQuestionType(e.target.value, i); } }>
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Short Answer"}> <ShortTextIcon sx={{ mr: "6px" }} /> Short answer</MenuItem>
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Paragraph"}> <SubjectIcon sx={{ mr: "6px" }} /> Paragraph</MenuItem>
+                                                                            <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Multiple Choice"}> <RadioButtonCheckedIcon sx={{ mr: "6px" }} /> Multiple choice</MenuItem>
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Checkboxes"}> <CheckBoxIcon sx={{ mr: "6px" }} /> Checkboxes</MenuItem>
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Drop-down"}> <ArrowDropDownCircleIcon sx={{ mr: "6px" }} /> Drop-down</MenuItem>
+                                                                            <Divider sx={{ borderBottomWidth: 2, bgcolor: "black" }} />
+                                                                            <MenuItem sx={{ pt: "16.5px", pb: "16.5px" }} value={"Linear Scale"}> <LinearScaleIcon sx={{ mr: "6px" }} /> Linear scale</MenuItem>
+                                                                        </Select>
+                                                                    </FormControl>
+                                                                </Grid>
+                                                            </Grid>
 
                                                             {(q.questionType === "Multiple Choice") ? <MultipleChoiceEdit index={i} /> : ""}
                                                             {(q.questionType === "Checkboxes") ? <CheckBoxEdit index={i} /> : ""}
