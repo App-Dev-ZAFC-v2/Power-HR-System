@@ -48,6 +48,7 @@ function AddEmployee(){
             .then(res => {
                 setSuccess(true);
                 setError(false);
+                window.location.href = '/admin/manage-employee';
             }
             )
             .catch(err => {
@@ -198,7 +199,7 @@ function AddEmployee(){
             </Form.Group>
 
             
-            <Button variant="contained" color="success">
+            <Button variant="contained" color="success" type="submit">
                 Add New Employee
             </Button>
             {
